@@ -1,0 +1,3 @@
+[submodule "zeppelin-k8s"]
+	path = zeppelin-k8s
+	url = git@github.com:rogeriomm/zeppelin-k8s.git
