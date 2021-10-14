@@ -4,3 +4,6 @@
 [submodule "spark-k8s"]
 	path = spark-k8s
 	url = git@github.com:rogeriomm/spark-k8s.git
+[submodule "minikube-labtools-k8s"]
+	path = minikube-labtools-k8s
+	url = git@github.com:rogeriomm/minikube-labtools-k8s.git
