@@ -7,3 +7,6 @@
 [submodule "minikube-labtools-k8s"]
 	path = minikube-labtools-k8s
 	url = git@github.com:rogeriomm/minikube-labtools-k8s.git
+[submodule "minio-k8s"]
+	path = minio-k8s
+	url = git@github.com:rogeriomm/minio-k8s.git
