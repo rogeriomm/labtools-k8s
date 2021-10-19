@@ -10,3 +10,6 @@
 [submodule "minio-k8s"]
 	path = minio-k8s
 	url = git@github.com:rogeriomm/minio-k8s.git
+[submodule "airflow-k8s"]
+	path = airflow-k8s
+	url = git@github.com:rogeriomm/airflow-k8s.git
