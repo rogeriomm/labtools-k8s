@@ -1,0 +1,26 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: host-claim
+  namespace: zeppelin
+spec:
+  storageClassName: host
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 40Gi
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: lab-claim
+  namespace: zeppelin
+spec:
+  storageClassName: remote
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 40Gi
+
