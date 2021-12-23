@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -12,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 )
 
 // Enter sudo password
@@ -54,6 +56,57 @@ func kubecfg() v1.CoreV1Interface {
 	return clientset.CoreV1()
 }
 
+type Bind9 struct {
+	f *os.File
+}
+
+func (bind *Bind9) open() {
+	var err error
+	bind.f, err = os.OpenFile("/usr/local/etc/bind/zones/db.worldl.xpt", os.O_APPEND|os.O_RDWR, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (bind *Bind9) close() {
+	bind.f.Close()
+}
+
+func (bind *Bind9) find_bind_zone(key string) bool {
+	scanner := bufio.NewScanner(bind.f)
+	r, err := regexp.Compile(key)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for scanner.Scan() {
+		if r.MatchString(scanner.Text()) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (bind *Bind9) update_zeppelin(ip string) {
+	bind.open()
+	defer bind.close()
+	found := bind.find_bind_zone("\\$INCLUDE /usr/local/etc/bind/zones/zeppelin.worldl.xpt")
+	if !found {
+		if _, err := bind.f.WriteString("$INCLUDE /usr/local/etc/bind/zones/zeppelin.worldl.xpt"); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	f, err := os.OpenFile("/usr/local/etc/bind/zones/zeppelin.worldl.xpt", os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	f.WriteString("*.zeppelin.worldl.xpt. IN A " + ip + "\n")
+	f.WriteString("zeppelin.worldl.xpt. IN A " + ip + "\n")
+	f.Close()
+}
+
 func main() {
 	core := kubecfg()
 
@@ -61,12 +114,14 @@ func main() {
 		metav1.GetOptions{})
 
 	if err != nil {
+		log.Println(err)
 		log.Fatal("Cannot find service zeppelin/zepelin-server")
 	}
 
-	dnsmasq_ip("zeppelin.worldl.xpt.conf", ".zeppelin.worldl.xpt", svc.Spec.ClusterIP)
+	b := Bind9{}
+	b.update_zeppelin(svc.Spec.ClusterIP)
 
-	out, err := exec.Command("sudo", "brew", "services", "restart", "dnsmasq").Output()
+	out, err := exec.Command("sudo", "brew", "services", "restart", "bind").Output()
 	log.Println(string(out))
 	if err != nil {
 		log.Fatal(err)
