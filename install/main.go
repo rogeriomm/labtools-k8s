@@ -16,22 +16,6 @@ import (
 	"regexp"
 )
 
-// Enter sudo password
-func enter_sudo_password() {
-	err := exec.Command("sudo", "ls")
-	if err != nil {
-		panic("sudo failed")
-	}
-}
-
-func dnsmasq_ip(file string, domain string, svc_ip string) {
-	err := os.WriteFile("/usr/local/etc/dnsmasq.d/"+file,
-		[]byte("address=/"+domain+"/"+svc_ip), 0666)
-	if err != nil {
-		log.Fatal("Cannot save dnsmasq configuration file")
-	}
-}
-
 type Bind9 struct {
 	f *os.File
 }
@@ -48,7 +32,7 @@ func (bind *Bind9) close() {
 	bind.f.Close()
 }
 
-func (bind *Bind9) find_bind_zone(key string) bool {
+func (bind *Bind9) findBindZone(key string) bool {
 	scanner := bufio.NewScanner(bind.f)
 	r, err := regexp.Compile(key)
 	if err != nil {
@@ -64,10 +48,10 @@ func (bind *Bind9) find_bind_zone(key string) bool {
 	return false
 }
 
-func (bind *Bind9) update_zeppelin(ip string) {
+func (bind *Bind9) updateZeppelinIngress(ip string) {
 	bind.open()
 	defer bind.close()
-	found := bind.find_bind_zone("\\$INCLUDE /usr/local/etc/bind/zones/zeppelin.worldl.xpt")
+	found := bind.findBindZone("\\$INCLUDE /usr/local/etc/bind/zones/zeppelin.worldl.xpt")
 	if !found {
 		if _, err := bind.f.WriteString("$INCLUDE /usr/local/etc/bind/zones/zeppelin.worldl.xpt\n"); err != nil {
 			log.Fatal(err)
@@ -83,10 +67,10 @@ func (bind *Bind9) update_zeppelin(ip string) {
 	f.Close()
 }
 
-func (bind *Bind9) update_k8s_ingress(ip string) {
+func (bind *Bind9) updateK8sIngress(ip string) {
 	bind.open()
 	defer bind.close()
-	found := bind.find_bind_zone("\\$INCLUDE /usr/local/etc/bind/zones/ingress-k8s.worldl.xpt")
+	found := bind.findBindZone("\\$INCLUDE /usr/local/etc/bind/zones/ingress-k8s.worldl.xpt")
 	if !found {
 		if _, err := bind.f.WriteString("$INCLUDE /usr/local/etc/bind/zones/ingress-k8s.worldl.xpt\n"); err != nil {
 			log.Fatal(err)
@@ -177,8 +161,8 @@ func main() {
 	log.Println("Zeppelin ingress ip:", ipIngressZeppelin)
 
 	b := Bind9{}
-	b.update_zeppelin(ipIngressZeppelin)
-	b.update_k8s_ingress(ipIngressMinikube)
+	b.updateZeppelinIngress(ipIngressZeppelin)
+	b.updateK8sIngress(ipIngressMinikube)
 
 	log.Println("Restarting BIND...")
 	_, err := exec.Command("sudo", "brew", "services", "restart", "bind").Output()
