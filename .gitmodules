@@ -16,3 +16,6 @@
 [submodule "kafka-k8s"]
 	path = kafka-k8s
 	url = git@github.com:rogeriomm/kafka-k8s.git
+[submodule "superset-k8s"]
+	path = superset-k8s
+	url = git@github.com:rogeriomm/superset-k8s.git
