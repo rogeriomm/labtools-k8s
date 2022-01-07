@@ -19,3 +19,6 @@
 [submodule "superset-k8s"]
 	path = superset-k8s
 	url = git@github.com:rogeriomm/superset-k8s.git
+[submodule "localstack-k8s"]
+	path = localstack-k8s
+	url = git@github.com:rogeriomm/localstack-k8s.git
