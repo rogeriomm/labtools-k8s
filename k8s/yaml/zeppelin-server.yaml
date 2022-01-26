@@ -59,6 +59,9 @@ data:
       # first server block will be default. Proxy zeppelin server.
       server {
         listen 80;
+        listen 443 ssl;
+        ssl_certificate /etc/nginx/certs/tls.crt;
+        ssl_certificate_key /etc/nginx/certs/tls.key;
         location / {
           proxy_pass http://localhost:8080;
           proxy_set_header Host $host;
@@ -76,6 +79,9 @@ data:
       # proxy extra service such as spark-ui
       server {
         listen 80;
+        listen 443 ssl;
+        ssl_certificate /etc/nginx/certs/tls.crt;
+        ssl_certificate_key /etc/nginx/certs/tls.key;
         server_name "~(?<svc_port>[0-9]+)-(?<svc_name>[^.]*)\.(.*)";
         location / {
           resolver 127.0.0.1:53 ipv6=off;
@@ -125,6 +131,9 @@ spec:
       - name: nginx-htpasswd
         secret:
           secretName: htpasswd
+      - name: nginx-cert
+        secret:
+          secretName: zeppelin-tls-secret
       - name: zeppelin-server-notebook-volume
         hostPath:
           path: /Users/rogermm/git/dataops/bdmm/labtools-k8s/lab-zeppelin-notebooks-git
@@ -191,6 +200,9 @@ spec:
         args:
           - cp -f /tmp/conf/nginx.conf /etc/nginx/nginx.conf;
             cp -f /tmp/htpasswd/dot.htpasswd /etc/nginx/.htpasswd;
+            mkdir /etc/nginx/certs;
+            cp /tmp/certs/tls.crt /etc/nginx/certs;
+            cp /tmp/certs/tls.key /etc/nginx/certs;
             sed -i -e "s/SERVICE_DOMAIN/$SERVICE_DOMAIN/g" /etc/nginx/nginx.conf;
             sed -i -e "s/NAMESPACE/$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)/g" /etc/nginx/nginx.conf;
             cat /etc/nginx/nginx.conf;
@@ -200,6 +212,8 @@ spec:
             mountPath: /tmp/conf
           - name: nginx-htpasswd
             mountPath: /tmp/htpasswd
+          - name: nginx-cert
+            mountPath: /tmp/certs
         lifecycle:
           preStop:
             exec:
@@ -224,6 +238,8 @@ spec:
   ports:
     - name: http
       port: 80
+    - name: https
+      port: 443
     - name: rpc            # port name is referenced in the code. So it shouldn't be changed.
       port: 12320
     - name: jupyter
