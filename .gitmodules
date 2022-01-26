@@ -22,3 +22,6 @@
 [submodule "localstack-k8s"]
 	path = localstack-k8s
 	url = git@github.com:rogeriomm/localstack-k8s.git
+[submodule "lab-zeppelin-notebooks"]
+	path = lab-zeppelin-notebooks
+	url = git@github.com:rogeriomm/lab-zeppelin-notebooks.git

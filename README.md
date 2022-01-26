@@ -83,3 +83,4 @@ export AWS_CA_BUNDLE=$MINIKUBE_HOME/ca.crt
    * https://spark.apache.org/docs/3.1.2/sql-data-sources-parquet.html
    * https://www.kaggle.com/
    * http://go-colly.org/: Fast and Elegant Scraping Framework for Gophers
+   * https://medium.com/@mvuksano/using-tls-certificates-with-nginx-docker-container-74c6769a26db: Using TLS certificates with Nginx docker container
