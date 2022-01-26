@@ -11,7 +11,7 @@ cd install
  
 ## MacOS host
 ```commandline
-brew install go pyenv minio
+brew install go pyenv minio awscli
 ```
 
 ```commandline
@@ -63,25 +63,23 @@ export AWS_CA_BUNDLE=$MINIKUBE_HOME/ca.crt
       * User: admin, Password: admin 
 
 # MINIO
+   * https://minio.worldl.xpt/
 
-# Zeppelin
-   * http://zeppelin.worldl.xpt/
+# Apache Zeppelin
+   * https://zeppelin.worldl.xpt/
       * http://zeppelin-server.zeppelin.svc.cluster.local/
       * http://4040-spark-mcdgtt.zeppelin.worldl.xpt/jobs/job/?id=0: Spark job sample url
      
 # Kafka
-   * https://strimzi.io/ TODO
+   * https://strimzi.io/ 
       * https://strimzi.io/quickstarts/: Starting Minikube
 
-# Exploration and visualization platform
-## Apache Superset
-   * [Superset](superset-k8s/README.md) 
-## Redash
-   * https://redash.io/
-   
-# Data scrapping
-   * http://go-colly.org/: Fast and Elegant Scraping Framework for Gophers
+# Apache Superset
+   * https://superset.worldl.xpt/
+      * User: admin
+      * Password: admin
 
 # Links
    * https://spark.apache.org/docs/3.1.2/sql-data-sources-parquet.html
    * https://www.kaggle.com/
+   * http://go-colly.org/: Fast and Elegant Scraping Framework for Gophers

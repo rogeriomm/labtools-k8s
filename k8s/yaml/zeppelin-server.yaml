@@ -29,8 +29,8 @@ data:
   # Default value is 'local.zeppelin-project.org' while it points 127.0.0.1 and `kubectl port-forward zeppelin-server` will give localhost to connects.
   # If you have your ingress controller configured to connect to `zeppelin-server` service and have a domain name for it (with wildcard subdomain point the same address), you can replace serviceDomain field with your own domain.
   SERVICE_DOMAIN: zeppelin.worldl.xpt
-  ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: registry.minikube/spark-base-python:master
-  ZEPPELIN_K8S_CONTAINER_IMAGE: registry.minikube/zeppelin-custom-0.10.0:master
+  ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: registry.minikube/spark-base-python-3.1.2:master
+  ZEPPELIN_K8S_CONTAINER_IMAGE: registry.minikube/zeppelin-custom-0.10.0-3.1.2:master
   ZEPPELIN_HOME: /opt/zeppelin
   ZEPPELIN_SERVER_RPC_PORTRANGE: 12320:12320
   # default value of 'master' property for spark interpreter.
@@ -66,6 +66,9 @@ data:
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection $connection_upgrade;
           proxy_redirect http://localhost $scheme://SERVICE_DOMAIN;
+    
+          auth_basic "User";
+          auth_basic_user_file /etc/nginx/.htpasswd;    
         }
       }
 
@@ -85,6 +88,9 @@ data:
 
           # redirect rule for spark ui. 302 redirect response misses port number of service domain
           proxy_redirect ~(http:[/]+[0-9]+[-][^-]+[-][^.]+)[^/]+(\/jobs.*) $1.SERVICE_DOMAIN$2;
+    
+          auth_basic "User";
+          auth_basic_user_file /etc/nginx/.htpasswd;
         }
       }
     }
@@ -116,9 +122,12 @@ spec:
           items:
           - key: nginx.conf
             path: nginx.conf
+      - name: nginx-htpasswd
+        secret:
+          secretName: htpasswd
       - name: zeppelin-server-notebook-volume
         hostPath:
-          path: /Users/rogermm/git/dataops/bdmm/labtools-k8s/zeppelin-k8s/notebook_10
+          path: /Users/rogermm/git/dataops/bdmm/labtools-k8s/lab-zeppelin-notebooks-git
           type: Directory
       - name: zeppelin-server-conf-volume
         hostPath:
@@ -133,7 +142,7 @@ spec:
           claimName: lab-claim
       containers:
       - name: zeppelin-server
-        image: registry.minikube/zeppelin-custom-0.10.0:master
+        image: registry.minikube/zeppelin-custom-0.10.0-3.1.2:master
         command: ["sh", "-c", "$(ZEPPELIN_HOME)/bin/zeppelin.sh"]
         lifecycle:
           preStop:
@@ -181,6 +190,7 @@ spec:
               key: SERVICE_DOMAIN
         args:
           - cp -f /tmp/conf/nginx.conf /etc/nginx/nginx.conf;
+            cp -f /tmp/htpasswd/dot.htpasswd /etc/nginx/.htpasswd;
             sed -i -e "s/SERVICE_DOMAIN/$SERVICE_DOMAIN/g" /etc/nginx/nginx.conf;
             sed -i -e "s/NAMESPACE/$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)/g" /etc/nginx/nginx.conf;
             cat /etc/nginx/nginx.conf;
@@ -188,6 +198,8 @@ spec:
         volumeMounts:
           - name: nginx-conf
             mountPath: /tmp/conf
+          - name: nginx-htpasswd
+            mountPath: /tmp/htpasswd
         lifecycle:
           preStop:
             exec:
@@ -214,6 +226,8 @@ spec:
       port: 80
     - name: rpc            # port name is referenced in the code. So it shouldn't be changed.
       port: 12320
+    - name: jupyter
+      port: 8888
   selector:
     app.kubernetes.io/name: zeppelin-server
 ---

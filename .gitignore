@@ -1,0 +1,10 @@
+airflow-k8s/
+kafka-k8s/
+localstack-k8s/
+metabase-k8s/
+minikube-labtools-k8s/
+minio-k8s/
+spark-k8s/
+superset-k8s/
+zeppelin-k8s/
+.idea/
