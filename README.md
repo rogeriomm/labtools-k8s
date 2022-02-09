@@ -1,5 +1,5 @@
 # Lab remote access
-   * http://apache-zeppelin.sytes.net
+   * https://apache-zeppelin.sytes.net/
 
 # Install
 ## Prepare
