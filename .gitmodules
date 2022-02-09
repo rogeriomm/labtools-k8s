@@ -1,26 +1,26 @@
 [submodule "zeppelin-k8s"]
-	path = zeppelin-k8s
+	path = modules/zeppelin-k8s
 	url = git@github.com:rogeriomm/zeppelin-k8s.git
 [submodule "spark-k8s"]
-	path = spark-k8s
+	path = modules/spark-k8s
 	url = git@github.com:rogeriomm/spark-k8s.git
 [submodule "minikube-labtools-k8s"]
-	path = minikube-labtools-k8s
+	path = modules/minikube-labtools-k8s
 	url = git@github.com:rogeriomm/minikube-labtools-k8s.git
 [submodule "minio-k8s"]
-	path = minio-k8s
+	path = modules/minio-k8s
 	url = git@github.com:rogeriomm/minio-k8s.git
 [submodule "airflow-k8s"]
-	path = airflow-k8s
+	path = modules/airflow-k8s
 	url = git@github.com:rogeriomm/airflow-k8s.git
 [submodule "kafka-k8s"]
-	path = kafka-k8s
+	path = modules/kafka-k8s
 	url = git@github.com:rogeriomm/kafka-k8s.git
 [submodule "superset-k8s"]
-	path = superset-k8s
+	path = modules/superset-k8s
 	url = git@github.com:rogeriomm/superset-k8s.git
 [submodule "localstack-k8s"]
-	path = localstack-k8s
+	path = modules/localstack-k8s
 	url = git@github.com:rogeriomm/localstack-k8s.git
 [submodule "lab-zeppelin-notebooks"]
 	path = lab-zeppelin-notebooks
