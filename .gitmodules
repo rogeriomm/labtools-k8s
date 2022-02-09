@@ -25,3 +25,6 @@
 [submodule "lab-zeppelin-notebooks"]
 	path = lab-zeppelin-notebooks
 	url = git@github.com:rogeriomm/lab-zeppelin-notebooks.git
+[submodule "modules/metabase-k8s"]
+	path = modules/metabase-k8s
+	url = git@github.com:rogeriomm/metabase-k8s.git
