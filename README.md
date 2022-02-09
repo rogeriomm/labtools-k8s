@@ -1,3 +1,6 @@
+# Lab remote access
+   * http://apache-zeppelin.sytes.net
+
 # Install
 ## Prepare
 ```commandline
@@ -15,7 +18,7 @@ brew install go pyenv minio awscli
 ```
 
 ```commandline
-pyenv global  3.10.1
+pyenv local  3.10.2
 pip install -r requirements.txt
 ```
    * Update all pip modules
@@ -27,9 +30,6 @@ pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1
 ```commandline
 pip freeze > /tmp/requirements.txt
 ```
-
-   * Install AWS CLI at directory "/opt/s3cmd"
-      * https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 ### Z shell
 ```commandline
@@ -78,6 +78,9 @@ export AWS_CA_BUNDLE=$MINIKUBE_HOME/ca.crt
    * https://superset.worldl.xpt/
       * User: admin
       * Password: admin
+
+# See also
+   * [How to make zeppelin certificate](docs/HowMakeZeppelinCertificate.md)
 
 # Links
    * https://spark.apache.org/docs/3.1.2/sql-data-sources-parquet.html
