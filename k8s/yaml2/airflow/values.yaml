@@ -1,0 +1,118 @@
+airflow:
+  clusterDomain: cluster2.xpt
+
+  config:
+    AIRFLOW__WEBSERVER__BASE_URL: "https://airflow.worldl.xpt/airflow"
+    AIRFLOW__CELERY__FLOWER_URL_PREFIX: "/flower"
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "True"
+    AIRFLOW__CORE__LOAD_EXAMPLES: "True"
+
+  ## a list of users to create
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/security/airflow-users.md
+  users:
+    - username: admin
+      password: admin
+      role: Admin
+      email: email@gmail.com
+      firstName: admin
+      lastName: admin
+
+  ## a list airflow variables to create
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/dags/airflow-variables.md
+  variables:
+    - key: "environment"
+      value: "dev"
+
+  ## extra pip packages to install in airflow Pods
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/configuration/extra-python-packages.md
+  ## [WARNING] this feature is not recommended for production use, see docs
+  extraPipPackages: []
+
+  ## extra environment variables for the airflow Pods
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-environment-variables.md
+  extraEnv: []
+
+  ## extra VolumeMounts for the airflow Pods
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-persistent-volumes.md
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-files.md
+  extraVolumeMounts: []
+
+  ## extra Volumes for the airflow Pods
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-persistent-volumes.md
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-files.md
+  extraVolumes: []
+
+###################################
+## COMPONENT | Airflow Scheduler
+###################################
+scheduler:
+  ## the number of scheduler Pods to run
+  replicas: 1
+
+  ## resource requests/limits for the scheduler Pods
+  ## [SPEC] https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#resourcerequirements-v1-core
+  resources: {}
+
+  ## configs for the log-cleanup sidecar of the scheduler
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/monitoring/log-cleanup.md
+  logCleanup:
+    enabled: true
+    retentionMinutes: 21600
+
+  ## configs for the scheduler Pods' liveness probe
+  ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/monitoring/scheduler-liveness-probe.md
+  livenessProbe:
+    enabled: true
+
+    ## configs for an additional check that ensures tasks are being created by the scheduler
+    ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/monitoring/scheduler-liveness-probe.md
+    taskCreationCheck:
+      enabled: false
+      thresholdSeconds: 300
+      schedulerAgeBeforeCheck: 180
+
+# https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/database/external-database.md
+postgresql:
+  enabled: false
+
+externalDatabase:
+  type: postgres
+
+  host: postgres-postgresql.postgres.svc.cluster2.xpt
+  port: 5432
+
+  ## the schema which will contain the airflow tables
+  database: airflow
+
+  ## Kubernetes secret in your airflow namespace
+  userSecret: "airflow-cluster1-database-credentials"
+  userSecretKey: "username"
+
+  ## Kubernetes secret in your airflow namespace
+  passwordSecret: "airflow-cluster1-database-credentials"
+  passwordSecretKey: "password"
+
+  ## use this for any extra connection-string settings, e.g. ?sslmode=disable
+  properties: ""
+
+# https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/ingress.md
+ingress:
+  enabled: true
+  ## WARNING: set as "networking.k8s.io/v1beta1" for Kubernetes 1.18 and earlier
+  apiVersion: networking.k8s.io/v1
+
+  ## airflow webserver ingress configs
+  web:
+    annotations: {}
+    host: "airflow.worldl.xpt"
+    path: "/airflow"
+    ## WARNING: requires Kubernetes 1.18 or later, use "kubernetes.io/ingress.class" annotation for older versions
+    ingressClassName: "nginx"
+
+  ## flower ingress configs
+  flower:
+    annotations: {}
+    host: "airflow.worldl.xpt"
+    path: "/flower"
+    ## WARNING: requires Kubernetes 1.18 or later, use "kubernetes.io/ingress.class" annotation for older versions
+    ingressClassName: "nginx"

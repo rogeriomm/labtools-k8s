@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jupyter-ingress
+  namespace: zeppelin
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  rules:
+    - host: jupyter.worldl.xpt
+      http:
+        paths:
+          - path: /jupyter
+            pathType: Prefix
+            backend:
+              service:
+                name: jupyter-server
+                port:
+                  number: 8888
+    - host: world-jupyter.duckdns.org
+      http:
+        paths:
+          - path: /jupyter
+            pathType: Prefix
+            backend:
+              service:
+                name: jupyter-server
+                port:
+                  number: 8888

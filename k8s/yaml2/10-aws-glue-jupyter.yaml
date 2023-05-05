@@ -1,0 +1,248 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-glue-jupyter
+  namespace: aws-glue
+  labels:
+    app.kubernetes.io/name: aws-glue
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aws-glue
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: aws-glue
+    spec:
+      volumes:
+         - name: notebook-volume-2
+           hostPath:
+             path: /Volumes/data/git/labtools-k8s/data/aws-glue-2/notebooks
+             type: Directory
+         - name: notebook-volume-3
+           hostPath:
+             path: /Volumes/data/git/labtools-k8s/data/aws-glue-3/notebooks
+             type: Directory
+         - name: notebook-volume-4
+           hostPath:
+             path: /Volumes/data/git/labtools-k8s/data/aws-glue-4/notebooks
+             type: Directory
+         - name: aws-config
+           hostPath:
+             path: /Volumes/data/git/labtools-k8s/data/aws-glue/.aws
+             type: Directory
+      containers:
+        - name: aws-glue-2
+          image: amazon/aws-glue-libs:glue_libs_2.0.0_image_01
+          args:
+            - /home/glue_user/jupyter/jupyter_start.sh
+          ports:
+            - name: webui
+              containerPort: 4040
+            - name: history
+              containerPort: 18080
+            - name: jupyter
+              containerPort: 8888
+          env:
+            - name: JUPYTER_PORT
+              value: "8888"
+            - name: AWS_PROFILE
+              value: "default"
+            - name: DISABLE_SSL
+              value: "true"
+            - name: SPARK_HISTORY_OPTS
+              value: "-Dspark.history.ui.port=18080"
+            - name: SPARK_MASTER_WEBUI_PORT
+              value: "4040"
+          volumeMounts:
+            - name: aws-config
+              mountPath: /home/glue_user/.aws
+            - name: notebook-volume-2
+              mountPath: /home/glue_user/workspace/jupyter_workspace
+        - name: aws-glue-3
+          image: amazon/aws-glue-libs:glue_libs_3.0.0_image_01
+          args:
+            - /home/glue_user/jupyter/jupyter_start.sh
+          ports:
+            - name: webui
+              containerPort: 4041
+            - name: history
+              containerPort: 18081
+            - name: jupyter
+              containerPort: 8889
+          env:
+            - name: JUPYTER_PORT
+              value: "8889"
+            - name: AWS_PROFILE
+              value: "default"
+            - name: DISABLE_SSL
+              value: "true"
+            - name: SPARK_HISTORY_OPTS
+              value: "-Dspark.history.ui.port=18081"
+            - name: SPARK_MASTER_WEBUI_PORT
+              value: "4041"
+          volumeMounts:
+            - name: aws-config
+              mountPath: /home/glue_user/.aws
+            - name: notebook-volume-3
+              mountPath: /home/glue_user/workspace/jupyter_workspace
+        - name: aws-glue-4
+          image: amazon/aws-glue-libs:glue_libs_4.0.0_image_01
+          args:
+            - /home/glue_user/jupyter/jupyter_start.sh
+          ports:
+            - name: webui
+              containerPort: 4042
+            - name: history
+              containerPort: 18082
+            - name: jupyter
+              containerPort: 8890
+          env:
+            - name: JUPYTER_PORT
+              value: "8890"
+            - name: AWS_PROFILE
+              value: "default"
+            - name: DISABLE_SSL
+              value: "true"
+            - name: SPARK_HISTORY_OPTS
+              value: "-Dspark.history.ui.port=18082"
+            - name: SPARK_MASTER_WEBUI_PORT
+              value: "4042"
+          volumeMounts:
+            - name: aws-config
+              mountPath: /home/glue_user/.aws
+            - name: notebook-volume-4
+              mountPath: /home/glue_user/workspace/jupyter_workspace
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: aws-glue-jupyter-service
+  namespace: aws-glue
+spec:
+  ports:
+    - name: jupyter2
+      port: 8888
+    - name: history2
+      port: 18080
+    - name: webui2
+      port: 4040
+    - name: jupyter3
+      port: 8889
+    - name: history3
+      port: 18081
+    - name: webui3
+      port: 4041
+    - name: jupyter4
+      port: 8890
+    - name: history4
+      port: 18082
+    - name: webui4
+      port: 4042
+  selector:
+    app.kubernetes.io/name: aws-glue
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aws-glue-jupyter-ingress
+  namespace: aws-glue
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+spec:
+  rules:
+    - host: jupyter-glue2.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 8888
+    - host: webui-glue2.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 4040
+    - host: history-glue2.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 18080
+    - host: jupyter-glue3.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 8889
+    - host: webui-glue3.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 4041
+    - host: history-glue3.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 18081
+    - host: jupyter-glue4.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 8890
+    - host: webui-glue4.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 4042
+    - host: history-glue4.worldl.xpt
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: aws-glue-jupyter-service
+                port:
+                  number: 18082
+

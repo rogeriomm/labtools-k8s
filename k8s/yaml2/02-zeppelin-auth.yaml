@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: htpasswd
+  namespace: zeppelin
+type: Opaque
+data:
+  dot.htpasswd: dXNlcjE6JGFwcjEkSzhuTS80UlQkc2s2U3JUNGd6a2x2NmJKb3RwRE85MQo=
