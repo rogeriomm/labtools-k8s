@@ -2,6 +2,7 @@
 ## Local
 | Local URL                                   | Description                                                                                                                | User  | Password  |
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|-------|-----------|
+| https://zeppelin.worldl.xpt                 | [Zeppelin](https://zeppelin.apache.org/)                                                                                   |       |           |
 | https://minio-console.worldl.xpt            | [MINIO operator](https://github.com/minio/operator/)                                                                       | minio | awesomes3 |
 | https://airflow.worldl.xpt/flower/dashboard | [Airflow flower](https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/security/flower.html) | admin | admin     |
 | https://airflow.worldl.xpt/airflow          | [Airflow](https://airflow.apache.org/docs/apache-airflow/stable/index.html)                                                |       |           |
