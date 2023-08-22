@@ -3,6 +3,7 @@
 | Local URL                                   | Description                                                                                                                | User  | Password  |
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|-------|-----------|
 | https://zeppelin.worldl.xpt                 | [Zeppelin](https://zeppelin.apache.org/)                                                                                   |       |           |
+| https://jupyter.worldl.xpt/jupyter          | [Jupyter](https://jupyter.org/) notebook: Python,Scala, RUST                                                               |       |           |
 | https://minio-console.worldl.xpt            | [MINIO operator](https://github.com/minio/operator/)                                                                       | minio | awesomes3 |
 | https://airflow.worldl.xpt/flower/dashboard | [Airflow flower](https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/security/flower.html) | admin | admin     |
 | https://airflow.worldl.xpt/airflow          | [Airflow](https://airflow.apache.org/docs/apache-airflow/stable/index.html)                                                |       |           |
@@ -19,7 +20,7 @@
 
 
 ## Internet
-| Public URL                                 | Description                                            |                   |   |   |
-|--------------------------------------------|--------------------------------------------------------|-------------------|---|---|
-| https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)               |                   |   |   |
-| https://world-jupyter.duckdns.org/jupyter  | [Jupyter](https://jupyter.org/) notebook: Python, RUST |                   |   |   |
+| Public URL                                 | Description                                                  |                   |   |   |
+|--------------------------------------------|--------------------------------------------------------------|-------------------|---|---|
+| https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)                     |                   |   |   |
+| https://world-jupyter.duckdns.org/jupyter  | [Jupyter](https://jupyter.org/) notebook: Python, Scala RUST |                   |   |   |
