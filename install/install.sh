@@ -52,7 +52,8 @@ airflow_install()
   if ! kubectl get namespace airflow ; then
     helm repo add airflow-stable https://airflow-helm.github.io/charts
     helm repo update airflow-stable
-    helm install airflow airflow-stable/airflow --create-namespace --namespace airflow --version "8.7.1" --values k8s/yaml2/airflow/values.yaml
+    # See "Airflow Version Support on https://artifacthub.io/packages/helm/airflow-helm/airflow
+    helm install airflow airflow-stable/airflow --create-namespace --namespace airflow --version "8.8.0" --values k8s/yaml2/airflow/values.yaml
 
     POSTGRES_HOST="postgres-postgresql.postgres.svc.cluster2.xpt"
     POSTGRES_USER=postgres
@@ -207,6 +208,8 @@ minio_copy()
 
     mc mb local/silver
     mc mb local/gold
+
+    mc mb local/spark
   fi
 }
 
@@ -223,6 +226,8 @@ set -e
 
 sudo -v
 
+nfs_fix
+
 labtools-k8s set-context cluster1
 
 kafka_install
@@ -230,8 +235,6 @@ kafka_install
 labtools-k8s set-context cluster2
 
 kafka_install
-
-nfs_fix
 
 labtools-k8s configure-clusters
 
