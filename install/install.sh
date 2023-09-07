@@ -26,20 +26,21 @@ hive_install()
   fi
 }
 
+#
+# https://datahubproject.io/docs/deploy/kubernetes/#quickstart
+#
 datahub_install()
 {
   if ! kubectl get namespace datahub ; then
     helm repo add datahub https://helm.datahubproject.io/
     helm repo update datahub
 
-    POSTGRES_HOST="postgres-postgresql.postgres.svc.cluster2.xpt"
-    POSTGRES_USER=postgres
     POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
 
     kubectl create namespace datahub
 
     kubectl create -n datahub secret generic postgresql-secrets --from-literal=postgres-password="$POSTGRES_PASSWORD"
-    kubectl create -n datahub secret generic neo4j-secrets --from-literal=neo4j-password=datahub
+    kubectl create -n datahub secret generic neo4j-secrets --from-literal=neo4j-password=neo4j-secrets
 
     helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/yaml2/datahub/values-prerequisites.yaml
 
@@ -64,7 +65,6 @@ airflow_install()
        --from-literal=password="${MONGODB_PASSWORD}"
 
     # POSTGRES - Airflow
-    POSTGRES_HOST="postgres-postgresql.postgres.svc.cluster2.xpt"
     POSTGRES_USER=postgres
     POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
 

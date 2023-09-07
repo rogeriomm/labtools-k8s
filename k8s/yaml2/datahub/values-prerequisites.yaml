@@ -1,0 +1,68 @@
+mysql:
+  enabled: false
+
+postgresql:
+  enabled: false
+
+elasticsearch:
+  enabled: true   # set this to false, if you want to provide your own ES instance.
+
+  # If you're running in production, set this to 3 and comment out antiAffinity below
+  # Or alternatively if you're running production, bring your own ElasticSearch
+  replicas: 1
+  minimumMasterNodes: 1
+  # Set replicas to 1 and uncomment this to allow the instance to be scheduled on
+  # a master node when deploying on a single node Minikube / Kind / etc cluster.
+  antiAffinity: "soft"
+
+  # # If you are running a multi-replica cluster, comment this out
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+
+  # # Shrink default JVM heap.
+  esJavaOpts: "-Xmx384m -Xms384m"
+
+  # # Allocate smaller chunks of memory per pod.
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "768M"
+    limits:
+      cpu: "1000m"
+      memory: "768M"
+
+# Deploys neo4j community version. Only supports single node
+neo4j-community:
+  enabled: true
+  acceptLicenseAgreement: "yes"
+  defaultDatabase: "graph.db"
+  # For better security, add neo4j-secrets k8s secret with neo4j-password and uncomment below
+  existingPasswordSecret: neo4j-secrets
+
+cp-helm-charts:
+  enabled: false
+  # Schema registry is under the community license
+  cp-schema-registry:
+    enabled: false
+    kafka:
+      bootstrapServers: "prerequisites-kafka:9092"  # <<release-name>>-kafka:9092
+  cp-kafka:
+    enabled: false
+  cp-zookeeper:
+    enabled: false
+  cp-kafka-rest:
+    enabled: false
+  cp-kafka-connect:
+    enabled: false
+  cp-ksql-server:
+    enabled: false
+  cp-control-center:
+    enabled: false
+
+# https://github.com/bitnami/charts/blob/main/bitnami/kafka/values.yaml
+kafka:
+  enabled: true
+  clusterDomain: cluster2.xpt
+  kraft:
+    enabled: false
+  zookeeper:
+    enabled: true
