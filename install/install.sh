@@ -55,49 +55,27 @@ airflow_install()
     # See "Airflow Version Support on https://artifacthub.io/packages/helm/airflow-helm/airflow
     helm install airflow airflow-stable/airflow --create-namespace --namespace airflow --version "8.8.0" --values k8s/yaml2/airflow/values.yaml
 
+    # MONGODB
+    MONGODB_USER="my-user"
+    MONGODB_PASSWORD=$(kubectl get secret --namespace mongodb my-user-password  -o jsonpath="{.data.password}")
+
+    kubectl -n airflow create secret generic airflow-mongodb-credentials \
+       --from-literal=username="${MONGODB_USER}" \
+       --from-literal=password="${MONGODB_PASSWORD}"
+
+    # POSTGRES - Airflow
     POSTGRES_HOST="postgres-postgresql.postgres.svc.cluster2.xpt"
     POSTGRES_USER=postgres
     POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
 
-    kubectl -n airflow create secret generic airflow-cluster1-database-credentials \
-       --from-literal=username="$POSTGRES_USER" \
-       --from-literal=password="$POSTGRES_PASSWORD"
+    kubectl -n airflow create secret generic airflow-postgres-credentials \
+       --from-literal=username="${POSTGRES_USER}" \
+       --from-literal=password="${POSTGRES_PASSWORD}"
+
+    kubectl -n airflow create secret generic airflow-database-credentials \
+       --from-literal=username="${POSTGRES_USER}" \
+       --from-literal=password="${POSTGRES_PASSWORD}"
   fi
-}
-
-airflow_post_install()
-{
-    if kubectl get namespace airflow ; then
-      ### Postgres connection
-      kubectl wait pods -n airflow  airflow-worker-0 --for condition=Ready --timeout=300s
-
-      POSTGRES_HOST="postgres-postgresql.postgres.svc.cluster2.xpt"
-      POSTGRES_USER=postgres
-      POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
-
-      airflow="kubectl exec -n airflow airflow-worker-0 -- airflow"
-
-      if ! eval "$airflow" connections get db > /dev/null ; then
-        eval "$airflow" connections add 'db' \
-              --conn-type 'postgres' --conn-host "${POSTGRES_HOST}" --conn-port 5432 \
-              --conn-login "${POSTGRES_USER}" --conn-password="${POSTGRES_PASSWORD}" \
-              --conn-schema 'metastore_db'
-
-        eval "$airflow" connections list
-
-        ### MongoDB connection
-        kubectl wait pods -n mongodb example-mongodb-0 --for condition=Ready --timeout=300s
-
-        MONGODB_HOST=example-mongodb-svc.mongodb.svc.cluster2.xpt
-        MONGODB_USER="my-user"
-        MONGODB_PASSWORD=$(kubectl get secret --namespace mongodb my-user-password  -o jsonpath="{.data.password}")
-
-        eval "$airflow" connections add 'mongodb' \
-              --conn-type 'mongodb' --conn-host "${MONGODB_HOST}" --conn-port 27017 \
-              --conn-login "${MONGODB_USER}" --conn-password="${MONGODB_PASSWORD}" \
-              --conn-schema 'metastore_db'
-      fi
-    fi
 }
 
 trino_install()
@@ -271,8 +249,6 @@ datahub_install
 zeppelin_create_secret
 
 kubectl apply -f "$LABTOOLS_K8S/k8s/yaml2/"
-
-airflow_post_install
 
 sleep 2
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
