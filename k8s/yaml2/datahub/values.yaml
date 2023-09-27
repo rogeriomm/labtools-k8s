@@ -1,6 +1,6 @@
 global:
   datahub:
-    version: v0.10.4
+    version: v0.11.0
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
