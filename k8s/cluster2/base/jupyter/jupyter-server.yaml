@@ -21,16 +21,19 @@ spec:
       volumes:
         - name: data-lab-volume
           persistentVolumeClaim:
-            claimName: lab-claim
+            claimName: nfs-common
       containers:
         - name: zeppelin-server
           image: registry.minikube/spark-jupyter-3.2:master
           ports:
             - name: http
               containerPort: 8888
+          env:
+            - name: JUPYTER_NOTEBOOK_PATH
+              value: "/Volumes/data/git/labtools-k8s/data/jupyter/notebooks"
           volumeMounts:
             - name: data-lab-volume
-              mountPath: /lab
+              mountPath: /Volumes/data/git
 ---
 kind: Service
 apiVersion: v1
@@ -41,5 +44,18 @@ spec:
   ports:
     - name: jupyter
       port: 8888
+  selector:
+    app.kubernetes.io/name: jupyter-server
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: jupyter-driver
+  namespace: zeppelin
+spec:
+  ports:
+    - name: spark-driver
+      port: 24913
+  clusterIP: None
   selector:
     app.kubernetes.io/name: jupyter-server

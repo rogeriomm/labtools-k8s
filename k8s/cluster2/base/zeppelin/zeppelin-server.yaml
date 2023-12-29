@@ -67,8 +67,8 @@ data:
           proxy_set_header Connection $connection_upgrade;
           proxy_redirect http://localhost $scheme://SERVICE_DOMAIN;
     
-          auth_basic "User";
-          auth_basic_user_file /etc/nginx/.htpasswd;    
+          #auth_basic "User";
+          #auth_basic_user_file /etc/nginx/.htpasswd;    
         }
       }    
 
@@ -108,8 +108,8 @@ data:
           # redirect rule for spark ui. 302 redirect response misses port number of service domain
           proxy_redirect ~(http:[/]+[0-9]+[-][^-]+[-][^.]+)[^/]+(\/jobs.*) $1.SERVICE_DOMAIN$2;
     
-          auth_basic "User";
-          auth_basic_user_file /etc/nginx/.htpasswd;
+          #auth_basic "User";
+          #auth_basic_user_file /etc/nginx/.htpasswd;
         }
       }
     }
@@ -147,21 +147,9 @@ spec:
       - name: nginx-cert
         secret:
           secretName: mkcert
-      - name: zeppelin-server-notebook-volume
-        hostPath:
-          path: /Volumes/data/git/labtools-k8s/data/zeppelin/notebooks
-          type: Directory
-      - name: zeppelin-server-conf-volume
-        hostPath:
-          path: /Volumes/data/git/labtools-k8s/data/zeppelin/conf
-          type: Directory
-      - name: zeppelin-server-k8s-interpreter
-        hostPath:
-          path: /Volumes/data/git/labtools-k8s/k8s/yaml2/interpreter
-          type: Directory
       - name: data-lab-volume
         persistentVolumeClaim:
-          claimName: lab-claim
+          claimName: nfs-common
       containers:
       - name: zeppelin-server
         image: registry.minikube/zeppelin-custom-0.10.1-3.2:master
@@ -194,16 +182,19 @@ spec:
         - configMapRef:
             name: zeppelin-server-conf-map
         volumeMounts:
-          - name: zeppelin-server-notebook-volume    # configure this to persist notebook
-            mountPath: /opt/zeppelin/notebook
-          - name: zeppelin-server-conf-volume        # configure this to persist Zeppelin configuration
-            mountPath: /opt/zeppelin/conf
-          - name: zeppelin-server-k8s-interpreter    # configure this to mount customized Kubernetes spec for interpreter
-            mountPath: /opt/zeppelin/k8s/interpreter
           - name: data-lab-volume
-            mountPath: /lab
+            mountPath: /opt/zeppelin/notebook
+            subPath: labtools-k8s/data/zeppelin/notebooks
+          - name: data-lab-volume
+            mountPath: /opt/zeppelin/conf
+            subPath: labtools-k8s/data/zeppelin/conf
+          - name: data-lab-volume
+            mountPath: /opt/zeppelin/k8s/interpreter
+            subPath: labtools-k8s/k8s/yaml2/zeppelin/interpreter
+          - name: data-lab-volume
+            mountPath: /Volumes/data/git
       - name: zeppelin-server-gateway
-        image: nginx:1.24
+        image: nginx:1.25
         command: ["/bin/sh", "-c"]
         env:
         - name: SERVICE_DOMAIN
@@ -290,3 +281,16 @@ roleRef:
   kind: Role
   name: zeppelin-server-role
   apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-common
+  namespace: zeppelin
+spec:
+  storageClassName: nfs-common
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Mi

@@ -1,5 +1,5 @@
-
    * https://artifacthub.io/packages/helm/airflow-helm/airflow
+   * https://github.com/airflow-helm/charts/tree/main/charts/airflow/docs
 
 ```shell
 labtools-k8s set-context cluster2
@@ -63,5 +63,14 @@ Use these commands to port-forward the Services to your localhost:
 ========================================================================
 
 ```
+# Loading Airflow DAGS
+   * https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/dags/load-dag-definitions.md#option-2---persistent-volume-claim
 
 
+# Upgrade
+   * https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/guides/upgrade.md
+   * https://airflow.apache.org/docs/helm-chart/1.10.0/quick-start.html#install-the-chart
+
+```shell
+helm upgrade airflow airflow-stable/airflow  --namespace airflow
+```
