@@ -1,0 +1,19 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaBridge
+metadata:
+  name: my-bridge
+spec:
+  replicas: 1
+  bootstrapServers: main-kafka-bootstrap:9093
+  tls:
+    trustedCertificates:
+      - secretName: main-cluster-ca-cert
+        certificate: ca.crt
+  authentication:
+    type: tls
+    certificateAndKey:
+      secretName: my-bridge
+      certificate: user.crt
+      key: user.key
+  http:
+    port: 8080
