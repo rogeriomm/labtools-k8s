@@ -1,3 +1,4 @@
+# https://debezium.io/documentation/reference/stable/connectors/postgresql.html
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:

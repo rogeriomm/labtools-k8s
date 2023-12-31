@@ -2,8 +2,7 @@
 
 hive_install()
 {
-  if ! kubectl get namespace hive; then
-    kubectl create ns hive
+  if ! configmap ca-pemstore -n hive 2> /dev/null > /dev/null; then
     kubectl -n hive create configmap ca-pemstore --from-file="$MINIKUBE_HOME"/ca.crt
   fi
 }
