@@ -13,6 +13,7 @@ resources:
   - bridge.yaml
   - connect.yaml
   - source-connector.yaml
+  - debezium-connector.yaml
 
 patches:
   - path: kafka.yaml
@@ -21,3 +22,4 @@ patches:
   - path: bridge.yaml
   - path: connect.yaml
   - path: source-connector.yaml
+  - path: debezium-connector.yaml
