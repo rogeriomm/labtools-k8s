@@ -1,0 +1,7 @@
+yamlApplicationConfig:
+  auth:
+    type: disabled
+  management:
+    health:
+      ldap:
+        enabled: false

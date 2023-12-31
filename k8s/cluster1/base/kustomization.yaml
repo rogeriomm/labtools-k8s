@@ -5,4 +5,4 @@ metadata:
 
 resources:
   - namespace.yaml
-  - mongodb-example.yaml
+  - kafka

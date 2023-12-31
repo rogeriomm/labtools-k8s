@@ -5,4 +5,4 @@ metadata:
 
 resources:
   - namespace.yaml
-  - mongodb-example.yaml
+  - hive-metastore.yaml
