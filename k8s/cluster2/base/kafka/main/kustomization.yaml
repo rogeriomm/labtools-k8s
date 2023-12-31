@@ -9,6 +9,7 @@ resources:
   - kafka.yaml
   - user-connect.yaml
   - user-bridge.yaml
+  - user-kafka-ui.yaml
   - topic-connect.yaml
   - bridge.yaml
   - connect.yaml
@@ -19,6 +20,7 @@ patches:
   - path: kafka.yaml
   - path: user-connect.yaml
   - path: user-bridge.yaml
+  - path: user-kafka-ui.yaml
   - path: bridge.yaml
   - path: connect.yaml
   - path: source-connector.yaml
