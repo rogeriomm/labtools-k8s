@@ -13,3 +13,4 @@ resources:
   - aws
   - hive
   - kafka/main
+  - kafka
