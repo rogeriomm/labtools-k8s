@@ -127,6 +127,9 @@ kafka_install()
     helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
     helm repo update kafka-ui
 
+  fi
+
+  if ! helm status main-registry -n kafka 2> /dev/null > /dev/null; then
     # Bitnami package for Confluent Schema Registry
     helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml"
   fi
