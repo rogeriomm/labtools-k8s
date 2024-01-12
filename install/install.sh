@@ -7,25 +7,26 @@ hive_install()
   fi
 }
 
+# https://github.com/open-metadata/openmetadata-helm-charts
+openmetadata_install()
+{
+  echo "Install OpenMetadata"
+}
+
 #
 # https://datahubproject.io/docs/deploy/kubernetes/#quickstart
 #
 datahub_install()
 {
-  if ! kubectl get namespace datahub ; then
+  if ! helm status datahub -n datahub 2> /dev/null > /dev/null; then
     helm repo add datahub https://helm.datahubproject.io/
     helm repo update datahub
 
-    POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
-
     kubectl create namespace datahub
-
-    kubectl create -n datahub secret generic postgresql-secrets --from-literal=postgres-password="$POSTGRES_PASSWORD"
-    kubectl create -n datahub secret generic neo4j-secrets --from-literal=neo4j-password=neo4j-secrets
 
     helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml
 
-    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml
+    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --wait --timeout 900s
   fi
 }
 
@@ -36,26 +37,6 @@ airflow_install()
     helm repo update airflow-stable
     # See "Airflow Version Support on https://artifacthub.io/packages/helm/airflow-helm/airflow
     helm install airflow airflow-stable/airflow --create-namespace --namespace airflow --version "8.8.0" --values k8s/cluster2/helm/airflow/values.yaml
-
-    # MONGODB
-    MONGODB_USER="my-user"
-    MONGODB_PASSWORD=$(kubectl get secret --namespace mongodb my-user-password  -o jsonpath="{.data.password}")
-
-    kubectl -n airflow create secret generic airflow-mongodb-credentials \
-       --from-literal=username="${MONGODB_USER}" \
-       --from-literal=password="${MONGODB_PASSWORD}"
-
-    # POSTGRES
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
-
-    kubectl -n airflow create secret generic airflow-postgres-credentials \
-       --from-literal=username="${POSTGRES_USER}" \
-       --from-literal=password="${POSTGRES_PASSWORD}"
-
-    kubectl -n airflow create secret generic airflow-database-credentials \
-       --from-literal=username="${POSTGRES_USER}" \
-       --from-literal=password="${POSTGRES_PASSWORD}"
   fi
 }
 
@@ -70,21 +51,29 @@ trino_install()
 
 mongodb_install()
 {
-  if ! kubectl get namespace mongodb 2> /dev/null ; then
+  if ! helm status community-operator -n mongodb 2> /dev/null > /dev/null; then
     helm repo add mongodb https://mongodb.github.io/helm-charts
     helm repo update mongodb
     helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator --create-namespace --namespace mongodb
   fi
 }
 
+# https://stackoverflow.com/questions/55499984/postgresql-in-helm-initdbscripts-parameter
 postgres_install()
 {
-  if ! kubectl get namespace postgres 2> /dev/null ; then
-    helm repo add bitnami https://charts.bitnami.com/bitnami
-    helm repo update bitnami
-
-    helm install -f k8s/cluster2/helm/postgres/values.yaml --create-namespace --namespace postgres postgres bitnami/postgresql
+  if ! helm status postgres -n postgres 2> /dev/null > /dev/null; then
+    helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f k8s/cluster2/helm/postgres/values.yaml --create-namespace --namespace postgres --wait --timeout 600s
   fi
+
+}
+
+postgres_show()
+{
+  set +x
+  echo -n "\033[34mPostgres admin password: " && \
+    kubectl -n postgres  get secret postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 --decode | grep -v '^$' && \
+    echo -n "\033[0m"
+  set -x
 }
 
 minio_install()
@@ -98,24 +87,33 @@ minio_install()
     kubectl minio init --namespace minio-operator --cluster-domain "$domain"
   fi
 
-  if ! kubectl minio tenant minio-tenant-1; then
+  if ! kubectl minio tenant info minio-tenant-1 > /dev/null 2> /dev/null; then
     echo "Creating MINIO instance"
 
-    kubectl create ns minio-tenant-1
-
     kubectl minio tenant create minio-tenant-1 \
-    --servers          3                     \
-    --volumes          6                     \
-    --capacity         100Gi                 \
-    --namespace        minio-tenant-1        \
-    --storage-class minio-local-storage
+      --servers        3                       \
+      --volumes        6                       \
+      --capacity       100Gi                   \
+      --namespace      minio-tenant-1          \
+      --storage-class  minio-local-storage
   fi
+}
+
+livy_install()
+{
+  echo "Install Livy"
 }
 
 kafka_install()
 {
   if ! kubectl get ns kafka; then
     kubectl create ns kafka
+    kubectl create ns kafka-main-cluster
+    kubectl create ns kafka-project-1
+    kubectl create ns kafka-project-2
+    kubectl create ns kafka-project-3
+    kubectl create ns kafka-project-4
+    kubectl create ns kafka-project-5
 
     # shellcheck disable=SC2086
     helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator \
@@ -129,9 +127,22 @@ kafka_install()
     helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
     helm repo update kafka-ui
 
-    # helm uninstall --namespace kafka kafka-ui
-    helm install kafka-ui kafka-ui/kafka-ui --namespace kafka --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-config/values.yaml"
+    # Bitnami package for Confluent Schema Registry
+    helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml"
   fi
+
+  if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
+    # helm uninstall --namespace kafka kafka-ui
+    helm install kafka-ui kafka-ui/kafka-ui --namespace kafka \
+         --set yamlApplicationConfigConfigMap.name="kafka-ui-configmap",yamlApplicationConfigConfigMap.keyName="config.yml" \
+         --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
+  fi
+}
+
+kafka_wait_main_cluster()
+{
+  echo "Waiting Kafka main cluster"
+  kubectl -n kafka-main-cluster wait kafka/main --for=condition=Ready --timeout=30m
 }
 
 minio_copy()
@@ -142,6 +153,9 @@ minio_copy()
 
   if ! mc ls local 2> /dev/null > /dev/null ; then
     echo "Waiting MINIO S3"
+
+    # Show MinIO Root User Credentials
+    kubectl minio tenant info minio-tenant-1
 
     while ! mc ls local 2> /dev/null > /dev/null ; do
       echo -n "."
@@ -164,16 +178,8 @@ minio_copy()
   fi
 }
 
-zeppelin_install()
-{
-  # Copy certificate from namespace "kube-system" to namespace "zeppelin"
-  kubectl --namespace kube-system get secrets mkcert -o yaml | \
-      yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace)' | \
-      kubectl apply --namespace zeppelin -f -
-}
-
 #
-# https://cert-manager.io/docs/devops-tips/syncing-secrets-across-namespaces/  <====
+# https://cert-manager.io/docs/devops-tips/syncing-secrets-across-namespaces/
 #   https://github.com/mittwald/kubernetes-replicator
 k8s-replicator_install()
 {
@@ -208,7 +214,12 @@ k8s-replicator_install
 # Install MongoDB api-resource on cluster2
 mongodb_install
 
+# Replicator
+kubectl annotate secret mkcert replicator.v1.mittwald.de/replicate-to="zeppelin" -n kube-system
+
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
+
+#kafka_wait_main_cluster
 
 minio_install
 postgres_install
@@ -216,8 +227,11 @@ trino_install
 hive_install
 airflow_install
 datahub_install
-zeppelin_install
+openmetadata_install
+livy_install
 
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
+
+postgres_show
 
 minio_copy

@@ -1,6 +1,6 @@
 global:
   datahub:
-    version: v0.12.1
+    #version: v0.12.1
     systemUpdate:
       ## The following options control settings for datahub-upgrade job which will
       ## managed ES indices and other update related work
@@ -13,11 +13,11 @@ global:
       port: "5432"
       url: "jdbc:postgresql://postgres-postgresql.postgres.svc.cluster2.xpt:5432/datahub"
       driver: "org.postgresql.Driver"
-      username: "postgres"
+      username: "datahub"
       # kubectl get secret --namespace postgres postgres-postgresql -o yaml
       password:
-        secretRef: postgresql-secrets
-        secretKey: postgres-password
+        secretRef: user-datahub
+        secretKey: password
 
 
 datahub-ingestion-cron:

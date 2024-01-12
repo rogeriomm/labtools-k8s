@@ -1,3 +1,6 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
 ## @section Global parameters
 ## Please, note that this will override the parameters, including dependencies, configured to use the global value
 ##
@@ -13,7 +16,7 @@ global:
   imagePullSecrets: []
   ## @param global.storageClass Global StorageClass for Persistent Volume(s)
   ##
-  storageClass: "standard-consumer"
+  storageClass: ""
   postgresql:
     ## @param global.postgresql.auth.postgresPassword Password for the "postgres" admin user (overrides `auth.postgresPassword`)
     ## @param global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`)
@@ -54,7 +57,7 @@ nameOverride: ""
 fullnameOverride: ""
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
-clusterDomain: cluster2.xpt
+clusterDomain: cluster.local
 ## @param extraDeploy Array of extra objects to deploy with the release (evaluated as a template)
 ##
 extraDeploy: []
@@ -84,9 +87,9 @@ diagnosticMode:
 
 ## Bitnami PostgreSQL image version
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
-## @param image.registry PostgreSQL image registry
-## @param image.repository PostgreSQL image repository
-## @param image.tag PostgreSQL image tag (immutable tags are recommended)
+## @param image.registry [default: REGISTRY_NAME] PostgreSQL image registry
+## @param image.repository [default: REPOSITORY_NAME/postgresql] PostgreSQL image repository
+## @skip image.tag PostgreSQL image tag (immutable tags are recommended)
 ## @param image.digest PostgreSQL image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
 ## @param image.pullPolicy PostgreSQL image pull policy
 ## @param image.pullSecrets Specify image pull secrets
@@ -95,11 +98,11 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: bitnami/postgresql
-  tag: 15.1.0-debian-11-r20
+  tag: 16.1.0-debian-11-r19
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
   ##
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -122,13 +125,13 @@ auth:
   ## @param auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
   ##
   enablePostgresUser: true
-  ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
+  ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` is provided
   ##
   postgresPassword: ""
   ## @param auth.username Name for a custom user to create
   ##
   username: ""
-  ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
+  ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` is provided
   ##
   password: ""
   ## @param auth.database Name for a custom database to create
@@ -137,7 +140,7 @@ auth:
   ## @param auth.replicationUsername Name of the replication user
   ##
   replicationUsername: repl_user
-  ## @param auth.replicationPassword Password for the replication user. Ignored if `auth.existingSecret` with key `replication-password` is provided
+  ## @param auth.replicationPassword Password for the replication user. Ignored if `auth.existingSecret` is provided
   ##
   replicationPassword: ""
   ## @param auth.existingSecret Name of existing secret to use for PostgreSQL credentials. `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
@@ -231,6 +234,7 @@ ldap:
     enabled: false
   ## @param ldap.uri LDAP URL beginning in the form `ldap[s]://host[:port]/basedn`. If provided, all the other LDAP parameters will be ignored.
   ## Ref: https://www.postgresql.org/docs/current/auth-ldap.html
+  ##
   uri: ""
 ## @param postgresqlDataDir PostgreSQL data dir folder
 ##
@@ -301,16 +305,7 @@ primary:
   ##   host all all localhost trust
   ##   host mydatabase mysuser 192.168.0.0/24 md5
   ##
-  pgHbaConfiguration: |-
-    # WARNING! This is wide open and only for toy local development purposes.
-    # Note: To verify this is loaded, connect via psql and run `table pg_hba_file_rules ;`
-    # https://www.postgresql.org/docs/current/auth-pg-hba-conf.html
-    host     all             all        0.0.0.0/0          trust
-    host     all             all        ::/0               trust
-    local    all             all                           trust
-    host     all             all        127.0.0.1/32       trust
-    host     all             all        ::1/128            trust
-
+  pgHbaConfiguration: ""
   ## @param primary.existingConfigmap Name of an existing ConfigMap with PostgreSQL Primary configuration
   ## NOTE: `primary.configuration` and `primary.pgHbaConfiguration` will be ignored
   ##
@@ -341,7 +336,25 @@ primary:
     ##      #!/bin/sh
     ##      echo "Do something."
     ##
-    scripts: {}
+    scripts:
+       init_script.sql: |
+          /* Metastore DB */
+          CREATE DATABASE metastore_db;
+          CREATE USER metastore_db WITH PASSWORD 'metastore_db';
+          GRANT ALL PRIVILEGES ON DATABASE metastore_db TO metastore_db;
+          GRANT CREATE ON SCHEMA public TO metastore_db;
+          ALTER USER metastore_db WITH SUPERUSER;
+          /* Airflow DB */
+          CREATE DATABASE airflow;
+          CREATE USER airflow WITH PASSWORD 'airflow';
+          GRANT ALL PRIVILEGES ON DATABASE airflow TO airflow;
+          GRANT CREATE ON SCHEMA public TO airflow;
+          ALTER USER airflow WITH SUPERUSER;
+          /* Datahub DB */
+          CREATE USER datahub WITH PASSWORD 'datahub';
+          ALTER USER datahub WITH SUPERUSER;
+
+
     ## @param primary.initdb.scriptsConfigMap ConfigMap with scripts to be run at first boot
     ## NOTE: This will override `primary.initdb.scripts`
     ##
@@ -443,7 +456,7 @@ primary:
   ##
   lifecycleHooks: {}
   ## PostgreSQL Primary resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param primary.resources.limits The resources limits for the PostgreSQL Primary containers
   ## @param primary.resources.requests.memory The requested memory for the PostgreSQL Primary containers
   ## @param primary.resources.requests.cpu The requested cpu for the PostgreSQL Primary containers
@@ -463,12 +476,26 @@ primary:
     fsGroup: 1001
   ## Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-  ## @param primary.containerSecurityContext.enabled Enable container security context
-  ## @param primary.containerSecurityContext.runAsUser User ID for the container
+  ## @param primary.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param primary.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param primary.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## @param primary.containerSecurityContext.privileged Set container's Security Context privileged
+  ## @param primary.containerSecurityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+  ## @param primary.containerSecurityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param primary.containerSecurityContext.capabilities.drop List of capabilities to be dropped
+  ## @param primary.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
   ##
   containerSecurityContext:
     enabled: true
     runAsUser: 1001
+    runAsNonRoot: true
+    privileged: false
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
   ## @param primary.hostAliases PostgreSQL primary pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -524,7 +551,7 @@ primary:
   ##
   affinity: {}
   ## @param primary.nodeSelector Node labels for PostgreSQL primary pods assignment
-  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
   nodeSelector: {}
   ## @param primary.tolerations Tolerations for PostgreSQL primary pods assignment
@@ -555,19 +582,10 @@ primary:
     rollingUpdate: {}
   ## @param primary.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the PostgreSQL Primary container(s)
   ##
-  ###extraVolumeMounts: []
   extraVolumeMounts: []
-
   ## @param primary.extraVolumes Optionally specify extra list of additional volumes for the PostgreSQL Primary pod(s)
   ##
   extraVolumes: []
-  # https://stackoverflow.com/questions/68337598/how-to-mount-a-single-file-from-the-local-kubernetes-cluster-into-the-pods
-  ###extraVolumes:
-  ###  - name: data
-  ###    hostPath:
-  ###      path: /Volumes/data
-  ###      type: DirectoryOrCreate
-
   ## @param primary.sidecars Add additional sidecar containers to the PostgreSQL Primary pod(s)
   ## For example:
   ## sidecars:
@@ -699,6 +717,19 @@ primary:
     ## @param primary.persistence.dataSource Custom PVC data source
     ##
     dataSource: {}
+  ## PostgreSQL Primary Persistent Volume Claim Retention Policy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ##
+  persistentVolumeClaimRetentionPolicy:
+    ## @param primary.persistentVolumeClaimRetentionPolicy.enabled Enable Persistent volume retention policy for Primary Statefulset
+    ##
+    enabled: false
+    ## @param primary.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+    ##
+    whenScaled: Retain
+    ## @param primary.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+    ##
+    whenDeleted: Retain
 
 ## @section PostgreSQL read only replica parameters (only used when `architecture` is set to `replication`)
 ##
@@ -789,7 +820,7 @@ readReplicas:
   ##
   lifecycleHooks: {}
   ## PostgreSQL read only resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param readReplicas.resources.limits The resources limits for the PostgreSQL read only containers
   ## @param readReplicas.resources.requests.memory The requested memory for the PostgreSQL read only containers
   ## @param readReplicas.resources.requests.cpu The requested cpu for the PostgreSQL read only containers
@@ -809,12 +840,26 @@ readReplicas:
     fsGroup: 1001
   ## Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-  ## @param readReplicas.containerSecurityContext.enabled Enable container security context
-  ## @param readReplicas.containerSecurityContext.runAsUser User ID for the container
+  ## @param readReplicas.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param readReplicas.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param readReplicas.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## @param readReplicas.containerSecurityContext.privileged Set container's Security Context privileged
+  ## @param readReplicas.containerSecurityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+  ## @param readReplicas.containerSecurityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param readReplicas.containerSecurityContext.capabilities.drop List of capabilities to be dropped
+  ## @param readReplicas.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
   ##
   containerSecurityContext:
     enabled: true
     runAsUser: 1001
+    runAsNonRoot: true
+    privileged: false
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
   ## @param readReplicas.hostAliases PostgreSQL read only pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -870,7 +915,7 @@ readReplicas:
   ##
   affinity: {}
   ## @param readReplicas.nodeSelector Node labels for PostgreSQL read only pods assignment
-  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
   nodeSelector: {}
   ## @param readReplicas.tolerations Tolerations for PostgreSQL read only pods assignment
@@ -1013,7 +1058,7 @@ readReplicas:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "standard"
+    storageClass: ""
     ## @param readReplicas.persistence.accessModes PVC Access Mode for PostgreSQL volume
     ##
     accessModes:
@@ -1036,8 +1081,129 @@ readReplicas:
     ## @param readReplicas.persistence.dataSource Custom PVC data source
     ##
     dataSource: {}
+  ## PostgreSQL Read only Persistent Volume Claim Retention Policy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ##
+  persistentVolumeClaimRetentionPolicy:
+    ## @param readReplicas.persistentVolumeClaimRetentionPolicy.enabled Enable Persistent volume retention policy for read only Statefulset
+    ##
+    enabled: false
+    ## @param readReplicas.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+    ##
+    whenScaled: Retain
+    ## @param readReplicas.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+    ##
+    whenDeleted: Retain
+
+
+## @section Backup parameters
+## This section implements a trivial logical dump cronjob of the database.
+## This only comes with the consistency guarantees of the dump program.
+## This is not a snapshot based roll forward/backward recovery backup.
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+backup:
+  ## @param backup.enabled Enable the logical dump of the database "regularly"
+  enabled: false
+  cronjob:
+    ## @param backup.cronjob.schedule Set the cronjob parameter schedule
+    schedule: "@daily"
+    ## @param backup.cronjob.timeZone Set the cronjob parameter timeZone
+    timeZone: ""
+    ## @param backup.cronjob.concurrencyPolicy Set the cronjob parameter concurrencyPolicy
+    concurrencyPolicy: Allow
+    ## @param backup.cronjob.failedJobsHistoryLimit Set the cronjob parameter failedJobsHistoryLimit
+    failedJobsHistoryLimit: 1
+    ## @param backup.cronjob.successfulJobsHistoryLimit Set the cronjob parameter successfulJobsHistoryLimit
+    successfulJobsHistoryLimit: 3
+    ## @param backup.cronjob.startingDeadlineSeconds Set the cronjob parameter startingDeadlineSeconds
+    startingDeadlineSeconds: ""
+    ## @param backup.cronjob.ttlSecondsAfterFinished Set the cronjob parameter ttlSecondsAfterFinished
+    ttlSecondsAfterFinished: ""
+    ## @param backup.cronjob.restartPolicy Set the cronjob parameter restartPolicy
+    restartPolicy: OnFailure
+    ## @param backup.cronjob.podSecurityContext.enabled Enable PodSecurityContext for CronJob/Backup
+    ## @param backup.cronjob.podSecurityContext.fsGroup Group ID for the CronJob
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+    ## backup container's Security Context
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+    ## @param backup.cronjob.containerSecurityContext.enabled Enabled containers' Security Context
+    ## @param backup.cronjob.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+    ## @param backup.cronjob.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+    ## @param backup.cronjob.containerSecurityContext.privileged Set container's Security Context privileged
+    ## @param backup.cronjob.containerSecurityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+    ## @param backup.cronjob.containerSecurityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+    ## @param backup.cronjob.containerSecurityContext.capabilities.drop List of capabilities to be dropped
+    ## @param backup.cronjob.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1001
+      runAsNonRoot: true
+      privileged: false
+      readOnlyRootFilesystem: false
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      seccompProfile:
+        type: "RuntimeDefault"
+    ## @param backup.cronjob.command Set backup container's command to run
+    command:
+      - /bin/sh
+      - -c
+      - "pg_dumpall --clean --if-exists --load-via-partition-root --quote-all-identifiers --no-password --file=${PGDUMP_DIR}/pg_dumpall-$(date '+%Y-%m-%d-%H-%M').pgdump"
+
+    ## @param backup.cronjob.labels Set the cronjob labels
+    labels: {}
+    ## @param backup.cronjob.annotations Set the cronjob annotations
+    annotations: {}
+    ## @param backup.cronjob.nodeSelector Node labels for PostgreSQL backup CronJob pod assignment
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/
+    ##
+    nodeSelector: {}
+    storage:
+      ## @param backup.cronjob.storage.existingClaim Provide an existing `PersistentVolumeClaim` (only when `architecture=standalone`)
+      ## If defined, PVC must be created manually before volume will be bound
+      ##
+      existingClaim: ""
+      ## @param backup.cronjob.storage.resourcePolicy Setting it to "keep" to avoid removing PVCs during a helm delete operation. Leaving it empty will delete PVCs after the chart deleted
+      ##
+      resourcePolicy: ""
+      ## @param backup.cronjob.storage.storageClass PVC Storage Class for the backup data volume
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ## set, choosing the default provisioner.
+      ##
+      storageClass: ""
+      ## @param backup.cronjob.storage.accessModes PV Access Mode
+      ##
+      accessModes:
+        - ReadWriteOnce
+      ## @param backup.cronjob.storage.size PVC Storage Request for the backup data volume
+      ##
+      size: 8Gi
+      ## @param backup.cronjob.storage.annotations PVC annotations
+      ##
+      annotations: {}
+      ## @param backup.cronjob.storage.mountPath Path to mount the volume at
+      ##
+      mountPath: /backup/pgdump
+      ## @param backup.cronjob.storage.subPath Subdirectory of the volume to mount at
+      ## and one PV for multiple services.
+      ##
+      subPath: ""
+      ## Fine tuning for volumeClaimTemplates
+      ##
+      volumeClaimTemplates:
+        ## @param backup.cronjob.storage.volumeClaimTemplates.selector A label query over volumes to consider for binding (e.g. when using local volumes)
+        ## A label query over volumes to consider for binding (e.g. when using local volumes)
+        ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#labelselector-v1-meta for more details
+        ##
+        selector: {}
 
 ## @section NetworkPolicy parameters
+##
 
 ## Add networkpolicies
 ##
@@ -1067,7 +1233,7 @@ networkPolicy:
     ## @param networkPolicy.ingressRules.primaryAccessOnlyFrom.enabled Enable ingress rule that makes PostgreSQL primary node only accessible from a particular origin.
     ## @param networkPolicy.ingressRules.primaryAccessOnlyFrom.namespaceSelector [object] Namespace selector label that is allowed to access the PostgreSQL primary node. This label will be used to identified the allowed namespace(s).
     ## @param networkPolicy.ingressRules.primaryAccessOnlyFrom.podSelector [object] Pods selector label that is allowed to access the PostgreSQL primary node. This label will be used to identified the allowed pod(s).
-    ## @param networkPolicy.ingressRules.primaryAccessOnlyFrom.customRules [object] Custom network policy for the PostgreSQL primary node.
+    ## @param networkPolicy.ingressRules.primaryAccessOnlyFrom.customRules Custom network policy for the PostgreSQL primary node.
     ##
     primaryAccessOnlyFrom:
       enabled: false
@@ -1088,11 +1254,12 @@ networkPolicy:
       ##       - namespaceSelector:
       ##           matchLabels:
       ##             label: example
-      customRules: {}
+      ##
+      customRules: []
     ## @param networkPolicy.ingressRules.readReplicasAccessOnlyFrom.enabled Enable ingress rule that makes PostgreSQL read-only nodes only accessible from a particular origin.
     ## @param networkPolicy.ingressRules.readReplicasAccessOnlyFrom.namespaceSelector [object] Namespace selector label that is allowed to access the PostgreSQL read-only nodes. This label will be used to identified the allowed namespace(s).
     ## @param networkPolicy.ingressRules.readReplicasAccessOnlyFrom.podSelector [object] Pods selector label that is allowed to access the PostgreSQL read-only nodes. This label will be used to identified the allowed pod(s).
-    ## @param networkPolicy.ingressRules.readReplicasAccessOnlyFrom.customRules [object] Custom network policy for the PostgreSQL read-only nodes.
+    ## @param networkPolicy.ingressRules.readReplicasAccessOnlyFrom.customRules Custom network policy for the PostgreSQL read-only nodes.
     ##
     readReplicasAccessOnlyFrom:
       enabled: false
@@ -1113,9 +1280,10 @@ networkPolicy:
       ##       - namespaceSelector:
       ##           matchLabels:
       ##             label: example
-      customRules: {}
+      ##
+      customRules: []
   ## @param networkPolicy.egressRules.denyConnectionsToExternal Enable egress rule that denies outgoing traffic outside the cluster, except for DNS (port 53).
-  ## @param networkPolicy.egressRules.customRules [object] Custom network policy rule
+  ## @param networkPolicy.egressRules.customRules Custom network policy rule
   ##
   egressRules:
     # Deny connections to external. This is not compatible with an external database.
@@ -1127,9 +1295,11 @@ networkPolicy:
     ##       - namespaceSelector:
     ##           matchLabels:
     ##             label: example
-    customRules: {}
+    ##
+    customRules: []
 
 ## @section Volume Permissions parameters
+##
 
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume(s) mountpoint(s) to 'runAsUser:fsGroup' on each node
@@ -1138,17 +1308,17 @@ volumePermissions:
   ## @param volumePermissions.enabled Enable init container that changes the owner and group of the persistent volume
   ##
   enabled: false
-  ## @param volumePermissions.image.registry Init container volume-permissions image registry
-  ## @param volumePermissions.image.repository Init container volume-permissions image repository
-  ## @param volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
+  ## @param volumePermissions.image.registry [default: REGISTRY_NAME] Init container volume-permissions image registry
+  ## @param volumePermissions.image.repository [default: REPOSITORY_NAME/os-shell] Init container volume-permissions image repository
+  ## @skip volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
   ## @param volumePermissions.image.digest Init container volume-permissions image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   ## @param volumePermissions.image.pullPolicy Init container volume-permissions image pull policy
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
   ##
   image:
     registry: docker.io
-    repository: bitnami/bitnami-shell
-    tag: 11-debian-11-r69
+    repository: bitnami/os-shell
+    tag: 11-debian-11-r93
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -1160,7 +1330,7 @@ volumePermissions:
     ##
     pullSecrets: []
   ## Init container resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param volumePermissions.resources.limits Init container volume-permissions resource limits
   ## @param volumePermissions.resources.requests Init container volume-permissions resource requests
   ##
@@ -1171,11 +1341,24 @@ volumePermissions:
   ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
   ## and not the below volumePermissions.containerSecurityContext.runAsUser
   ## @param volumePermissions.containerSecurityContext.runAsUser User ID for the init container
+  ## @param volumePermissions.containerSecurityContext.runAsGroup Group ID for the init container
+  ## @param volumePermissions.containerSecurityContext.runAsNonRoot runAsNonRoot for the init container
+  ## @param volumePermissions.containerSecurityContext.seccompProfile.type seccompProfile.type for the init container
   ##
   containerSecurityContext:
     runAsUser: 0
-
+    runAsGroup: 0
+    runAsNonRoot: false
+    seccompProfile:
+      type: RuntimeDefault
 ## @section Other Parameters
+##
+
+## @param serviceBindings.enabled Create secret for service binding (Experimental)
+## Ref: https://servicebinding.io/service-provider/
+##
+serviceBindings:
+  enabled: false
 
 ## Service account for PostgreSQL to use.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -1220,14 +1403,15 @@ psp:
   create: false
 
 ## @section Metrics Parameters
+##
 
 metrics:
   ## @param metrics.enabled Start a prometheus exporter
   ##
   enabled: false
-  ## @param metrics.image.registry PostgreSQL Prometheus Exporter image registry
-  ## @param metrics.image.repository PostgreSQL Prometheus Exporter image repository
-  ## @param metrics.image.tag PostgreSQL Prometheus Exporter image tag (immutable tags are recommended)
+  ## @param metrics.image.registry [default: REGISTRY_NAME] PostgreSQL Prometheus Exporter image registry
+  ## @param metrics.image.repository [default: REPOSITORY_NAME/postgres-exporter] PostgreSQL Prometheus Exporter image repository
+  ## @skip metrics.image.tag PostgreSQL Prometheus Exporter image tag (immutable tags are recommended)
   ## @param metrics.image.digest PostgreSQL image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   ## @param metrics.image.pullPolicy PostgreSQL Prometheus Exporter image pull policy
   ## @param metrics.image.pullSecrets Specify image pull secrets
@@ -1235,7 +1419,7 @@ metrics:
   image:
     registry: docker.io
     repository: bitnami/postgres-exporter
-    tag: 0.11.1-debian-11-r46
+    tag: 0.15.0-debian-11-r5
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -1246,8 +1430,14 @@ metrics:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
+  ## @param metrics.collectors Control enabled collectors
+  ## ref: https://github.com/prometheus-community/postgres_exporter#flags
+  ## Example:
+  ## collectors:
+  ##   wal: false
+  collectors: {}
   ## @param metrics.customMetrics Define additional custom metrics
-  ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
+  ## ref: https://github.com/prometheus-community/postgres_exporter#adding-new-metrics-via-a-config-file-deprecated
   ## customMetrics:
   ##   pg_database:
   ##     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size_bytes FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
@@ -1261,7 +1451,7 @@ metrics:
   ##
   customMetrics: {}
   ## @param metrics.extraEnvVars Extra environment variables to add to PostgreSQL Prometheus exporter
-  ## see: https://github.com/wrouesnel/postgres_exporter#environment-variables
+  ## see: https://github.com/prometheus-community/postgres_exporter#environment-variables
   ## For example:
   ##  extraEnvVars:
   ##  - name: PG_EXPORTER_DISABLE_DEFAULT_METRICS
@@ -1270,14 +1460,26 @@ metrics:
   extraEnvVars: []
   ## PostgreSQL Prometheus exporter containers' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-  ## @param metrics.containerSecurityContext.enabled Enable PostgreSQL Prometheus exporter containers' Security Context
-  ## @param metrics.containerSecurityContext.runAsUser Set PostgreSQL Prometheus exporter containers' Security Context runAsUser
-  ## @param metrics.containerSecurityContext.runAsNonRoot Set PostgreSQL Prometheus exporter containers' Security Context runAsNonRoot
+  ## @param metrics.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param metrics.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param metrics.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## @param metrics.containerSecurityContext.privileged Set container's Security Context privileged
+  ## @param metrics.containerSecurityContext.readOnlyRootFilesystem Set container's Security Context readOnlyRootFilesystem
+  ## @param metrics.containerSecurityContext.allowPrivilegeEscalation Set container's Security Context allowPrivilegeEscalation
+  ## @param metrics.containerSecurityContext.capabilities.drop List of capabilities to be dropped
+  ## @param metrics.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
   ##
   containerSecurityContext:
     enabled: true
     runAsUser: 1001
     runAsNonRoot: true
+    privileged: false
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
   ## Configure extra options for PostgreSQL Prometheus exporter containers' liveness, readiness and startup probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   ## @param metrics.livenessProbe.enabled Enable livenessProbe on PostgreSQL Prometheus exporter containers
@@ -1336,7 +1538,7 @@ metrics:
   containerPorts:
     metrics: 9187
   ## PostgreSQL Prometheus exporter resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   ## @param metrics.resources.limits The resources limits for the PostgreSQL Prometheus exporter container
   ## @param metrics.resources.requests The requested resources for the PostgreSQL Prometheus exporter container
   ##
@@ -1356,7 +1558,7 @@ metrics:
     clusterIP: ""
     ## @param metrics.service.sessionAffinity Control where client requests go, to the same pod or round-robin
     ## Values: ClientIP or None
-    ## ref: https://kubernetes.io/docs/user-guide/services/
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
     ##
     sessionAffinity: None
     ## @param metrics.service.annotations [object] Annotations for Prometheus to auto-discover the metrics endpoint

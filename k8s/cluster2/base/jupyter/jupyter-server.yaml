@@ -23,8 +23,8 @@ spec:
           persistentVolumeClaim:
             claimName: nfs-common
       containers:
-        - name: zeppelin-server
-          image: registry.minikube/spark-jupyter-3.2:master
+        - name: jupyter-server
+          image: registry.minikube/spark-jupyter-3.4:master
           ports:
             - name: http
               containerPort: 8888

@@ -1,9 +1,10 @@
    * https://github.com/mongodb/mongodb-kubernetes-operator/blob/master/docs/install-upgrade.md
-
    * https://zeppelin.apache.org/docs/0.9.0/interpreter/mongodb.html
-
    * https://www.fosslinux.com/65442/how-to-install-mongodb-on-debian-11.htm
-    
+
+
+   * https://github.com/mongodb/helm-charts
+     * https://github.com/mongodb/helm-charts/tree/main/charts/community-operator
 
 # Issues
 ## /var/log/mongodb-mms-automation/mongodb.log' for reading: No such file or directory

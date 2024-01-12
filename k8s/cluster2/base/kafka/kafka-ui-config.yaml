@@ -8,7 +8,7 @@ data:
     kafka:
       clusters:
         - name: main
-          bootstrapServers: kafka-cluster-broker-endpoints:9092
+          bootstrapServers: 10.111.38.197:9092
     auth:
       type: disabled
     management:
