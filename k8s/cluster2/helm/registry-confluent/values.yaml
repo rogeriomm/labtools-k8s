@@ -38,7 +38,7 @@ commonLabels: {}
 commonAnnotations: {}
 ## @param clusterDomain Kubernetes cluster domain name
 ##
-clusterDomain: cluster.local
+clusterDomain: cluster2.xpt
 ## @param extraDeploy Array of extra objects to deploy with the release
 ##
 extraDeploy: []
@@ -656,7 +656,7 @@ serviceAccount:
 kafka:
   ## @param kafka.enabled Enable/disable Kafka chart installation
   ##
-  enabled: true
+  enabled: false
   ## @param kafka.controller.replicaCount Number of Kafka controller-eligible (controller+broker) nodes
   ##
   controller:
@@ -691,7 +691,7 @@ externalKafka:
   ## @param externalKafka.brokers Array of Kafka brokers to connect to. Format: protocol://broker_hostname:port
   ##
   brokers:
-    - PLAINTEXT://localhost:9092
+    - SSL://main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9093
   ## @param externalKafka.listener.protocol Kafka listener protocol. Allowed protocols: PLAINTEXT, SASL_PLAINTEXT, SASL_SSL and SSL
   ##
   listener:
