@@ -7,7 +7,3 @@ resources:
   - namespace.yaml
   - kafka-ui-ingress.yaml
   - kafka-ui-config.yaml
-
-patches:
-  - path: kafka-ui-ingress.yaml
-  - path: kafka-ui-config.yaml

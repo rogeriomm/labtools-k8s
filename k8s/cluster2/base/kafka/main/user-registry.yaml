@@ -1,17 +1,15 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
-  name: kafka-user-bridge
+  name: kafka-user-registry
   labels:
     strimzi.io/cluster: main
 spec:
   authentication:
-    type: tls
+    type: scram-sha-512
   authorization:
     type: simple
     acls:
-      # Topics and groups used by the HTTP clients through the HTTP Bridge
-      # Change to match the topics used by your HTTP clients
       - resource:
           type: group
           name: my-group

@@ -82,22 +82,22 @@ airflow:
   connectionsTemplates:
     POSTGRES_USERNAME:
       kind: secret
-      name: user-airflow
+      name: postgres-user-airflow
       key: user
 
     POSTGRES_PASSWORD:
       kind: secret
-      name: user-airflow
+      name: postgres-user-airflow
       key: password
 
     MONGODB_USERNAME:
       kind: secret
-      name: mongodb-airflow-user
+      name: mongodb-user-airflow
       key: user
 
     MONGODB_PASSWORD:
       kind: secret
-      name: mongodb-airflow-user
+      name: mongodb-user-airflow
       key: password
 
 workers:

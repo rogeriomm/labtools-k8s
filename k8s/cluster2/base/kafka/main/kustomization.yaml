@@ -10,6 +10,7 @@ resources:
   - user-connect.yaml
   - user-bridge.yaml
   - user-kafka-ui.yaml
+  - user-registry.yaml
   - user-ide.yaml
   - topic-connect.yaml
   - bridge.yaml
@@ -23,6 +24,7 @@ patches:
   - path: user-bridge.yaml
   - path: user-kafka-ui.yaml
   - path: user-ide.yaml
+  - path: user-registry.yaml
   - path: bridge.yaml
   - path: connect.yaml
   - path: source-connector.yaml
