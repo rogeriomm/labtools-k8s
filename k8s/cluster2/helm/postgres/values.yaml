@@ -338,6 +338,10 @@ primary:
     ##
     scripts:
        init_script.sql: |
+          /* Debezium CDC setup */
+          ALTER SYSTEM SET wal_level = logical;
+          CREATE USER debezium WITH REPLICATION PASSWORD 'password';
+          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
           /* Metastore DB */
           CREATE DATABASE metastore_db;
           CREATE USER metastore_db WITH PASSWORD 'metastore_db';
