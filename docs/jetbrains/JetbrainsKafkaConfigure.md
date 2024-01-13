@@ -20,7 +20,7 @@ CONTAINER ID   IMAGE                                 COMMAND                  CR
 
 cluster2: 127.0.0.1:50973->22/tcp
 
-![alt text](ssh.png "Minikube SSH")
+![alt text](JetbrainsSshConfiguration.png "Minikube SSH")
 
    * https://github.com/rogeriomm/labtools-k8s/blob/master/k8s/cluster2/base/kafka/main/user-ide.yaml
 
