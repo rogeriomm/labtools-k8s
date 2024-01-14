@@ -1,3 +1,7 @@
+This is a work in progress
+
+<img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
+
 # Remote access
 ## Local
 | Local URL                          | Description                                                                                                                | User    | Password       |
@@ -25,3 +29,4 @@
 |--------------------------------------------|---------------------------------------------------------------|-------------------|---|---|
 | https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)                      |                   |   |   |
 | https://world-jupyter.duckdns.org/jupyter  | [Jupyter](https://jupyter.org/) notebook: Python, Scala, RUST |                   |   |   |
+
