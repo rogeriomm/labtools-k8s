@@ -152,13 +152,10 @@ kafka_install()
 
   fi
 
-
   bitnami_confluent_registry_install "$1"
 
   if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
-    # helm uninstall --namespace kafka kafka-ui
-    helm install kafka-ui kafka-ui/kafka-ui --namespace kafka \
-         --set yamlApplicationConfigConfigMap.name="kafka-ui-configmap",yamlApplicationConfigConfigMap.keyName="config.yml" \
+    helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
          --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
   fi
 }
@@ -226,6 +223,8 @@ labtools-k8s set-context cluster1
 kafka_install cluster1
 
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
+
+kubectl annotate secret kafka-user-ide  replicator.v1.mittwald.de/replicate-to="kafka" -n kafka-main-cluster
 
 # Cluster 2 setup
 labtools-k8s set-context cluster2
