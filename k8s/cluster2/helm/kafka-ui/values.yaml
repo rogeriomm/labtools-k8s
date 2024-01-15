@@ -1,6 +1,7 @@
 # https://docs.kafka-ui.provectus.io/configuration/helm-charts/quick-start
 #    https://docs.kafka-ui.provectus.io/configuration/helm-charts/configuration
-
+# https://github.com/provectus/kafka-ui/blob/master/documentation/compose/kafka-ui.yaml
+#  See KAFKA_CLUSTERS_0_SCHEMAREGISTRY
 replicaCount: 1
 
 image:
@@ -30,9 +31,12 @@ yamlApplicationConfigConfigMap:
   name: kafka-ui-configmap
 
 existingSecret: ""
+
 envs:
   secret: {}
   config: {}
+#  config:
+#    KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://main-registry-schema-registry.kafka-main-cluster.svc:8081"
 
 networkPolicy:
   enabled: false
