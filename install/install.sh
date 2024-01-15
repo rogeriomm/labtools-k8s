@@ -104,15 +104,17 @@ livy_install()
   echo "Install Livy"
 }
 
-
 bitnami_confluent_registry_install()
 {
     if ! helm status main-registry -n kafka-main-cluster 2> /dev/null > /dev/null; then
       # Bitnami package for Confluent Schema Registry
-      #helm upgrade main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/cluster1/helm/registry-confluent/values.yaml"
-      #helm upgrade main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/cluster2/helm/registry-confluent/values.yaml"
-      #kubectl delete pvc data-main-registry-kafka-controller-0
       helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.0.1
+
+    kubectl get secret kafka-user-registry -n kafka-main-cluster -o json | \
+        jq '.metadata.name = "kafka-user-registry-copy" | .metadata.labels = {"strimzi.io/kind":"Kafka", "strimzi.io/cluster":"main"} | .data."client-passwords" = .data.password | del(.metadata.creationTimestamp) | del(.metadata.resourceVersion) | del(.metadata.selfLink) | del(.metadata.uid)' | \
+        kubectl apply -n kafka-main-cluster -f -
+
+
     fi
 }
 
