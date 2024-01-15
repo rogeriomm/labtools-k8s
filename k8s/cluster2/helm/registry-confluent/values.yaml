@@ -183,7 +183,7 @@ auth:
     truststorePassword: ""
     ## @param auth.kafka.saslMechanism Mechanism that schema registry will use to connect to kafka. Allowed: PLAIN, SCRAM-SHA-256, SCRAM-SHA-512
     ##
-    saslMechanism: PLAIN
+    saslMechanism: SCRAM-SHA-512
 ## @param listeners Comma-separated list of listeners that listen for API requests over either HTTP or HTTPS
 ##
 listeners: http://0.0.0.0:8081
@@ -197,11 +197,7 @@ avroCompatibilityLevel: backward
 ##   - name: FOO
 ##     value: BAR
 ##
-extraEnvVars:
-  - name: SCHEMA_REGISTRY_KAFKA_SASL_USERS
-    value: "todo"
-  - name: SCHEMA_REGISTRY_KAFKA_SASL_PASSWORDS
-    value: "todo"
+extraEnvVars: []
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
@@ -695,17 +691,17 @@ externalKafka:
   ## @param externalKafka.brokers Array of Kafka brokers to connect to. Format: protocol://broker_hostname:port
   ##
   brokers:
-    - SASL_PLAINTEXT://main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9093
+    - SASL_PLAINTEXT://main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
   ## @param externalKafka.listener.protocol Kafka listener protocol. Allowed protocols: PLAINTEXT, SASL_PLAINTEXT, SASL_SSL and SSL
   ##
   listener:
-    protocol: PLAINTEXT
+    protocol: SASL_PLAINTEXT
   ## Authentication parameters
   ## @param externalKafka.sasl.user User for SASL authentication
   ## @param externalKafka.sasl.password Password for SASL authentication
   ## @param externalKafka.sasl.existingSecret Name of the existing secret containing a password for SASL authentication (under the key named "client-passwords")
   ##
   sasl:
-    user: user
-    password: "123"
+    user: "kafka-user-registry"
+    password: "aGkWHQY1MBenm1K0GyIOI9jIe6GGR1f2"
     existingSecret: ""

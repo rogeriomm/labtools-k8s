@@ -1,4 +1,5 @@
 # https://docs.kafka-ui.provectus.io/configuration/helm-charts/quick-start
+#    https://docs.kafka-ui.provectus.io/configuration/helm-charts/configuration
 
 replicaCount: 1
 
@@ -23,37 +24,10 @@ serviceAccount:
   name: ""
 
 existingConfigMap: ""
-yamlApplicationConfig:
-  kafka:
-    clusters:
-      - name: main
-        bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
-        properties:
-          security.protocol: SASL_PLAINTEXT
-          sasl.mechanism: SCRAM-SHA-512
-          sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka-user-ide" password="Qix9BAu3sVYifqASpt97gTxwlrspoNe0";
-  auth:
-    type: disabled
-  management:
-    health:
-      ldap:
-        enabled: false
-  # kafka:
-  #   clusters:
-  #     - name: yaml
-  #       bootstrapServers: kafka-service:9092
-  # spring:
-  #   security:
-  #     oauth2:
-  # auth:
-  #   type: disabled
-  # management:
-  #   health:
-  #     ldap:
-  #       enabled: false
-#yamlApplicationConfigConfigMap:
-#  keyName: config.yml
-#  name: kafka-ui-configmap
+
+yamlApplicationConfigConfigMap:
+  keyName: config.yml
+  name: kafka-ui-configmap
 
 existingSecret: ""
 envs:
