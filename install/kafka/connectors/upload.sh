@@ -1,0 +1,1 @@
+minikube -p cluster2 image load debezium-connector-postgres:0.39.0-kafka-3.6.1
