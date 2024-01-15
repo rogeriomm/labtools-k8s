@@ -62,9 +62,9 @@ mongodb_install()
 postgres_install()
 {
   if ! helm status postgres -n postgres 2> /dev/null > /dev/null; then
-    helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f k8s/cluster2/helm/postgres/values.yaml --create-namespace --namespace postgres --wait --timeout 600s
+    helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f k8s/cluster2/helm/postgres/values.yaml \
+         --create-namespace --namespace postgres --wait --timeout 600s --version 13.2.9
   fi
-
 }
 
 postgres_show()
@@ -108,13 +108,12 @@ bitnami_confluent_registry_install()
 {
     if ! helm status main-registry -n kafka-main-cluster 2> /dev/null > /dev/null; then
       # Bitnami package for Confluent Schema Registry
-      helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.0.1
+      helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster \
+                 --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.0.1
 
-    kubectl get secret kafka-user-registry -n kafka-main-cluster -o json | \
-        jq '.metadata.name = "kafka-user-registry-copy" | .metadata.labels = {"strimzi.io/kind":"Kafka", "strimzi.io/cluster":"main"} | .data."client-passwords" = .data.password | del(.metadata.creationTimestamp) | del(.metadata.resourceVersion) | del(.metadata.selfLink) | del(.metadata.uid)' | \
-        kubectl apply -n kafka-main-cluster -f -
-
-
+      kubectl get secret kafka-user-registry -n kafka-main-cluster -o json | \
+          jq '.metadata.name = "kafka-user-registry-copy" | .metadata.labels = {"strimzi.io/kind":"Kafka", "strimzi.io/cluster":"main"} | .data."client-passwords" = .data.password | del(.metadata.creationTimestamp) | del(.metadata.resourceVersion) | del(.metadata.selfLink) | del(.metadata.uid)' | \
+          kubectl apply -n kafka-main-cluster -f -
     fi
 }
 
@@ -129,6 +128,18 @@ confluent_install_operator()
     fi
 }
 
+debezium_install()
+{
+  if ! docker image inspect debezium-connector-postgres:0.39.0-kafka-3.6.1 > /dev/null 2> /dev/null; then
+
+    debezium_version="1.0.0"
+
+https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.4.0.Final/
+
+    echo "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${debezium_version}/debezium-connector-postgres-${debezium_version}-plugin.tar.gz"
+  fi
+}
+
 kafka_install()
 {
   if ! kubectl get ns kafka; then
@@ -140,9 +151,9 @@ kafka_install()
     kubectl create ns kafka-project-4
     kubectl create ns kafka-project-5
 
-    # shellcheck disable=SC2086
+    # https://quay.io/repository/strimzi/operator
     helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator \
-                 --values "k8s/$1/helm/kafka/values.yaml"
+                 --values "k8s/$1/helm/kafka/values.yaml" --version 0.39.0
 
     kubectl rollout status deployment strimzi-cluster-operator -n kafka --timeout=90s
 
@@ -186,6 +197,8 @@ kafka_install()
               enabled: false
     " | kubectl apply -f -
   fi
+
+  debezium_install
 }
 
 kafka_wait_main_cluster()
