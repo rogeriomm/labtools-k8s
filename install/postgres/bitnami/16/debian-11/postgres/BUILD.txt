@@ -1,7 +1,7 @@
 Docker image: docker.io/bitnami/debian-base-buildpack:bullseye-r5
 Commands:
 apt-get update -y
-DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends libedit-dev libicu-dev uuid-dev flex libpcre3-dev liblz4-dev bzip2 sqlite3 libsqlite3-dev cmake libkrb5-dev libyaml-dev libzstd-dev libbz2-dev libz-dev
+DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends libedit-dev libicu-dev uuid-dev flex libpcre3-dev liblz4-dev bzip2 sqlite3 libsqlite3-dev cmake libyaml-dev libzstd-dev libbz2-dev libz-dev
 export JAVA_HOME=/opt/bitnami/java
 export PATH=/opt/bitnami/java/bin:$PATH
 curl -SsLf "https://downloads.bitnami.com/files/stacksmith/java-11.0.21-10-0-linux-amd64-debian-11.tar.gz" -o "/opt/bitnami/java-11.0.21-10-0-linux-amd64-debian-11.tar.gz" && tar -zxf "/opt/bitnami/java-11.0.21-10-0-linux-amd64-debian-11.tar.gz" -C /opt/bitnami --strip-components=2 --no-same-owner --wildcards '*/files' && rm -rf "/opt/bitnami/java-11.0.21-10-0-linux-amd64-debian-11.tar.gz"
@@ -27,7 +27,7 @@ curl -L https://github.com/google/go-containerregistry/releases/download/v0.16.1
     tar -zxvf /tmp/go-containerregistry-arm64.tar.gz -C /usr/local/bin/ crane && \
     mv /usr/local/bin/crane /usr/local/bin/crane-arm64
 mkdir -p /srp-tools && \
-    curl -Lo /srp-tools/srp https://artifactory.eng.vmware.com/artifactory/srp-tools-generic-local/srpcli/0.16.6-20231222173311-81862cf-278/linux-amd64/srp && \
+    curl -Lo /srp-tools/srp https://artifactory.eng.vmware.com/artifactory/srp-tools-generic-local/srpcli/0.16.10-20240108091325-b0445dd-283.1/linux-amd64/srp && \
     chmod u+x /srp-tools/srp && \
     /srp-tools/srp --version
 mkdir -p /srp-tools/observer && \
@@ -36,10 +36,10 @@ mkdir -p /srp-tools/observer && \
     rm /srp-tools/observer.tar.gz && \
     chmod u+x /srp-tools/observer/bin/observer_agent && \
     /srp-tools/observer/bin/observer_agent --version
-curl https://ftp.postgresql.org/pub/source/v15.5/postgresql-15.5.tar.gz --output /tmp/sources/postgresql/postgresql-15.5.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/postgresql-15.5.0.tmp -xf /tmp/sources/postgresql/postgresql-15.5.tar.gz
-cd /bitnami/blacksmith-sandox/postgresql-15.5.0.tmp
-/bitnami/blacksmith-sandox/postgresql-15.5.0/configure  --prefix=/opt/bitnami/postgresql --with-libedit-preferred --with-openssl --with-libxml --with-libxslt --with-readline --with-icu --with-uuid=e2fs --with-ldap CFLAGS=-O2 CXXFLAGS=-O2 --with-lz4
+curl https://ftp.postgresql.org/pub/source/v16.1/postgresql-16.1.tar.gz --output /tmp/sources/postgresql/postgresql-16.1.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/postgresql-16.1.0.tmp -xf /tmp/sources/postgresql/postgresql-16.1.tar.gz
+cd /bitnami/blacksmith-sandox/postgresql-16.1.0.tmp
+/bitnami/blacksmith-sandox/postgresql-16.1.0/configure  --prefix=/opt/bitnami/postgresql --with-libedit-preferred --with-openssl --with-libxml --with-libxslt --with-readline --with-icu --with-uuid=e2fs --with-ldap CFLAGS=-O2 CXXFLAGS=-O2 --with-lz4
 make  world --jobs=5
 make  install-world --jobs=5
 curl https://github.com/libgeos/geos/archive/3.8.4.tar.gz --output /tmp/sources/geos/geos-3.8.4.tar.gz
@@ -56,10 +56,10 @@ cd /bitnami/blacksmith-sandox/proj-6.3.2.tmp
 /bitnami/blacksmith-sandox/proj-6.3.2/configure  --prefix=/opt/bitnami/postgresql
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/OSGeo/gdal/releases/download/v3.8.2/gdal-3.8.2.tar.gz --output /tmp/sources/gdal/gdal-3.8.2.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/gdal-3.8.2.tmp -xf /tmp/sources/gdal/gdal-3.8.2.tar.gz
-cd /bitnami/blacksmith-sandox/gdal-3.8.2.tmp
-cmake  /bitnami/blacksmith-sandox/gdal-3.8.2 -DCMAKE_INSTALL_PREFIX:PATH=/opt/bitnami/postgresql -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DGDAL_USE_EXTERNAL_LIBS:BOOL=OFF -DGDAL_USE_PROJ=ON -DGDAL_USE_GEOS=ON -B/bitnami/blacksmith-sandox/gdal-3.8.2/out
+curl https://github.com/OSGeo/gdal/releases/download/v3.8.3/gdal-3.8.3.tar.gz --output /tmp/sources/gdal/gdal-3.8.3.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/gdal-3.8.3.tmp -xf /tmp/sources/gdal/gdal-3.8.3.tar.gz
+cd /bitnami/blacksmith-sandox/gdal-3.8.3.tmp
+cmake  /bitnami/blacksmith-sandox/gdal-3.8.3 -DCMAKE_INSTALL_PREFIX:PATH=/opt/bitnami/postgresql -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DGDAL_USE_EXTERNAL_LIBS:BOOL=OFF -DGDAL_USE_PROJ=ON -DGDAL_USE_GEOS=ON -B/bitnami/blacksmith-sandox/gdal-3.8.3/out
 make  --jobs=5
 cmake  --build . --target install
 curl https://github.com/json-c/json-c/archive/refs/tags/json-c-0.16-20220414.tar.gz --output /tmp/sources/json-c/json-c-json-c-0.16-20220414.tar.gz
@@ -77,7 +77,7 @@ curl https://github.com/tada/pljava/archive/V1_6_6.tar.gz --output /tmp/sources/
 tar --no-same-owner -C /bitnami/blacksmith-sandox/pljava-1.6.6.tmp -xf /tmp/sources/pljava/pljava-1_6_6.tar.gz
 cd /bitnami/blacksmith-sandox/pljava-1.6.6.tmp
 mvn  clean package
-java  -jar /bitnami/blacksmith-sandox/pljava-1.6.6/pljava-packaging/target/pljava-pg15.jar
+java  -jar /bitnami/blacksmith-sandox/pljava-1.6.6/pljava-packaging/target/pljava-pg16.jar
 curl http://www.unixodbc.org/unixODBC-2.3.12.tar.gz --output /tmp/sources/unixodbc/unixODBC-2.3.12.tar.gz
 tar --no-same-owner -C /bitnami/blacksmith-sandox/unixodbc-2.3.12.tmp -xf /tmp/sources/unixodbc/unixODBC-2.3.12.tar.gz
 cd /bitnami/blacksmith-sandox/unixodbc-2.3.12.tmp
@@ -108,16 +108,11 @@ cd /bitnami/blacksmith-sandox/postgis-3.4.1.tmp
 /bitnami/blacksmith-sandox/postgis-3.4.1/configure  --prefix=/opt/bitnami/postgresql --with-pgconfig=/opt/bitnami/postgresql/bin/pg_config --with-geosconfig=/opt/bitnami/postgresql/bin/geos-config --with-projdir=/opt/bitnami/postgresql --with-gdalconfig=/opt/bitnami/postgresql/bin/gdal-config --with-jsondir=/opt/bitnami/postgresql --with-protobufdir=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/pgaudit/pgaudit/archive/1.7.0.tar.gz --output /tmp/sources/pgaudit/pgaudit-1.7.0.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/pgaudit-1.7.0.tmp -xf /tmp/sources/pgaudit/pgaudit-1.7.0.tar.gz
-cd /bitnami/blacksmith-sandox/pgaudit-1.7.0.tmp
+curl https://github.com/pgaudit/pgaudit/archive/16.0.tar.gz --output /tmp/sources/pgaudit/pgaudit-16.0.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/pgaudit-16.0.0.tmp -xf /tmp/sources/pgaudit/pgaudit-16.0.tar.gz
+cd /bitnami/blacksmith-sandox/pgaudit-16.0.0.tmp
 make  USE_PGXS=1 --jobs=5
 make  USE_PGXS=1 install --jobs=5
-curl https://github.com/citusdata/pg_auto_failover/archive/v2.1.tar.gz --output /tmp/sources/pgautofailover/pg_auto_failover-2.1.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/pgautofailover-2.1.0.tmp -xf /tmp/sources/pgautofailover/pg_auto_failover-2.1.tar.gz
-cd /bitnami/blacksmith-sandox/pgautofailover-2.1.0.tmp
-make  --jobs=5
-make  install --jobs=5
 curl https://github.com/pgbackrest/pgbackrest/archive/release/2.49.tar.gz --output /tmp/sources/pgbackrest/pgbackrest-release-2.49.tar.gz
 tar --no-same-owner -C /bitnami/blacksmith-sandox/pgbackrest-2.49.0.tmp -xf /tmp/sources/pgbackrest/pgbackrest-release-2.49.tar.gz
 cd /bitnami/blacksmith-sandox/pgbackrest-2.49.0.tmp
@@ -231,15 +226,15 @@ strip  "/opt/bitnami/postgresql/lib/insert_username.so"
 strip  "/opt/bitnami/postgresql/lib/isn.so"
 strip  "/opt/bitnami/postgresql/lib/latin_and_mic.so"
 strip  "/opt/bitnami/postgresql/lib/latin2_and_win1250.so"
-strip  "/opt/bitnami/postgresql/lib/libecpg_compat.so.3.15"
-strip  "/opt/bitnami/postgresql/lib/libecpg.so.6.15"
-strip  "/opt/bitnami/postgresql/lib/libgdal.so.34.3.8.2"
+strip  "/opt/bitnami/postgresql/lib/libecpg_compat.so.3.16"
+strip  "/opt/bitnami/postgresql/lib/libecpg.so.6.16"
+strip  "/opt/bitnami/postgresql/lib/libgdal.so.34.3.8.3"
 strip  "/opt/bitnami/postgresql/lib/libgeos_c.so.1.13.5"
 strip  "/opt/bitnami/postgresql/lib/libgeos-3.8.4.so"
 strip  "/opt/bitnami/postgresql/lib/libjson-c.so.5.2.0"
-strip  "/opt/bitnami/postgresql/lib/libpgtypes.so.3.15"
+strip  "/opt/bitnami/postgresql/lib/libpgtypes.so.3.16"
 strip  "/opt/bitnami/postgresql/lib/libpljava-so-1.6.6.so"
-strip  "/opt/bitnami/postgresql/lib/libpq.so.5.15"
+strip  "/opt/bitnami/postgresql/lib/libpq.so.5.16"
 strip  "/opt/bitnami/postgresql/lib/libpqwalreceiver.so"
 strip  "/opt/bitnami/postgresql/lib/libproj.so.15.3.2"
 strip  "/opt/bitnami/postgresql/lib/lo.so"
