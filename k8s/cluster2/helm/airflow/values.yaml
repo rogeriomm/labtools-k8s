@@ -3,7 +3,7 @@
 
 airflow:
   image:
-    repository: registry.minikube/airflow-2.7.1-10
+    repository: registry.minikube/airflow-2.7.3-10
     tag: master
 
   clusterDomain: cluster2.xpt
@@ -154,11 +154,11 @@ externalDatabase:
   database: airflow
 
   ## Kubernetes secret in your airflow namespace
-  userSecret: "user-airflow"
+  userSecret: "postgres-user-airflow"
   userSecretKey: "user"
 
   ## Kubernetes secret in your airflow namespace
-  passwordSecret: "user-airflow"
+  passwordSecret: "postgres-user-airflow"
   passwordSecretKey: "password"
 
   ## use this for any extra connection-string settings, e.g. ?sslmode=disable
