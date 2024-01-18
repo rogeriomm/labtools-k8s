@@ -14,9 +14,10 @@ global:
       url: "jdbc:postgresql://postgres-postgresql.postgres.svc.cluster2.xpt:5432/datahub"
       driver: "org.postgresql.Driver"
       username: "datahub"
-      # kubectl get secret --namespace postgres postgres-postgresql -o yaml
+      # kubectl get secret --namespace postgres postgres-user-datahub -o yaml
+      # kubectl get secret --namespace datahub postgres-user-datahub -o yaml
       password:
-        secretRef: user-datahub
+        secretRef: postgres-user-datahub
         secretKey: password
 
 
@@ -46,7 +47,7 @@ datahub-frontend:
     enabled: true
     # https://datahubproject.io/docs/deploy/aws/ search ingress
     hosts:
-      - host: datahub.worldl.xpt
+      - host: datahub.worldlb.xpt
         redirectPaths:
           - path: /*
             name: ssl-redirect
