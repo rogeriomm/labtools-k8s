@@ -2,16 +2,18 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
+    paths:
+      - 'install/kafka/connectors/**'
+      - 'install/postgres/**'
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Build the Bitnami Postgres Docker image with decoderbufs plugin
