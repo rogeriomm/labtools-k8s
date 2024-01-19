@@ -16,3 +16,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Bitnami Postgres Docker image with decoderbufs plugin
       run: docker build ./install/postgres/bitnami/15/debian-11/decoderbufs --tag bitnami-postgresql-decoderbufs:15.5.0-debian-11-r18
+    - name: Build Kafka Connect with connector
+      run: ./install/kafka/connectors/build.sh
