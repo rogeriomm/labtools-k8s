@@ -1,9 +1,12 @@
 This is a work in progress
 
+   * [Quick start Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start)
+
+
 <img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
 
-# Remote access
-## Local
+
+# Web local
 | Local URL                                         | Description                                                                                                                | User    | Password       |
 |---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---------|----------------|
 | https://dashboard.worldl.xpt/                     | [K8S dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)                             |         |                |
@@ -24,9 +27,8 @@ This is a work in progress
 | http://datahub-datahub-frontend.datahub.svc:9002/ | [Datahub](https://datahubproject.io)         Load balancer                                                                 | datahub | manualPassword |
 | https://kafkaui.worldl.xpt/                       | [Kafka UI](https://github.com/provectus/kafka-ui)                                                                          |         |
 
-## Internet
+# Internet Web (Protected by Firewall)
 | Public URL                                 | Description                                                   |                   |   |   |
 |--------------------------------------------|---------------------------------------------------------------|-------------------|---|---|
 | https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)                      |                   |   |   |
 | https://world-jupyter.duckdns.org/jupyter  | [Jupyter](https://jupyter.org/) notebook: Python, Scala, RUST |                   |   |   |
-
