@@ -17,6 +17,6 @@ jobs:
     - name: Build the Bitnami Postgres Docker image with decoderbufs plugin
       working-directory: ./install/postgres/bitnami/15/debian-11/decoderbufs/
       run: docker build . --tag bitnami-postgresql-decoderbufs:15.5.0-debian-11-r18
-    - name: Build Kafka Connect with connector
+    - name: Build Kafka Connect with connector.
       working-directory: ./install/kafka/connectors/
       run: ./build.sh
