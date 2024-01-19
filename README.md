@@ -27,7 +27,7 @@ This is a work in progress
 | http://datahub-datahub-frontend.datahub.svc:9002/ | [Datahub](https://datahubproject.io)         Load balancer                                                                 | datahub | manualPassword |
 | https://kafkaui.worldl.xpt/                       | [Kafka UI](https://github.com/provectus/kafka-ui)                                                                          |         |
 
-# Internet Web (Protected by Firewall)
+# Internet Web ([Protected by Firewall](https://github.com/rogeriomm/public-server))
 | Public URL                                 | Description                                                   |                   |   |   |
 |--------------------------------------------|---------------------------------------------------------------|-------------------|---|---|
 | https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)                      |                   |   |   |
