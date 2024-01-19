@@ -23,5 +23,4 @@ plug "mongodb"   "2.4.1.Final"
 plug "mysql"     "2.4.1.Final"
 plug "oracle"    "2.4.1.Final"
 
-mkdir -p plugins
 docker build . -t debezium-connector-postgres:0.39.0-kafka-3.6.1
