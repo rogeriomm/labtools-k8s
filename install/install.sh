@@ -102,6 +102,14 @@ mongodb_install()
   fi
 }
 
+mysql_install()
+{
+  if ! helm status mysql -n mysql 2> /dev/null > /dev/null; then
+    helm install my-release oci://registry-1.docker.io/bitnamicharts/mysql -f k8s/cluster2/helm/mysql/values.yaml \
+         --create-namespace --namespace mysql --wait --timeout 600s
+  fi
+}
+
 # https://stackoverflow.com/questions/55499984/postgresql-in-helm-initdbscripts-parameter
 postgres_install()
 {
@@ -154,7 +162,9 @@ bitnami_confluent_registry_install()
       # Bitnami package for Confluent Schema Registry
       helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster \
                  --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.0.1
+    fi
 
+    if kubectl get secret kafka-user-registry -n kafka-main-cluster 2> /dev/null > /dev/null; then
       kubectl get secret kafka-user-registry -n kafka-main-cluster -o json | \
           jq '.metadata.name = "kafka-user-registry-copy" | .metadata.labels = {"strimzi.io/kind":"Kafka", "strimzi.io/cluster":"main"} | .data."client-passwords" = .data.password | del(.metadata.creationTimestamp) | del(.metadata.resourceVersion) | del(.metadata.selfLink) | del(.metadata.uid)' | \
           kubectl apply -n kafka-main-cluster -f -
@@ -304,6 +314,8 @@ labtools-k8s set-context cluster1
 # Install Kafka api-resource on cluster1
 kafka_install cluster1
 
+k8s-replicator_install
+
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 
 #kubectl annotate secret kafka-user-ide  replicator.v1.mittwald.de/replicate-to="kafka" -n kafka-main-cluster
@@ -328,15 +340,19 @@ kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
 
 #kafka_wait_main_cluster
 
+elasticsearch_install
+
 minio_install
 postgres_install
-trino_install
+mysql_install
+
 hive_install
 airflow_install
-elasticsearch_install
+livy_install
+
+trino_install
 datahub_install
 openmetadata_install
-livy_install
 
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
 
