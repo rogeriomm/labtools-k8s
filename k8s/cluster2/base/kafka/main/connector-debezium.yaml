@@ -17,7 +17,7 @@ spec:
     database.user: debezium
     database.password: debezium
     database.dbname: airflow
-    topic.prefix: postgres
+    topic.prefix: postgres-airflow
     database.include.list: inventory
     schema.history.internal.kafka.bootstrap.servers: main-kafka-bootstrap:9092
     schema.history.internal.kafka.topic: schema-changes.inventory
