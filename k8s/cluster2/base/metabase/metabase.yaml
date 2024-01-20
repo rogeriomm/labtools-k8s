@@ -17,9 +17,8 @@ spec:
     spec:
       volumes:
       - name: metabase-data-volume
-        hostPath:
-          path: /Volumes/data/git/labtools-k8s/data/metabase
-          type: Directory
+        persistentVolumeClaim:
+          claimName: metabase-db
       containers:
       - name: metabase
         image: metabase/metabase
