@@ -26,6 +26,7 @@ This is a work in progress
 | https://history-glue4.worldl.xpt/                 | [AWS Glue version 4.0 - History](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-libraries.html)       |         |                |
 | http://datahub-datahub-frontend.datahub.svc:9002/ | [Datahub](https://datahubproject.io)         Load balancer                                                                 | datahub | manualPassword |
 | https://kafkaui.worldl.xpt/                       | [Kafka UI](https://github.com/provectus/kafka-ui)                                                                          |         |
+| https://metabase.worldl.xpt/                      | [Metabase](https://www.metabase.com)                                                                                       |         |
 
 # Internet Web ([Protected by Firewall](https://github.com/rogeriomm/public-server))
 | Public URL                                 | Description                                                   |                   |   |   |
