@@ -114,7 +114,7 @@ mongodb_install()
 
 mysql_install()
 {
-  if ! helm status mysql -n mysql 2> /dev/null > /dev/null; then
+  if ! helm status my-release -n mysql 2> /dev/null > /dev/null; then
     helm install my-release oci://registry-1.docker.io/bitnamicharts/mysql -f k8s/cluster2/helm/mysql/values.yaml \
          --create-namespace --namespace mysql --wait --timeout 600s
   fi
