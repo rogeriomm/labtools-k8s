@@ -10,3 +10,11 @@ defaultImageTag: 0.39.0
 extraEnvs:
   - name: KUBERNETES_SERVICE_DNS_DOMAIN
     value: "cluster1.xpt"
+
+resources:
+  limits:
+    memory: 600Mi
+    cpu: 1000m
+  requests:
+    memory: 384Mi
+    cpu: 200m
