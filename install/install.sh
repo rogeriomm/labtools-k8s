@@ -208,32 +208,34 @@ kafka_ui_install()
   if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
     helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
          --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
+  fi
 
-    sasl_jaas_config=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.sasl\.jaas\.config}' | base64 -d)
+  if kubectl -n kafka-main-cluster get secret kafka-user-ui; then
+      sasl_jaas_config=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.sasl\.jaas\.config}' | base64 -d)
 
-    echo "
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: kafka-ui-configmap
-      namespace: kafka
-    data:
-      config.yml: |-
-        kafka:
-          clusters:
-            - name: main
-              bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
-              properties:
-                security.protocol: SASL_PLAINTEXT
-                sasl.mechanism: SCRAM-SHA-512
-                sasl.jaas.config: $sasl_jaas_config
-        auth:
-          type: disabled
-        management:
-          health:
-            ldap:
-              enabled: false
-    " | kubectl apply -f -
+      echo "
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: kafka-ui-configmap
+        namespace: kafka
+      data:
+        config.yml: |-
+          kafka:
+            clusters:
+              - name: main
+                bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
+                properties:
+                  security.protocol: SASL_PLAINTEXT
+                  sasl.mechanism: SCRAM-SHA-512
+                  sasl.jaas.config: $sasl_jaas_config
+          auth:
+            type: disabled
+          management:
+            health:
+              ldap:
+                enabled: false
+      " | kubectl apply -f -
   fi
 }
 
@@ -327,7 +329,7 @@ sudo -v
 # Cluster 1 setup
 labtools-k8s set-context cluster1
 
-minikube_configure
+#minikube_configure
 
 k8s-replicator_install
 
