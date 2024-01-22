@@ -37,3 +37,6 @@
 [submodule "modules/ranger"]
 	path = modules/ranger
 	url = git@github.com:rogeriomm/ranger.git
+[submodule "modules/labtools-k8s-notebooks"]
+	path = modules/labtools-k8s-notebooks
+	url = git@github.com:rogeriomm/labtools-k8s-notebooks.git
