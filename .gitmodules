@@ -1,9 +1,6 @@
 [submodule "zeppelin-k8s"]
 	path = zeppelin-k8s
 	url = git@github.com:rogeriomm/zeppelin-k8s.git
-[submodule "modules/kafka-k8s"]
-	path = modules/kafka-k8s
-	url = git@github.com:rogeriomm/kafka-k8s.git
 [submodule "modules/localstack-k8s"]
 	path = modules/localstack-k8s
 	url = git@github.com:rogeriomm/localstack-k8s.git
