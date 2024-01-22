@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: airflow-secrets
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "openmetadata"
+type: Opaque
+data:
+  openmetadata-airflow-password: "bWV0YXN0b3JlX2Ri"
