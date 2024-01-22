@@ -24,6 +24,15 @@ data:
   echo "${CONFIG_MAP}" | kubectl apply -f -
 }
 
+velero_install()
+{
+    if ! helm status velero -n velero 2> /dev/null > /dev/null; then
+      helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts
+      helm repo update vmware-tanzu
+      helm install --namespace velero velero vmware-tanzu/velero --values k8s/cluster2/helm/velero/values.yaml
+    fi
+}
+
 minikube_configure()
 {
   # Raise the kindnet daemonset pod memory resource limit
@@ -346,6 +355,8 @@ kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 labtools-k8s set-context cluster2
 
 minikube_configure
+
+#velero_install
 
 k8s-replicator_install
 
