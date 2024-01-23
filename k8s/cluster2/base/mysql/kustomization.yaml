@@ -3,5 +3,10 @@ kind: Kustomization
 metadata:
   name: arbitrary
 
+namespace: mysql
+
 resources:
   - users.yaml
+
+patches:
+  - path: users.yaml
