@@ -75,6 +75,46 @@ NAME                          CLUSTER      CONNECTOR CLASS                      
 debezium-connector-postgres   my-connect   io.debezium.connector.postgresql.PostgresConnector   1           
 ```
 
+# Versions
+   * https://kafka.apache.org/downloads
+     * Kafka releases
+   * https://debezium.io/releases/: Debezium tested versions Java/Kafka Connect/Postgres
+      * https://github.com/rogeriomm/labtools-k8s/blob/master/install/kafka/connectors/Dockerfile#L12
+   * https://strimzi.io/downloads/
+      * Supported versions: operator version, Kafka versions, Kubernetes versions
+      * https://github.com/rogeriomm/labtools-k8s/blob/master/k8s/cluster2/helm/kafka/values.yaml#L9\
+   * https://debezium.io/documentation/reference/stable/configuration/avro.html
+     * "Beginning with Debezium 2.0.0, Confluent Schema Registry support is not included in the Debezium containers"
+       * https://packages.confluent.io/maven/io/confluent/kafka-connect-avro-converter/ https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter
+         * Version ?
+         * https://github.com/rogeriomm/labtools-k8s/blob/master/install/kafka/connectors/dependencies/pom.xml
+   * Debezium plugins
+     * https://github.com/rogeriomm/labtools-k8s/blob/master/install/kafka/connectors/build.sh#L20
+   
+
+# Which is better, decoderbufs or pgoutput, and why?
+"Decoderbufs" and "pgoutput" are both logical decoding output plugins for PostgreSQL. 
+They are used to stream changes in database tables to external systems. 
+The choice between them depends on your specific requirements and setup.
+Let's compare them based on some key aspects:
+
+Decoderbufs
+Format: Decoderbufs outputs changes in a Protobuf (Protocol Buffers) format. Protobuf is a language-neutral, platform-neutral, extensible way of serializing structured data.
+Efficiency: It's generally more efficient in terms of CPU usage and bandwidth because Protobuf is a binary format and is more compact compared to text-based formats.
+Compatibility: Being a binary format, it requires compatible Protobuf schema on the client side. This means extra effort in maintaining the schema and ensuring compatibility between producer and consumer.
+Use Case: Best suited for high-performance, cross-language applications, especially where bandwidth and efficiency are critical.
+
+pgoutput
+Format: pgoutput outputs changes in a text-based format. It's the default output plugin for PostgreSQL's logical replication.
+Ease of Use: Since it uses a text-based format, it’s generally easier to debug and understand, especially if you are directly inspecting the replication stream.
+Compatibility: Being a default plugin, it tends to have better support and compatibility with various PostgreSQL versions and replication tools.
+Use Case: Ideal for standard logical replication needs, especially when using PostgreSQL's built-in replication functionalities or when simplicity and compatibility are prioritized.
+
+Conclusion
+Choose Decoderbufs if you need high efficiency in terms of bandwidth and CPU usage, are working in a multi-language environment, and are prepared to handle the complexity of maintaining Protobuf schemas.
+Choose pgoutput if you are looking for ease of use, better compatibility with various PostgreSQL tools and versions, and do not have stringent efficiency requirements.
+In summary, the "better" option really depends on your specific use case, your team's familiarity with the technologies involved, and your performance requirements.
+
 
 # Troubleshooting
    * Find config errors
@@ -82,7 +122,7 @@ debezium-connector-postgres   my-connect   io.debezium.connector.postgresql.Post
 curl -H "Accept:application/json" http://my-connect-connect-api.kafka-main-cluster.svc:8083/connector-plugins/source/config/validate  | jq
 ```
 
-  * Get errors from kafkaconnectors Strimzi api
+  * Get errors from kafkaconnectors Strimzi api 
 
 ```shell
 kubectl get -n kafka-main-cluster kafkaconnectors debezium-connector-postgres
@@ -295,6 +335,7 @@ status:
   topics: []
 ```
 
+
 Get tag version from oci://registry-1.docker.io/bitnamicharts/postgresql helm chart
 ```shell
 skopeo list-tags docker://registry-1.docker.io/bitnamicharts/postgresql
@@ -447,6 +488,11 @@ curl -H "Accept:application/json" http://my-connect-connect-api.kafka-main-clust
   }
 }
 ```
+
+# AVRO configuration
+   * https://debezium.io/documentation/reference/stable/configuration/avro.html
+     * " Beginning with Debezium 2.0.0, Confluent Schema Registry support is not included in the Debezium containers. To enable the Confluent Schema Registry for a Debezium container,... "
+
 
 # Tested Versions
    * https://debezium.io/releases/
