@@ -109,12 +109,13 @@ airflow_install()
   fi
 }
 
+# https://github.com/trinodb/charts
 trino_install()
 {
-  if ! kubectl get namespace trino 2> /dev/null ; then
+  if ! helm status trino -n trino 2> /dev/null > /dev/null;  then
     helm repo add trino https://trinodb.github.io/charts
     helm repo update trino
-    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino-cluster trino/trino
+    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino trino/trino
   fi
 }
 
