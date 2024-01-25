@@ -3,11 +3,31 @@ This is a work in progress
    * [Quick start Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start)
 
 
-<img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
-
-# Kafka Strimizi, Debezium CDC, Postgres
+# Kafka Strimzi, Debezium CDC, Postgres
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
+
+# Zeppelin
+<img src="docs/zeppelin/ZeppelinWeb.png" alt="drawing" width="1000"/>
+
+# Jupyter
+<img src="docs/jupyter/JupyterWeb.png" alt="drawing" width="1000"/>
+
+# Metabase
+<img src="docs/metabase/MetabaseWeb.png" alt="drawing" width="1000"/>
+
+# Datahub
+<img src="docs/datahub/DatahubWeb.png" alt="drawing" width="1000"/>
+
+# Airflow
+<img src="docs/airflow/AirflowWeb.png" alt="drawing" width="1000"/>
+
+# Minio
+<img src="docs/minio/MinioWeb.png" alt="drawing" width="1000"/>
+
+# Kubernetes
+<img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
+
 
 # Web local
 | Local URL                                          | Description                                                                                                                | User    | Password       |
