@@ -5,6 +5,9 @@ This is a work in progress
 
 <img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
 
+# Kafka Strimizi, Debezium CDC, Postgres
+<img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
+<img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
 
 # Web local
 | Local URL                                          | Description                                                                                                                | User    | Password       |
