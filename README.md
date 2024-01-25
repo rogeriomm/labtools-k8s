@@ -3,7 +3,7 @@ This is a work in progress
    * [Quick start Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start)
 
 
-# Kafka Strimzi, Debezium CDC, Postgres
+# Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
 
