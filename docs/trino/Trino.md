@@ -12,6 +12,12 @@ Get the application URL by running these commands:
   kubectl port-forward $POD_NAME 8080:8080
 ```
 
+```shell
+nc -v  trino.trino.svc 8080
+```
+
+   * http://trino.trino.svc:8080
+
 
 # Links
    * Connectors
