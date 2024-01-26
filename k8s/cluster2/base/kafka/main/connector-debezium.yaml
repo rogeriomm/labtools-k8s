@@ -34,3 +34,6 @@ spec:
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
     transforms.unwrap.drop.tombstones: false
     transforms.unwrap.delete.handling.mode: drop
+
+    #table.exclude.list: public.job
+    table.include.list: public.dag,public.variable
