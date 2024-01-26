@@ -1,6 +1,7 @@
 This is a work in progress
 
-   * [Quick start Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start)
+   * [Quick start Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start) 
+   * [Zeppelin notebooks (TODO)](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/zeppelin-notebooks/)
 
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres
