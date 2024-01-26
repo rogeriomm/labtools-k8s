@@ -13,6 +13,9 @@ This is a work in progress
 # Jupyter
 <img src="docs/jupyter/JupyterWeb.png" alt="drawing" width="1000"/>
 
+# Spark
+<img src="docs/spark/SparkWebUi.png" alt="drawing" width="1000"/>
+
 # Metabase
 <img src="docs/metabase/MetabaseWeb.png" alt="drawing" width="1000"/>
 
@@ -23,6 +26,7 @@ This is a work in progress
 <img src="docs/airflow/AirflowWeb.png" alt="drawing" width="1000"/>
 
 # Minio
+<img src="docs/minio/MinioOperatorWeb.png" alt="drawing" width="1000"/>
 <img src="docs/minio/MinioWeb.png" alt="drawing" width="1000"/>
 
 # Kubernetes
