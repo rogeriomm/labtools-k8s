@@ -3,7 +3,7 @@ kind: KafkaConnector
 metadata:
   name: source-connector
   labels:
-    strimzi.io/cluster: main
+    strimzi.io/cluster: my-connect
 spec:
   class: org.apache.kafka.connect.file.FileStreamSourceConnector
   tasksMax: 2
