@@ -10,6 +10,7 @@
 
   <properties>
     <confluent.version>${confluent_version}</confluent.version>
+    <apache.version>${apache_version}</apache.version>
   </properties>
 
   <dependencies>
@@ -27,6 +28,71 @@
       <artifactId>common-utils</artifactId>
       <version>${confluent.version}</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-file -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>connect-file</artifactId>
+      <version>${apache.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-api -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>connect-api</artifactId>
+      <version>${apache.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-json -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>connect-json</artifactId>
+      <version>${apache.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-mirror-client -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>connect-mirror-client</artifactId>
+      <version>7.5.1-ce</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-basic-auth-extension -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>connect-basic-auth-extension</artifactId>
+      <version>7.5.1-ce</version>
+    </dependency>
+
+
+    <!-- https://www.confluent.io/hub/confluentinc/kafka-connect-jdbc -->
+    <!-- https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-jdbc/versions/10.7.4/confluentinc-kafka-connect-jdbc-10.7.4.zip -->
+    <!-- https://mvnrepository.com/artifact/io.confluent/kafka-connect-jdbc -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-connect-jdbc</artifactId>
+      <version>10.7.4</version>
+    </dependency>
+
+    <!-- https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch -->
+    <!-- https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-elasticsearch/versions/14.0.12/confluentinc-kafka-connect-elasticsearch-14.0.12.zip -->
+    <!-- https://mvnrepository.com/artifact/io.confluent/kafka-connect-elasticsearch -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-connect-elasticsearch</artifactId>
+      <version>14.0.3</version>
+    </dependency>
+
+    <!-- https://www.confluent.io/hub/confluentinc/kafka-connect-s3 -->
+    <!-- https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-s3/versions/10.5.7/confluentinc-kafka-connect-s3-10.5.7.zip -->
+    <!-- https://mvnrepository.com/artifact/io.confluent/kafka-connect-s3 -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-connect-s3</artifactId>
+      <version>10.5.6</version>
+    </dependency>
+
   </dependencies>
 
   <repositories>
