@@ -7,7 +7,7 @@ This is a work in progress
 
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres
-   * [YAML](k8s/cluster2/base/kafka/main)
+   * [YAML](k8s/cluster2/base/kafka/main)   -  [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumPostgresCdc.ipynb)
 
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
