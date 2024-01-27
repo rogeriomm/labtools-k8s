@@ -29,7 +29,7 @@ spec:
               containerPort: 8888
           env:
             - name: JUPYTER_NOTEBOOK_PATH
-              value: "/Volumes/data/git/labtools-k8s/data/jupyter/notebooks"
+              value: "/Volumes/data/git/labtools-k8s/modules/labtools-k8s-notebooks/jupyter-notebooks"
           volumeMounts:
             - name: data-lab-volume
               mountPath: /Volumes/data/git
