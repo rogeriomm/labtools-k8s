@@ -6,13 +6,16 @@ This is a work in progress
 
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres
+   * [YAML](k8s/cluster2/base/kafka/main)
+
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
 
-# Zeppelin
+# Zeppelin/Jupiter
+   * [YAML](k8s/cluster2/base/zeppelin)
+
 <img src="docs/zeppelin/ZeppelinWeb.png" alt="drawing" width="1000"/>
 
-# Jupyter
 <img src="docs/jupyter/JupyterWeb.png" alt="drawing" width="1000"/>
 
 # Spark
