@@ -2,6 +2,7 @@ This is a work in progress
 
    * [Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/)
       * [Quick start](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start) 
+        * [Kafka](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start/kafka) 
    * [Zeppelin notebooks (TODO)](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/zeppelin-notebooks/)
 
 
@@ -11,11 +12,12 @@ This is a work in progress
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
 
-# Zeppelin/Jupiter
+# Zeppelin/Jupyter
    * [YAML](k8s/cluster2/base/zeppelin)
 
 <img src="docs/zeppelin/ZeppelinWeb.png" alt="drawing" width="1000"/>
 
+   * [YAML](k8s/cluster2/base/jupyter)
 <img src="docs/jupyter/JupyterWeb.png" alt="drawing" width="1000"/>
 
 # Spark
