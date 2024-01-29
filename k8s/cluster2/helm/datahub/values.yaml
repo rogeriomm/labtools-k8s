@@ -1,3 +1,4 @@
+# https://github.com/acryldata/datahub-helm/blob/datahub-0.3.28/charts/datahub/values.yaml
 global:
   datahub:
     #version: v0.12.1
@@ -41,13 +42,13 @@ datahub-frontend:
     requests:
       cpu: 100m
       memory: 512Mi
-  # Set up ingress to expose react front-end
 
+  # Set up ingress to expose react front-end
   ingress:
     enabled: true
     # https://datahubproject.io/docs/deploy/aws/ search ingress
     hosts:
-      - host: datahub.worldlb.xpt
+      - host: datahub.worldl.xpt
         redirectPaths:
           - path: /*
             name: ssl-redirect
@@ -59,3 +60,5 @@ datahub-frontend:
     manualValues: |
        datahub:manualPassword
        initialViewer:manualPassword
+  service:
+      type: ClusterIP
