@@ -1930,18 +1930,19 @@ server:
     # -- Enable an ingress resource for the Argo CD server
     enabled: false
     # -- Additional ingress annotations
-    annotations: {}
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     # -- Additional ingress labels
     labels: {}
     # -- Defines which ingress controller will implement the resource
-    ingressClassName: ""
+    ingressClassName: "nginx"
 
     # -- List of ingress hosts
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    hosts: []
-      # - argocd.example.com
+    hosts:
+      - argocd.worldl.xpt
 
     # -- List of ingress paths
     paths:
@@ -1949,14 +1950,14 @@ server:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths
-    extraPaths: []
-      # - path: /*
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: ssl-redirect
-      #       port:
-      #         name: use-annotation
+    extraPaths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port:
+              name: use-annotation
 
     # -- Ingress TLS configuration
     tls: []
@@ -1965,7 +1966,7 @@ server:
       #     - argocd.example.com
 
     # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
-    https: false
+    https: true
 
   # dedicated ingress for gRPC as documented at
   # Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/
