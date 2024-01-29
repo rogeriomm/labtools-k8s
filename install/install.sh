@@ -92,7 +92,7 @@ datahub_install()
 
     helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml --version 0.1.6
 
-    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --wait --timeout 900s --version 0.3.27
+    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --wait --timeout 900s --version 0.3.28
   fi
 }
 
@@ -157,12 +157,26 @@ postgres_show()
   set -x
 }
 
+# https://artifacthub.io/packages/helm/simcube/mssqlserver-2022
+sqlserver_install()
+{
+  if ! helm status mssqlserver-2022 -n sqlserver 2> /dev/null > /dev/null; then
+    helm repo add simcube https://simcubeltd.github.io/simcube-helm-charts/
+    helm repo update simcube
+
+    helm install mssqlserver-2022 simcube/mssqlserver-2022 -f k8s/cluster2/helm/sqlserver/values.yaml \
+        --create-namespace --namespace sqlserver --version 1.2.3
+  fi
+}
+
+# https://github.com/minio/operator
 minio_install()
 {
   if ! kubectl get namespace minio-operator; then
     echo "Installing MINIO operator..."
     kubectl krew update
     kubectl krew install minio
+    kubectl krew update minio
     kubectl minio version
     domain=$(kubectl get cm coredns -n kube-system -o jsonpath="{.data.Corefile}" | grep kubernetes | awk -F ' ' '{print $2}')
     kubectl minio init --namespace minio-operator --cluster-domain "$domain"
@@ -178,6 +192,10 @@ minio_install()
       --namespace      minio-tenant-1          \
       --storage-class  minio-local-storage
   fi
+
+  kubectl minio version
+  #kubectl krew update minio
+  #kubectl krew upgrade minio
 }
 
 livy_install()
@@ -291,9 +309,15 @@ kafka_wait_main_cluster()
 
 minio_copy()
 {
-  set +x
-
   export https_proxy="http://localhost:8888"
+
+  # Add "minio" user with policie "consoleAdmin"
+  if ! mc admin user info local minio; then
+    echo -e "minio\nawesomes3" | mc admin user add local
+    mc admin policy attach local consoleAdmin --user minio
+  fi
+
+  set +x
 
   if ! mc ls local 2> /dev/null > /dev/null ; then
     echo "Waiting MINIO S3"
@@ -386,6 +410,7 @@ elasticsearch_install
 minio_install
 postgres_install
 mysql_install
+sqlserver_install
 
 hive_install
 airflow_install
