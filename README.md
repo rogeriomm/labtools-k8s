@@ -6,11 +6,16 @@ This is a work in progress
    * [Zeppelin notebooks (TODO)](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/zeppelin-notebooks/)
 
 
-# Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres
+# Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
+## Postgres
    * [YAML](k8s/cluster2/base/kafka/main)   -  [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumPostgresCdc.ipynb)
 
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
+
+##  Microsoft SQL Server CDC
+* [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/sqlserver/sqlserver.ipynb) [Notebook CDC](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumSqlserverCdc.ipynb)
+
 
 # Zeppelin/Jupyter
    * [YAML](k8s/cluster2/base/zeppelin)
@@ -18,6 +23,7 @@ This is a work in progress
 <img src="docs/zeppelin/ZeppelinWeb.png" alt="drawing" width="1000"/>
 
    * [YAML](k8s/cluster2/base/jupyter)
+
 <img src="docs/jupyter/JupyterWeb.png" alt="drawing" width="1000"/>
 
 # Spark
@@ -35,9 +41,6 @@ This is a work in progress
 # Minio
 <img src="docs/minio/MinioOperatorWeb.png" alt="drawing" width="1000"/>
 <img src="docs/minio/MinioWeb.png" alt="drawing" width="1000"/>
-
-# Microsoft SQL Server 2022
-   * [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/sqlserver/sqlserver.ipynb)
 
 # Kubernetes
 <img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
