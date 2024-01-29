@@ -17,4 +17,5 @@ resources:
   - bridge.yaml
   - connect.yaml
   - connector-source.yaml
-  - connector-debezium.yaml
+  - connector-debezium-postgres.yaml
+  - connector-debezium-sqlserver.yaml
