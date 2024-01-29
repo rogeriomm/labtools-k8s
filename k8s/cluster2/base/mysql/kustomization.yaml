@@ -6,6 +6,7 @@ metadata:
 namespace: mysql
 
 resources:
+  - namespace.yaml
   - users.yaml
 
 patches:
