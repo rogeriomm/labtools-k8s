@@ -10,7 +10,7 @@ spec:
   config:
     # https://debezium.io/documentation/reference/stable/connectors/postgresql.html
     tasks.max: 1
-    database.hostname: postgres-postgresql.postgres.svc.cluster2.xpt
+    database.hostname: postgres-postgresql.postgres.svc
     database.port: 5432
     #database.user: ${secrets:kafka-main-cluster/postgres-user-debezium:username}
     #database.password: ${secrets:kafka-main-cluster/postgres-user-debezium:password}
