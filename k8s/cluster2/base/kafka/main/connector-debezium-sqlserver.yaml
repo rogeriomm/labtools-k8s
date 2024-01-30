@@ -17,7 +17,10 @@ spec:
     database.port: 1433
     database.dbname: test
     database.user: sa
-    database.password: ZAyPsMK9RM99SfYfaz6W
+    database.password: jRaF7SUPhgJ6iDkQZCjn
+    database.names: test
+    # https://debezium.io/documentation/reference/stable/connectors/sqlserver.html#setting-up-sqlserver
+    database.encrypt: false
     table.whitelist: "dbo.subscription,dbo.company,dbo.credit_card"
     database.server.name: mssqlserver-2022.sqlserver.svc
     #message.key.columns: ""
@@ -30,6 +33,7 @@ spec:
     max.queue.size: 1200
     query.fetch.size: 1000
     snapshot.fetch.size: 600
+    topic.prefix: sqlserver.test
 
     # Debezium Avro serialization configurations
 
