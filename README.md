@@ -14,7 +14,7 @@ This is a work in progress
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
 
 ##  Microsoft SQL Server CDC
-* [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/sqlserver/sqlserver.ipynb) [Notebook CDC](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumSqlserverCdc.ipynb)
+* [YAML](k8s/cluster2/helm/sqlserver) [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/sqlserver/sqlserver.ipynb) [Notebook CDC](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumSqlserverCdc.ipynb)
 
 
 # Zeppelin/Jupyter
