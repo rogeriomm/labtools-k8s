@@ -47,7 +47,10 @@ airflow:
   ## extra Volumes for the airflow Pods
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-persistent-volumes.md
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-files.md
-  extraVolumes: []
+  extraVolumes:
+    - name: worker-tmp
+      persistentVolumeClaim:
+        claimName: worker-tmp
 
   kubernetesPodTemplate:
     extraVolumeMounts:
