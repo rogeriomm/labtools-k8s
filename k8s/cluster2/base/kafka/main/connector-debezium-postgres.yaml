@@ -12,10 +12,11 @@ spec:
     tasks.max: 1
     database.hostname: postgres-postgresql.postgres.svc
     database.port: 5432
-    #database.user: ${secrets:kafka-main-cluster/postgres-user-debezium:username}
-    #database.password: ${secrets:kafka-main-cluster/postgres-user-debezium:password}
-    database.user: debezium
-    database.password: debezium
+    # https://strimzi.io/blog/2021/07/22/using-kubernetes-config-provider-to-load-data-from-secrets-and-config-maps/
+    database.user: ${secrets:kafka-main-cluster/postgres-user-debezium:username}
+    database.password: ${secrets:kafka-main-cluster/postgres-user-debezium:password}
+    #database.user: debezium
+    #database.password: debezium
     database.dbname: airflow
     topic.prefix: postgres-airflow
     schema.history.internal.kafka.bootstrap.servers: main-kafka-bootstrap:9092

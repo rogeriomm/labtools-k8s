@@ -15,6 +15,7 @@ resources:
   - topic-connect.yaml
   - topic-samples.yaml
   - bridge.yaml
+  - secret-authorization.yaml
   - connect.yaml
   - connector-source.yaml
   - connector-debezium-postgres.yaml
