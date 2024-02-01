@@ -15,13 +15,12 @@ spec:
     value.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
     database.hostname: mssqlserver-2022.sqlserver.svc
     database.port: 1433
-    database.dbname: test
-    database.user: sa
-    database.password: jRaF7SUPhgJ6iDkQZCjn
-    database.names: test
+    database.dbname: testDB
+    database.user: ${secrets:kafka-main-cluster/sqlserver-user-debezium:username}
+    database.password: ${secrets:kafka-main-cluster/sqlserver-user-debezium:password}
+    database.names: testDB
     # https://debezium.io/documentation/reference/stable/connectors/sqlserver.html#setting-up-sqlserver
     database.encrypt: false
-    table.whitelist: "dbo.subscription,dbo.company,dbo.credit_card"
     database.server.name: mssqlserver-2022.sqlserver.svc
     #message.key.columns: ""
     database.history.kafka.bootstrap.servers: main-kafka-bootstrap:9092
@@ -33,7 +32,7 @@ spec:
     max.queue.size: 1200
     query.fetch.size: 1000
     snapshot.fetch.size: 600
-    topic.prefix: sqlserver.test
+    topic.prefix: sqlserver.testDB
 
     # Debezium Avro serialization configurations
 
