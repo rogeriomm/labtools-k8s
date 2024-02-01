@@ -6,6 +6,7 @@ metadata:
 resources:
   - velero
   - postgres
+  - sqlserver
   - mysql
   - jupyter
   - zeppelin
