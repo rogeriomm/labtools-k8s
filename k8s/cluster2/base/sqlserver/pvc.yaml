@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: lab-claim
+spec:
+  storageClassName: nfs-common
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128M
+
+

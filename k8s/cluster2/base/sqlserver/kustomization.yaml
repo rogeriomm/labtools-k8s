@@ -8,3 +8,5 @@ namespace: sqlserver
 resources:
   - namespace.yaml
   - users.yaml
+  - pvc.yaml
+  - init.yaml

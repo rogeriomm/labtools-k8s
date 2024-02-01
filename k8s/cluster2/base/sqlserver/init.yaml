@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sqlserver-init-conf
+data:
+  start.sh: |
+    #!/bin/bash
+    echo "Loading data..."
+    /opt/mssql-tools/bin/sqlcmd -S mssqlserver-2022.sqlserver.svc -U sa -P $SA_PASSWORD \
+                 -i /data/init.sql
+    echo "END."
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sqlserver-init-job
+spec:
+  template:
+    spec:
+      volumes:
+        - name: tunnel-conf
+          configMap:
+            name: sqlserver-init-conf
+            items:
+              - key: start.sh
+                path: start.sh
+        - name: data-lab-volume
+          persistentVolumeClaim:
+            claimName: lab-claim
+
+      containers:
+        - name: sqlserver-init
+          image: mcr.microsoft.com/mssql-tools
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: tunnel-conf
+              mountPath: /tmp/conf
+              readOnly: true
+            - name: data-lab-volume
+              mountPath: /data
+              subPath: labtools-k8s/data/sqlserver
+          command: ["/bin/bash"]
+          args: ["/tmp/conf/start.sh"]
+          env:
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mssqlserver-2022-secret
+                  key: sapassword
+      restartPolicy: Never
+  backoffLimit: 4
+
