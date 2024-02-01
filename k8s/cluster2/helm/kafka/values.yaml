@@ -8,11 +8,7 @@ defaultImageRegistry: quay.io
 defaultImageRepository: strimzi
 defaultImageTag: 0.39.0
 
-#kubernetesServiceDnsDomain: cluster2.xpt
-
-extraEnvs:
-  - name: KUBERNETES_SERVICE_DNS_DOMAIN
-    value: "cluster2.xpt"
+kubernetesServiceDnsDomain: cluster2.xpt
 
 resources:
   limits:
