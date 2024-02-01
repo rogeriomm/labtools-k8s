@@ -6,6 +6,12 @@ This is a work in progress
    * [Zeppelin notebooks (TODO)](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/zeppelin-notebooks/)
 
 
+   * TODO
+      * [Microks8s](https://microk8s.io) 
+        * Staging environment with production-like characteristics
+      * [AWS EKS](https://aws.amazon.com/eks/) + Terraform 
+        * Staging environment with production-like characteristics
+
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
 ## Postgres
    * [YAML](k8s/cluster2/base/kafka/main)   -  [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumPostgresCdc.ipynb)
