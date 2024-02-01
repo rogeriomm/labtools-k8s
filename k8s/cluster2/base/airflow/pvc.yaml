@@ -36,3 +36,16 @@ spec:
   resources:
     requests:
       storage: 128Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: worker-log
+  namespace: airflow
+spec:
+  storageClassName: standard-consumer
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Mi
