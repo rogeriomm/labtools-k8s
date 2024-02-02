@@ -7,8 +7,8 @@ namespace: commander
 
 resources:
   - namespace.yaml
-  - tunnel.yaml
+  - commander.yaml
   - serviceacc.yaml
   - jupyter-ingress.yaml
-  - jupyter-server.yaml
+  - jupyter-commander.yaml
   - pvc.yaml
