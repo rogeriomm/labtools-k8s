@@ -65,7 +65,9 @@ nexus_install()
 elasticsearch_install()
 {
   if ! helm status elasticsearch -n elasticsearch 2> /dev/null > /dev/null; then
-    helm install --namespace elasticsearch --create-namespace elasticsearch oci://registry-1.docker.io/bitnamicharts/elasticsearch --values k8s/cluster2/helm/elasticsearch/values.yaml
+    helm install --namespace elasticsearch --create-namespace elasticsearch \
+         oci://registry-1.docker.io/bitnamicharts/elasticsearch --values k8s/cluster2/helm/elasticsearch/values.yaml \
+         --version 19.17.2
   fi
 }
 
@@ -83,7 +85,8 @@ openmetadata_install()
     helm repo add open-metadata https://helm.open-metadata.org/
     helm repo update open-metadata
 
-    helm install openmetadata --namespace openmetadata --create-namespace open-metadata/openmetadata --values k8s/cluster2/helm/openmetadata/values.yaml
+    helm install openmetadata --namespace openmetadata --create-namespace open-metadata/openmetadata \
+        --values k8s/cluster2/helm/openmetadata/values.yaml --version 1.2.8
   fi
 }
 
