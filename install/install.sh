@@ -174,6 +174,9 @@ sqlserver_install()
 
     helm install mssqlserver-2022 simcube/mssqlserver-2022 -f k8s/cluster2/helm/sqlserver/values.yaml \
         --create-namespace --namespace sqlserver --version 1.2.3
+
+    kubectl -n sqlserver  wait deployment/mssqlserver-2022 --for=condition=Available --timeout=30m
+
   fi
 }
 
