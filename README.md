@@ -39,6 +39,9 @@ This is a work in progress
 # Datahub
 <img src="docs/datahub/DatahubWeb.png" alt="drawing" width="1000"/>
 
+# OpenMetadata
+<img src="docs/openmetadata/OpenmetadataWeb.png" alt="drawing" width="1000"/>
+
 # Airflow
 <img src="docs/airflow/AirflowWeb.png" alt="drawing" width="1000"/>
 
@@ -72,7 +75,7 @@ This is a work in progress
 | https://webui-glue4.worldl.xpt/                      | [AWS Glue version 4.0 - WebUI](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-libraries.html)         |         |                                                                                                                                       |
 | https://history-glue4.worldl.xpt/                    | [AWS Glue version 4.0 - History](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-libraries.html)       |         |                                                                                                                                       |
 | http://datahub.worldl.xpt/                           | [Datahub](https://datahubproject.io)                                                                                       | datahub | manualPassword                                                                                                                        |
-| https://openmetadata.worldl.xpt/                     | [OpenMetadata](https://open-metadata.org/)                                                                                 |         |                                                                                                                                       |
+| https://openmetadata.worldl.xpt/                     | [OpenMetadata](https://open-metadata.org/)                                                                                 | admin   | admin                                                                                                                                 |
 | https://kafkaui.worldl.xpt/                          | [Kafka UI](https://github.com/provectus/kafka-ui)                                                                          |         |                                                                                                                                       |
 | https://metabase.worldl.xpt/                         | [Metabase](https://www.metabase.com)                                                                                       |         |                                                                                                                                       |
 | http://trino.trino.svc:8080                          | [Trino](https://trino.io)                                                                                                  |         |                                                                                                                                       |
