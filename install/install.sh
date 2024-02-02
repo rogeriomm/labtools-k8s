@@ -134,17 +134,23 @@ mongodb_install()
     helm repo update mongodb
     helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator --create-namespace --namespace mongodb
   fi
-
-  echo MySQL root password
-  kubectl -n mysql get secret my-release-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode
 }
 
+# https://github.com/bitnami/charts/tree/main/bitnami/mysql
 mysql_install()
 {
   if ! helm status my-release -n mysql 2> /dev/null > /dev/null; then
     helm install my-release oci://registry-1.docker.io/bitnamicharts/mysql -f k8s/cluster2/helm/mysql/values.yaml \
          --create-namespace --namespace mysql --wait --timeout 600s
   fi
+}
+
+mysql_show()
+{
+  set +x && echo -n "\033[34mMySQL root password: " && \
+    kubectl -n mysql get secret my-release-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode && \
+    echo -n "\033[0m" && echo "" &&
+    set -x
 }
 
 # https://stackoverflow.com/questions/55499984/postgresql-in-helm-initdbscripts-parameter
@@ -158,11 +164,10 @@ postgres_install()
 
 postgres_show()
 {
-  set +x
-  echo -n "\033[34mPostgres admin password: " && \
+  set +x && echo -n "\033[34mPostgres admin password: " && \
     kubectl -n postgres  get secret postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 --decode | grep -v '^$' && \
-    echo -n "\033[0m"
-  set -x
+    echo -n "\033[0m" &&
+    set -x
 }
 
 # https://artifacthub.io/packages/helm/simcube/mssqlserver-2022
@@ -205,8 +210,12 @@ minio_install()
   fi
 
   kubectl minio version
-  #kubectl krew update minio
-  #kubectl krew upgrade minio
+}
+
+minio_show()
+{
+  set +x && echo "Minio password: " \
+    set -x
 }
 
 livy_install()
@@ -436,5 +445,7 @@ openmetadata_install
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
 
 postgres_show
+mysql_show
+minio_show
 
 minio_copy
