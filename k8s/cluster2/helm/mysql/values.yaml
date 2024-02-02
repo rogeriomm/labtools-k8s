@@ -1,5 +1,4 @@
-# Copyright VMware, Inc.
-# SPDX-License-Identifier: APACHE-2.0
+# https://github.com/bitnami/charts/blob/main/bitnami/mysql/values.yaml
 
 ## @section Global parameters
 ## Global Docker image parameters
@@ -85,7 +84,7 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: bitnami/mysql
-  tag: 8.0.36-debian-11-r0
+  tag: 8.0.36-debian-11-r2
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -162,7 +161,13 @@ auth:
 ##      #!/bin/bash
 ##      echo "Do something."
 ##
-initdbScripts: {}
+initdbScripts:
+  createdb.sql: |-
+    CREATE DATABASE IF NOT EXISTS openmetadata_db DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    CREATE USER 'openmetadata'@'%' IDENTIFIED BY 'openmetadata';
+    GRANT ALL PRIVILEGES ON *.* TO 'openmetadata'@'%' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;    
+
 ## @param initdbScriptsConfigMap ConfigMap with the initdb scripts (Note: Overrides `initdbScripts`)
 ##
 initdbScriptsConfigMap: ""
