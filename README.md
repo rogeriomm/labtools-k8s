@@ -7,8 +7,6 @@ This is a work in progress
 
 
    * TODO
-      * [Microks8s](https://microk8s.io) 
-        * Staging environment with production-like characteristics
       * [AWS EKS](https://aws.amazon.com/eks/) + Terraform 
         * Staging environment with production-like characteristics
 
