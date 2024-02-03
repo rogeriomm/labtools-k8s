@@ -50,7 +50,7 @@ This is a work in progress
 <img src="docs/minio/MinioWeb.png" alt="drawing" width="1000"/>
 
 # Kubernetes
-<img src="docs/K8sPodsCluster2.png" alt="drawing" width="1000"/>
+<img src="docs/k8s/K8sPodsCluster2.png" alt="drawing" width="1000"/>
 
 
 # Web local
