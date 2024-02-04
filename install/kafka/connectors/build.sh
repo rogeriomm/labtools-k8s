@@ -18,13 +18,13 @@ plug()
 }
 
 # Debezium connectors
-plug "postgres"                "2.5.0.Final"
+#plug "postgres"                "2.5.0.Final"
 plug "sqlserver"               "2.5.0.Final"
-plug "mongodb"                 "2.5.0.Final"
-plug "mysql"                   "2.5.0.Final"
-plug "oracle"                  "2.5.0.Final"
-plug "jdbc"                    "2.5.0.Final"
-plug "cassandra-4"             "2.5.0.Final"
-plug "connect-rest-extension"  "2.5.0.Final" "https://github.com/debezium/debezium/tree/main/debezium-connect-rest-extension"
+#plug "mongodb"                 "2.5.0.Final"
+#plug "mysql"                   "2.5.0.Final"
+#plug "oracle"                  "2.5.0.Final"
+#plug "jdbc"                    "2.5.0.Final"
+#plug "cassandra-4"             "2.5.0.Final"
+#plug "connect-rest-extension"  "2.5.0.Final" "https://github.com/debezium/debezium/tree/main/debezium-connect-rest-extension"
 
-docker build . -t registry.minikube/debezium-connector-postgres:0.39.0-kafka-3.6.1 --no-cache
+docker build . -t registry.minikube/debezium-connector-postgres:0.39.0-kafka-3.6.1 #--no-cache
