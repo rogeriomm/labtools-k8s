@@ -60,6 +60,14 @@ argocd_install()
 nexus_install()
 {
   echo "Install NEXUS"
+
+  if ! helm status nexus -n nexus 2> /dev/null > /dev/null; then
+    helm repo add sonatype https://sonatype.github.io/helm3-charts/
+    helm repo update sonatype
+    helm install --namespace nexus --create-namespace nexus \
+         sonatype/nexus-repository-manager --values k8s/cluster2/helm/nexus/values.yaml \
+         --version 61.0.2
+  fi
 }
 
 elasticsearch_install()
@@ -427,6 +435,8 @@ kubectl annotate secret mkcert replicator.v1.mittwald.de/replicate-to="zeppelin"
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
 
 #kafka_wait_main_cluster
+
+nexus_install
 
 localstack_install
 
