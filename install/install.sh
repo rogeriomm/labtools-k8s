@@ -65,8 +65,8 @@ nexus_install()
     helm repo add sonatype https://sonatype.github.io/helm3-charts/
     helm repo update sonatype
     helm install --namespace nexus --create-namespace nexus \
-         sonatype/nexus-repository-manager --values k8s/cluster2/helm/nexus/values.yaml \
-         --version 61.0.2
+         sonatype/nexus-iq-server --values k8s/cluster2/helm/nexus/values.yaml \
+         --version 171.0.0
   fi
 }
 
