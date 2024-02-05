@@ -36,3 +36,6 @@ curl http://datahub-datahub-frontend.datahub.svc:9002
 
    * Elastic search
       * https://github.com/elastic/helm-charts/blob/main/elasticsearch/values.yaml
+
+# Backup
+   * https://datahubproject.io/docs/how/backup-datahub/
