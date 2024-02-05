@@ -21,4 +21,4 @@ resources:
   - metabase
   - commander
   - argocd
-
+  - jfrog
