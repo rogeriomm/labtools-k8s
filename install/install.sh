@@ -59,14 +59,27 @@ argocd_install()
 
 nexus_install()
 {
-  echo "Install NEXUS"
-
   if ! helm status nexus -n nexus 2> /dev/null > /dev/null; then
     helm repo add sonatype https://sonatype.github.io/helm3-charts/
     helm repo update sonatype
     helm install --namespace nexus --create-namespace nexus \
          sonatype/nexus-iq-server --values k8s/cluster2/helm/nexus/values.yaml \
          --version 171.0.0
+  fi
+}
+
+#
+# https://github.com/jfrog/charts
+#
+jfrog_install()
+{
+  if ! helm status jfrog-artifactory-oss -n jfrog 2> /dev/null > /dev/null; then
+    helm repo add jfrog https://charts.jfrog.io
+    helm repo update jfrog
+
+    helm install --namespace jfrog --create-namespace jfrog-artifactory-jcr \
+         jfrog/artifactory-jcr --values k8s/cluster2/helm/jfrog/values-artifactory-jcr.yaml \
+         --version 107.77.3
   fi
 }
 
@@ -436,7 +449,7 @@ kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
 
 #kafka_wait_main_cluster
 
-nexus_install
+jfrog_install
 
 localstack_install
 
