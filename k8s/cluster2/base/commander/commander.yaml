@@ -56,7 +56,7 @@ spec:
             defaultMode: 0700
       containers:
         - name: tunnel-server-gateway
-          image: registry.minikube/command
+          image: jfrog.worldl.xpt/lab/command
           imagePullPolicy: Never
           volumeMounts:
             - name: tunnel-conf
