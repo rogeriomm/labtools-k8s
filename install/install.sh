@@ -73,7 +73,7 @@ nexus_install()
 #
 jfrog_install()
 {
-  if ! helm status jfrog-artifactory-oss -n jfrog 2> /dev/null > /dev/null; then
+  if ! helm status jfrog-artifactory-jcr -n jfrog 2> /dev/null > /dev/null; then
     helm repo add jfrog https://charts.jfrog.io
     helm repo update jfrog
 
