@@ -3,6 +3,9 @@ kind: Kustomization
 metadata:
   name: arbitrary
 
+namespace: jfrog
+
 resources:
+  - namespace.yaml
   - ingress.yaml
 
