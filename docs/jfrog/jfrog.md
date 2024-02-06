@@ -49,7 +49,7 @@ docker push jfrog.worldl.xpt/lab/hello-world
 
 <img src="JFrogContainerRegistry.png" alt="drawing" width="1000"/>
 <img src="JFrogRepositoryLab.png" alt="drawing" width="1000"/>
-
+<img src="JfrogSecurityConfiguration.png" alt="drawing" width="1000"/>
 
    * https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/jfrog/jfrog.ipynb
 
