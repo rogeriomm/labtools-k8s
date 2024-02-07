@@ -124,7 +124,7 @@ datahub_install()
 
     helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml --version 0.1.6
 
-    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --wait --timeout 900s --version 0.3.28
+    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --version 0.3.28
   fi
 }
 
@@ -165,7 +165,7 @@ mysql_install()
 {
   if ! helm status my-release -n mysql 2> /dev/null > /dev/null; then
     helm install my-release oci://registry-1.docker.io/bitnamicharts/mysql -f k8s/cluster2/helm/mysql/values.yaml \
-         --create-namespace --namespace mysql --wait --timeout 600s
+         --create-namespace --namespace mysql
   fi
 }
 
@@ -182,7 +182,7 @@ postgres_install()
 {
   if ! helm status postgres -n postgres 2> /dev/null > /dev/null; then
     helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f k8s/cluster2/helm/postgres/values.yaml \
-         --create-namespace --namespace postgres --wait --timeout 600s --version 13.2.30
+         --create-namespace --namespace postgres --version 13.2.30
   fi
 }
 
@@ -204,8 +204,7 @@ sqlserver_install()
     helm install mssqlserver-2022 simcube/mssqlserver-2022 -f k8s/cluster2/helm/sqlserver/values.yaml \
         --create-namespace --namespace sqlserver --version 1.2.3
 
-    kubectl -n sqlserver  wait deployment/mssqlserver-2022 --for=condition=Available --timeout=30m
-
+    #kubectl -n sqlserver  wait deployment/mssqlserver-2022 --for=condition=Available --timeout=30m
   fi
 }
 
