@@ -47,10 +47,6 @@ docker image tag hello-world jfrog.worldl.xpt/lab/hello-world
 docker push jfrog.worldl.xpt/lab/hello-world
 ```
 
-<img src="JFrogContainerRegistry.png" alt="drawing" width="1000"/>
-<img src="JFrogRepositoryLab.png" alt="drawing" width="1000"/>
-<img src="JfrogSecurityConfiguration.png" alt="drawing" width="1000"/>
-
    * https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/jfrog/jfrog.ipynb
 
 # Troubleshooting
@@ -69,3 +65,46 @@ docker push jfrog.worldl.xpt/lab/hello-world
 kubectl get pods -n ingress-nginx
 ```
    * https://stackoverflow.com/questions/49918313/413-error-with-kubernetes-and-nginx-ingress-controller: 413 error with Kubernetes and Nginx ingress controller
+
+# Initial configuration
+```shell
+kubectl -n jfrog port-forward pod/jfrog-artifactory-jcr-0 8082:8082
+```
+
+   * http://localhost:8082
+      * Base URL: https://jfrog.worldl.xpt 
+      * Add repository "lab"
+
+<img src="JFrogSetBaseUrl.png" alt="drawing" width="1000"/>
+<img src="JFrogContainerRegistry.png" alt="drawing" width="1000"/>
+<img src="JFrogRepositoryLab.png" alt="drawing" width="1000"/>
+<img src="JfrogSecurityConfiguration.png" alt="drawing" width="1000"/>
+
+# JFrog API
+   * List repositories
+```shell
+curl -u admin:password "http://jfrog.worldl.xpt/artifactory/api/repositories" | jq
+```
+   * Create repository. This REST API is available only in Artifactory Pro
+```shell
+curl -uadmin:password -X PUT "http://jfrog.worldl.xpt/artifactory/api/repositories/lab" -H "Content-Type: application/json" -d '{
+  "key": "lab",
+  "rclass": "local",
+  "packageType": "docker",
+  "dockerApiVersion": "V2",
+  "description": "A Docker repository",
+  "notes": "Docker repository for lab",
+  "includesPattern": "**/*",
+  "excludesPattern": "",
+  "repoLayoutRef": "simple-default",
+  "dockerRepositoryVersion": "V2",
+  "maxUniqueTags": 0,
+  "propertySets": [],
+  "archiveBrowsingEnabled": false,
+  "optionalIndexCompressionFormats": [],
+  "dockerTagRetention": 0,
+  "dockerTagRetentionMaxDays": 0,
+  "dockerTagRetentionSchedule": "",
+  "blockPushingSchema1": true
+}'
+```
