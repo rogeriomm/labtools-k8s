@@ -16,8 +16,9 @@ This is a work in progress
 flowchart TD
     Postgres(Postgres Database) -->|CDC| Kafka(Kafka Strimzi)
     SQLServer(SQL Server Database) -->|CDC| Kafka
-    Kafka -->|Data Stream| Consumers{Consumers}
-
+    ConsumerMinio --> ConsumerSpark{Apache Spark}
+    Kafka -->|Data Stream| ConsumerMinio{Minio S3}
+    ConsumerSpark --> |SCALA engine Replication - TODO| ConsumerSpardk{Delta lake}
 
     class Postgres,SQLServer database;
     class Kafka kafka;
