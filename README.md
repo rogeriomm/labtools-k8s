@@ -16,13 +16,16 @@ This is a work in progress
 flowchart TD
     Postgres(Postgres Database) -->|CDC| Kafka(Kafka Strimzi)
     SQLServer(SQL Server Database) -->|CDC| Kafka
-    ConsumerMinio --> ConsumerSpark{Apache Spark}
-    Kafka -->|Data Stream| ConsumerMinio{Minio S3}
-    ConsumerSpark --> |SCALA engine Replication - TODO| ConsumerSpardk{Delta lake}
+    Kafka -->|Data Stream| ConsumerMinio(Minio S3)
+    ConsumerMinio -->|Data Stream| ConsumerSpark(Apache Spark)
+    ConsumerSpark --> |SCALA engine Replication - TODO| ConsumerDelta(Delta Lake)
+    Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
+    SchemaRegistry -->|Schema Use| ConsumerSpark
+    ConsumerDelta -->|Data Query| Trino(Trino)
 
     class Postgres,SQLServer database;
-    class Kafka kafka;
-    class Consumers consumers;
+    class Kafka,SchemaRegistry kafka;
+    class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino consumers;
 ```
 
 ## Postgres
