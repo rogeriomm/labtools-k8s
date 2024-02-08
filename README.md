@@ -11,6 +11,19 @@ This is a work in progress
         * Staging environment with production-like characteristics
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
+
+```mermaid
+flowchart TD
+    Postgres(Postgres Database) -->|CDC| Kafka(Kafka Strimzi)
+    SQLServer(SQL Server Database) -->|CDC| Kafka
+    Kafka -->|Data Stream| Consumers{Consumers}
+
+
+    class Postgres,SQLServer database;
+    class Kafka kafka;
+    class Consumers consumers;
+```
+
 ## Postgres
    * [YAML](k8s/cluster2/base/kafka/main)   -  [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumPostgresCdc.ipynb)
 
@@ -88,3 +101,4 @@ This is a work in progress
 |--------------------------------------------|---------------------------------------------------------------|-------------------|---|---|
 | https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)                      |                   |   |   |
 | https://world-jupyter.duckdns.org/jupyter  | [Jupyter](https://jupyter.org/) notebook: Python, Scala, RUST |                   |   |   |
+
