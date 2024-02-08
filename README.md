@@ -17,7 +17,7 @@ flowchart TD
     SQLServer(SQL Server Database) -->|CDC| Kafka
     Kafka -->|AVRO Data Stream| ConsumerMinio(Minio S3)
     ConsumerMinio -->|AVRO Data Stream| ConsumerSpark(Apache Spark)
-    ConsumerSpark --> |SCALA engine Replication - TODO| ConsumerDelta(Delta Lake)
+    ConsumerSpark --> |CDC Replication using Scala Engine - TODO| ConsumerDelta(Delta Lake)
     ConsumerSpark --> |Data catalog, lineage| ConsumerDatahub(Datahub)
     ConsumerSpark --> HiveMetastore(Hive metastore)
     Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
