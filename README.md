@@ -10,8 +10,6 @@ This is a work in progress
       * [AWS EKS](https://aws.amazon.com/eks/) + Terraform 
         * Staging environment with production-like characteristics
 
-# Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
-
 ```mermaid
 flowchart TD
     Postgres(Postgres Database) -->|CDC| Kafka(Kafka Strimzi)
@@ -22,12 +20,14 @@ flowchart TD
     Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
     SchemaRegistry -->|Schema Use| ConsumerSpark
     ConsumerDelta -->|Data Query| Trino(Trino)
+    Airflow(Apache Airflow) -->|Orchestrate| ConsumerSpark
 
     class Postgres,SQLServer database;
     class Kafka,SchemaRegistry kafka;
-    class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino consumers;
+    class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino,Airflow consumers;
 ```
 
+# Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
 ## Postgres
    * [YAML](k8s/cluster2/base/kafka/main)   -  [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumPostgresCdc.ipynb)
 
