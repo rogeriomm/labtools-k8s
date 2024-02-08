@@ -34,6 +34,7 @@ flowchart TD
     class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino,Airflow consumers;
     class Datahub datahub;
 ```
+   * [CDC replication on Delta lake(TODO)](https://github.com/rogeriomm/debezium-cdc-replication-delta)
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
 ## Postgres
