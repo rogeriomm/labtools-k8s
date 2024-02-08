@@ -19,6 +19,7 @@ flowchart TD
     ConsumerMinio -->|AVRO Data Stream| ConsumerSpark(Apache Spark)
     ConsumerSpark --> |SCALA engine Replication - TODO| ConsumerDelta(Delta Lake)
     ConsumerSpark --> |Data catalog, lineage| ConsumerDatahub(Datahub)
+    ConsumerSpark --> HiveMetastore(Hive metastore)
     Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
     SchemaRegistry -->|Schema Use - API| ConsumerSpark
     ConsumerDelta -->|Data Query| Trino(Trino)
