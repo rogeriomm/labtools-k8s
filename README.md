@@ -23,6 +23,7 @@ flowchart TD
     Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
     SchemaRegistry -->|Schema Use - API| ConsumerSpark
     ConsumerDelta -->|Data Query| Trino(Trino)
+    click ConsumerDelta href "https://github.com/rogeriomm/debezium-cdc-replication-delta" "Visit GitHub repository"
     Airflow(Apache Airflow) -->|Orchestrate| ConsumerSpark
     Trino --> Zeppelin(Zeppelin)
     Trino --> Jupyter(Jupyter)
