@@ -1,4 +1,4 @@
-This is a work in progress
+**This is a work in progress...**
 
    * [Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/)
       * [Quick start](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start) 
@@ -10,21 +10,27 @@ This is a work in progress
       * [AWS EKS](https://aws.amazon.com/eks/) + Terraform 
         * Staging environment with production-like characteristics
 
+# Pipeline architecture
 ```mermaid
 flowchart TD
     Postgres(Postgres Database) -->|CDC| Kafka(Kafka Strimzi)
     SQLServer(SQL Server Database) -->|CDC| Kafka
-    Kafka -->|Data Stream| ConsumerMinio(Minio S3)
-    ConsumerMinio -->|Data Stream| ConsumerSpark(Apache Spark)
+    Kafka -->|AVRO Data Stream| ConsumerMinio(Minio S3)
+    ConsumerMinio -->|AVRO Data Stream| ConsumerSpark(Apache Spark)
     ConsumerSpark --> |SCALA engine Replication - TODO| ConsumerDelta(Delta Lake)
+    ConsumerSpark --> |Data catalog, lineage| ConsumerDatahub(Datahub)
     Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
-    SchemaRegistry -->|Schema Use| ConsumerSpark
+    SchemaRegistry -->|Schema Use - API| ConsumerSpark
     ConsumerDelta -->|Data Query| Trino(Trino)
     Airflow(Apache Airflow) -->|Orchestrate| ConsumerSpark
-
+    Trino --> Zeppelin(Zeppelin)
+    Trino --> Jupyter(Jupyter)
+    Trino --> Metabase(Metabase)
+    
     class Postgres,SQLServer database;
     class Kafka,SchemaRegistry kafka;
     class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino,Airflow consumers;
+    class Datahub datahub;
 ```
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
