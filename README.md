@@ -21,6 +21,7 @@ flowchart TD
     ConsumerSpark --> |Data catalog, lineage| ConsumerDatahub(Datahub)
     ConsumerSpark --> HiveMetastore(Hive metastore)
     Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
+    Kafka --> RedpandaConsole(Redpanda Console)
     SchemaRegistry -->|Schema Use - API| ConsumerSpark
     ConsumerDelta -->|Data Query| Trino(Trino)
     click ConsumerDelta href "https://github.com/rogeriomm/debezium-cdc-replication-delta" "Visit GitHub repository"
@@ -31,7 +32,7 @@ flowchart TD
     
     class Postgres,SQLServer database;
     class Kafka,SchemaRegistry kafka;
-    class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino,Airflow consumers;
+    class ConsumerMinio,ConsumerSpark,ConsumerDelta consumers;
     class Datahub datahub;
 ```
    * [CDC replication on Delta lake(TODO)](https://github.com/rogeriomm/debezium-cdc-replication-delta)
