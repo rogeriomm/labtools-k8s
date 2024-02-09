@@ -143,7 +143,7 @@ console:
       enabled: true
       clusters:
         - name: my-connect
-          url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
+          url: http://my-connect-connect-api.kafka-main-cluster.svc:8083
           tls:
             enabled: false  # Trusted certs are still allowed by default
 
