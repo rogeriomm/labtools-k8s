@@ -123,6 +123,14 @@ console:
     kafka:
       brokers:
         - main-kafka-bootstrap.kafka-main-cluster.svc:9092
+      schemaRegistry: # https://docs.redpanda.com/current/manage/schema-reg/schema-reg-ui/#prerequisites
+        enabled: true
+        urls: ["http://main-registry-schema-registry.kafka-main-cluster.svc:8081"]
+      protobuf:
+        enabled: true
+        schemaRegistry:
+          enabled: true
+          refreshInterval: 5m
       sasl:
         enabled: true
         mechanism: SCRAM-SHA-512
