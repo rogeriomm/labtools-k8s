@@ -288,7 +288,7 @@ kafka_ui_install()
           kafka:
             clusters:
               - name: main
-                bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
+                bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc:9092
                 properties:
                   security.protocol: SASL_PLAINTEXT
                   sasl.mechanism: SCRAM-SHA-512
@@ -314,8 +314,17 @@ redpanda_console_install()
   if ! helm status redpandas-console -n kafka 2> /dev/null > /dev/null; then
     helm repo add redpanda https://charts.redpanda.com
     helm repo update redpanda
+
+    # https://github.com/redpanda-data/console/blob/master/docs/installation.md#configuration
+    #   In general we only use flags to specify the path to your config file which contains all the actual configuration.
+    #   Because Console requires sensitive information such as credentials, we offer further flags so that you don't
+    #   need to put them into your YAML configuration.
+    sasl_password=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.password}' | base64 -d)
+
     helm upgrade --install redpandas-console --namespace kafka redpanda/console \
-       --values "$LABTOOLS_K8S/k8s/$1/helm/redpandas/values-console.yaml"
+       --values "$LABTOOLS_K8S/k8s/$1/helm/redpandas/values-console.yaml" \
+       --set console.config.kafka.sasl.password="$sasl_password" \
+       --version 0.7.20
   fi
 }
 
