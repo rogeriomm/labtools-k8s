@@ -272,11 +272,6 @@ confluent_install_operator()
     fi
 }
 
-debezium_install()
-{
-  echo "Debezium install"
-}
-
 kafka_ui_install()
 {
   if kubectl -n kafka-main-cluster get secret kafka-user-ui; then
@@ -314,6 +309,16 @@ kafka_ui_install()
   fi
 }
 
+redpanda_console_install()
+{
+  if ! helm status redpandas-console -n kafka 2> /dev/null > /dev/null; then
+    helm repo add redpanda https://charts.redpanda.com
+    helm repo update redpanda
+    helm upgrade --install redpandas-console --namespace kafka redpanda/console \
+       --values "$LABTOOLS_K8S/k8s/$1/helm/redpandas/values-console.yaml"
+  fi
+}
+
 kafka_install()
 {
   if ! kubectl get ns kafka; then
@@ -339,10 +344,9 @@ kafka_install()
   fi
 
   kafka_ui_install "$1"
+  redpanda_console_install "$1"
 
   bitnami_confluent_registry_install "$1"
-
-  debezium_install
 }
 
 kafka_wait_main_cluster()
