@@ -1,0 +1,11 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: s3-source
+  labels:
+    strimzi.io/cluster: my-connect
+spec:
+  class: io.confluent.connect.s3.source.S3SourceConnector
+  tasksMax: 2
+  config:
+    topic: my-topic

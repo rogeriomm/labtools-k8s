@@ -1,0 +1,34 @@
+# https://blog.min.io/kafka_and_minio/
+# https://docs.confluent.io/kafka-connectors/s3-sink/current/overview.html
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: s3-sink-cdc
+  labels:
+    strimzi.io/cluster: my-connect
+spec:
+  class: io.confluent.connect.s3.S3SinkConnector
+  tasksMax: 1
+  config:
+    topics: "postgres-airflow.public.job"
+    s3.bucket.name: "bronze"
+    topic: my-topic
+
+    schema.generator.class: "io.confluent.connect.storage.hive.schema.DefaultSchemaGenerator"
+    partitioner.class: "io.confluent.connect.storage.partitioner.DefaultPartitioner"
+    schema.compatibility: "NONE"
+
+    # Avro converter configurations
+    key.converter: io.confluent.connect.avro.AvroConverter
+    key.converter.schema.registry.url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
+    value.converter: io.confluent.connect.avro.AvroConverter
+    value.converter.schema.registry.url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
+
+    store.url: "https://minio.minio-tenant-1.svc"
+    storage.class: "io.confluent.connect.s3.storage.S3Storage"
+
+    # Format type in which the data will be stored into MinIO
+    format.class: io.confluent.connect.s3.format.avro.AvroFormat
+    flush.size: 3
+    # Specifies the endpoint from which the connector can pull, validate the schema and deserialize the data from the producer
+    schema.registry.url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
