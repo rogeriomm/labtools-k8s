@@ -82,6 +82,7 @@ flowchart TD
 # Kubernetes
 <img src="docs/k8s/K8sPodsCluster2.png" alt="drawing" width="1000"/>
 
+   * [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/minikube/minikube.ipynb)
 
 # Web local
 | Local URL                                            | Description                                                                                                                | User    | Password                                                                                                                              |
