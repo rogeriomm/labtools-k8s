@@ -5,4 +5,4 @@ metadata:
 
 resources:
   - namespace.yaml
-#  - argocd-ingress.yaml
+  - argocd-ingress.yaml
