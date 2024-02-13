@@ -370,12 +370,7 @@ kafka_install()
     helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
     helm repo update kafka-ui
   fi
-
-  kafka_ui_install "$1"
-  redpanda_console_install "$1"
-
-  bitnami_confluent_registry_install "$1"
-}
+ }
 
 kafka_wait_main_cluster()
 {
@@ -464,6 +459,11 @@ k8s-replicator_install
 
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
+
+kafka_ui_install cluster2
+redpanda_console_install cluster2
+bitnami_confluent_registry_install cluster2
+
 
 certmanager_install
 
