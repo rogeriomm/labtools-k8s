@@ -57,7 +57,7 @@ nameOverride: ""
 fullnameOverride: ""
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
-clusterDomain: cluster.local
+clusterDomain: cluster2.xpt
 ## @param extraDeploy Array of extra objects to deploy with the release (evaluated as a template)
 ##
 extraDeploy: []
@@ -357,6 +357,10 @@ primary:
           /* OpenMetadata user */
           CREATE USER openmetadata WITH PASSWORD 'openmetadata';
           ALTER USER openmetadata WITH SUPERUSER;
+          /* Keycloak user */
+          CREATE DATABASE keycloak;
+          CREATE USER keycloak WITH PASSWORD 'keycloak';
+          ALTER USER keycloak WITH SUPERUSER;
        init_script.sh: |
          echo "..................."
 
