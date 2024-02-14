@@ -154,9 +154,9 @@ datahub_install()
 
 keycloak_install()
 {
-  if ! helm status my-release -n keycloack 2> /dev/null > /dev/null; then
-    helm install my-release oci://registry-1.docker.io/bitnamicharts/keycloak --create-namespace --namespace keycloack  \
-         --values k8s/cluster2/helm/keycloack/values.yaml
+  if ! helm status my-release -n keycloak 2> /dev/null > /dev/null; then
+    helm install my-release oci://registry-1.docker.io/bitnamicharts/keycloak --create-namespace --namespace keycloak  \
+         --values k8s/cluster2/helm/keycloak/values.yaml
   fi
 }
 
