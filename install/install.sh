@@ -60,6 +60,13 @@ minikube_configure()
 {
   # Raise the kindnet daemonset pod memory resource limit
   kubectl -n kube-system patch daemonset kindnet --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":"100Mi"}]'
+
+  if ! kubectl -n kube-system get secret cluster-truststore-jks; then
+    keytool -noprompt -import -alias ca -file "$MINIKUBE_HOME/ca.crt" -keystore /tmp/cluster.truststore.jks -storepass 123456
+    kubectl -n kube-system create secret generic cluster-truststore-jks --from-file=cluster.truststore.jks=/tmp/cluster.truststore.jks
+    kubectl annotate secret cluster-truststore-jks replicator.v1.mittwald.de/replicate-to=kafka-main-cluster
+    rm /tmp/cluster.truststore.jks
+  fi
 }
 
 argocd_install()
@@ -412,7 +419,7 @@ redpanda_console_install()
 
 kafka_install()
 {
-  if ! kubectl get ns kafka; then
+  if ! helm status strimzi-cluster-operator -n kafka 2> /dev/null > /dev/null; then
     kubectl create ns kafka
     kubectl create ns kafka-main-cluster
     kubectl create ns kafka-project-1
@@ -423,6 +430,7 @@ kafka_install()
 
     # https://quay.io/repository/strimzi/operator
     helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator \
+                 --create-namespace \
                  --values "k8s/$1/helm/kafka/values.yaml" --version 0.39.0
 
     kubectl rollout status deployment strimzi-cluster-operator -n kafka --timeout=90s
