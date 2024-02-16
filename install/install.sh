@@ -52,7 +52,8 @@ localstack_install() {
     if ! helm status localstack -n localstack 2> /dev/null > /dev/null; then
       helm repo add localstack https://localstack.github.io/helm-charts
       helm repo update localstack
-      helm install --namespace localstack --create-namespace localstack localstack/localstack --values k8s/cluster2/helm/localstack/values.yaml --version 0.6.8
+      helm install --namespace localstack --create-namespace localstack localstack/localstack \
+         --values k8s/cluster2/helm/localstack/values.yaml --version 0.6.8
     fi
 }
 
@@ -133,7 +134,7 @@ openmetadata_install()
     helm repo update open-metadata
 
     helm install openmetadata --namespace openmetadata --create-namespace open-metadata/openmetadata \
-        --values k8s/cluster2/helm/openmetadata/values.yaml --version 1.2.8
+        --values k8s/cluster2/helm/openmetadata/values.yaml --version 1.3.0
   fi
 }
 
@@ -186,7 +187,7 @@ trino_install()
   if ! helm status trino -n trino 2> /dev/null > /dev/null;  then
     helm repo add trino https://trinodb.github.io/charts
     helm repo update trino
-    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino trino/trino --version 0.17.0
+    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino trino/trino --version 0.18.0
   fi
 }
 
@@ -195,7 +196,8 @@ mongodb_install()
   if ! helm status community-operator -n mongodb 2> /dev/null > /dev/null; then
     helm repo add mongodb https://mongodb.github.io/helm-charts
     helm repo update mongodb
-    helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator --create-namespace --namespace mongodb
+    helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator
+    --create-namespace --namespace mongodb --version 0.9.0
   fi
 }
 
