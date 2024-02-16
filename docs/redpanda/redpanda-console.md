@@ -14,5 +14,12 @@ redpanda/operator       0.4.19          v2.1.14-23.3.4  Redpanda operator helm c
 
 # Links
    * https://github.com/redpanda-data/helm-charts/tree/main/charts/console
+      * https://github.com/redpanda-data/helm-charts/blob/main/charts/console/examples/console-enterprise.yaml
+        * Enterprise sample
    * https://docs.redpanda.com/current/reference/k-helm-index/
       * https://docs.redpanda.com/current/deploy/deployment-option/self-hosted/kubernetes/k-production-deployment/
+   * https://github.com/redpanda-data/console
+   * https://docs.redpanda.com/docs/reference/console/config/
+   * https://docs.redpanda.com/current/deploy/deployment-option/self-hosted/kubernetes/eks-guide/#deploy-redpanda-and-redpanda-console
+     * Search: '--set "auth.sasl.users[0].password=secretpassword"'
+   
