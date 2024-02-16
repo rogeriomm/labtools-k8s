@@ -100,6 +100,8 @@ each time the update-ca-trust command gets executed.
 Please refer to the update-ca-trust(8) manual page for additional information.
 ```
 
+
+
    * head
 ```shell
 kubeclt -n kafka-main-cluster logs my-connect-connect-0
@@ -175,6 +177,70 @@ kubeclt -n kafka-main-cluster logs my-connect-connect-0
 │ 2024-02-15 11:27:59,857 INFO Kafka Connect worker initializing ... (org.apache.kafka.connect.cli.AbstractConnectCli) [main
 ```
 
+```shell
+cat /tmp/strimzi-connect.properties
+```
+```text
+# Bootstrap servers
+bootstrap.servers=main-kafka-bootstrap:9093
+# REST Listeners
+rest.port=8083
+rest.advertised.host.name=my-connect-connect-0.my-connect-connect.kafka-main-cluster.svc
+rest.advertised.port=8083
+# Plugins
+plugin.path=/opt/kafka/plugins
+# Provided configuration
+offset.storage.topic=connect-cluster-offsets
+value.converter=org.apache.kafka.connect.json.JsonConverter
+config.storage.topic=connect-cluster-configs
+key.converter=org.apache.kafka.connect.json.JsonConverter
+group.id=connect-cluster
+status.storage.topic=connect-cluster-status
+config.providers=secrets,configmaps
+config.providers.configmaps.class=io.strimzi.kafka.KubernetesConfigMapConfigProvider
+config.providers.secrets.class=io.strimzi.kafka.KubernetesSecretConfigProvider
+config.storage.replication.factor=-1
+offset.storage.replication.factor=-1
+status.storage.replication.factor=-1
+
+
+security.protocol=SSL
+producer.security.protocol=SSL
+consumer.security.protocol=SSL
+admin.security.protocol=SSL
+# TLS / SSL
+ssl.truststore.location=/tmp/kafka/cluster.truststore.p12
+ssl.truststore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+ssl.truststore.type=PKCS12
+
+producer.ssl.truststore.location=/tmp/kafka/cluster.truststore.p12
+producer.ssl.truststore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+
+consumer.ssl.truststore.location=/tmp/kafka/cluster.truststore.p12
+consumer.ssl.truststore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+
+admin.ssl.truststore.location=/tmp/kafka/cluster.truststore.p12
+admin.ssl.truststore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+ssl.keystore.location=/tmp/kafka/cluster.keystore.p12
+ssl.keystore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+ssl.keystore.type=PKCS12
+
+producer.ssl.keystore.location=/tmp/kafka/cluster.keystore.p12
+producer.ssl.keystore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+producer.ssl.keystore.type=PKCS12
+
+consumer.ssl.keystore.location=/tmp/kafka/cluster.keystore.p12
+consumer.ssl.keystore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+consumer.ssl.keystore.type=PKCS12
+
+admin.ssl.keystore.location=/tmp/kafka/cluster.keystore.p12
+admin.ssl.keystore.password=cLtH1HGW4r3mdN1K1puqvy3egLs8SUsA
+admin.ssl.keystore.type=PKCS12
+
+
+# Additional configuration
+consumer.client.rack=
+```
 
 # Links
    * https://blog.min.io/kafka-schema-registry/
