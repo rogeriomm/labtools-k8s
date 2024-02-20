@@ -57,3 +57,6 @@ spec:
           value: "minio"
         - name: AWS_SECRET_ACCESS_KEY
           value: "awesomes3"
+        # Self signed certificate(WORK)
+        - name: CA_CERTIFICATE_FILE
+          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
