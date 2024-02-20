@@ -131,7 +131,7 @@ COPY update-ca-trust.sh /opt/kafka/bin
 # https://www.redhat.com/sysadmin/configure-ca-trust-list
 # https://www.redhat.com/sysadmin/ca-certificates-cli
 # head -n 20 /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt
-RUN  microdnf install sudo less vim && \
+RUN  microdnf install sudo && \
      echo "kafka ALL=(ALL) NOPASSWD: /usr/bin/update-ca-trust, /bin/rm /etc/sudoers" >> /etc/sudoers && \
      chown kafka /etc/pki/ca-trust/source/anchors && \
      chmod +x /opt/kafka/bin/update-ca-trust.sh && \
