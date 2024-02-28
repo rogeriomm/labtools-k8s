@@ -23,7 +23,8 @@ spec:
             claimName: lab-claim
       containers:
         - name: jupyter-server
-          image: jfrog.worldl.xpt/lab/spark-jupyter-3.4:master
+          image: harbor.worldl.xpt/library/spark-jupyter-3.4:master
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8888

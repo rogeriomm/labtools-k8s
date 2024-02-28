@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: hive-metastore
-          image: jfrog.worldl.xpt/lab/hive-metastore-base-3.2:master
+          image: harbor.worldl.xpt/library/hive-metastore-base-3.2:master
           #imagePullPolicy: Always
           env:
             - name: HIVE_SITE_CONF_metastore_warehouse_dir
