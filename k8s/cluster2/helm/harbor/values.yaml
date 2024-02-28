@@ -33,7 +33,7 @@ fullnameOverride: ""
 kubeVersion: ""
 ## @param clusterDomain Kubernetes Cluster Domain
 ##
-clusterDomain: cluster.local
+clusterDomain: cluster2.xpt
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
@@ -125,7 +125,7 @@ ipFamily:
 ## Use "proxy" to use a deploy NGINX proxy in front of Harbor services
 ## Use "ingress" to use an Ingress Controller as proxy
 ##
-exposureType: proxy
+exposureType: ingress
 ## Service parameters
 ##
 service:
@@ -207,7 +207,7 @@ ingress:
     controller: default
     ## @param ingress.core.hostname Default host for the ingress record
     ##
-    hostname: core.harbor.domain
+    hostname: harbor.worldl.xpt
     ## @param ingress.core.annotations [object] Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
     ## Use this parameter to set the required annotations for cert-manager, see
     ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
