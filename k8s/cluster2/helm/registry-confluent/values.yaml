@@ -1,6 +1,4 @@
-# Copyright VMware, Inc.
-# SPDX-License-Identifier: APACHE-2.0
-
+# https://github.com/bitnami/charts/blob/main/bitnami/schema-registry/values.yaml
 
 ## @section Global parameters
 ## Global Docker image parameters
@@ -69,9 +67,9 @@ diagnosticMode:
 ## @param image.debug Enable image debug mode
 ##
 image:
-  registry: docker.io
-  repository: bitnami/schema-registry
-  tag: 7.5.3-debian-11-r0
+  #registry: docker.io
+  #repository: bitnami/schema-registry
+  #tag: 7.5.3-debian-11-r0
   digest: ""
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images

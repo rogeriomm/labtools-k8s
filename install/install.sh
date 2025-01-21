@@ -251,7 +251,7 @@ bitnami_confluent_registry_install()
     if ! helm status main-registry -n kafka-main-cluster 2> /dev/null > /dev/null; then
       # Bitnami package for Confluent Schema Registry
       helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster \
-                 --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.0.1
+                 --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.1.1
     fi
 
     if kubectl get secret kafka-user-registry -n kafka-main-cluster 2> /dev/null > /dev/null; then
@@ -280,6 +280,8 @@ debezium_install()
 kafka_ui_install()
 {
   if kubectl -n kafka-main-cluster get secret kafka-user-ui; then
+      echo "-------------"
+
       sasl_jaas_config=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.sasl\.jaas\.config}' | base64 -d)
 
       echo "
@@ -337,9 +339,9 @@ kafka_install()
     helm repo update kafka-ui
   fi
 
-  bitnami_confluent_registry_install "$1"
-
   kafka_ui_install "$1"
+
+  bitnami_confluent_registry_install "$1"
 
   debezium_install
 }
