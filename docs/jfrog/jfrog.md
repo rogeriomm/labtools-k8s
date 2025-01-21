@@ -35,5 +35,11 @@ jfrog/xray                      103.88.10       3.88.10         Universal compon
 
    * https://artifacthub.io/packages/helm/jfrog/artifactory-jcr
       * https://github.com/jfrog/charts/tree/master/stable/artifactory-jcr#chart-details
-         *  "Optionally expose Artifactory with Ingress Ingress documentation"
+         *  "Optionally expose Artifactory with Ingress documentation"
 
+```shell
+docker login jfrog.worldl.xpt
+```
+
+<img src="JFrogContainerRegistry.png" alt="drawing" width="1000"/>
+<img src="JFrogRepositoryLab.png" alt="drawing" width="1000"/>
