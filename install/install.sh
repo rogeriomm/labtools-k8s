@@ -59,13 +59,10 @@ localstack_install() {
 
 minikube_configure()
 {
-  # Raise the kindnet daemonset pod memory resource limit
-  kubectl -n kube-system patch daemonset kindnet --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":"100Mi"}]'
-
   if ! kubectl -n kube-system get secret cluster-truststore-jks; then
     keytool -noprompt -import -alias ca -file "$MINIKUBE_HOME/ca.crt" -keystore /tmp/cluster.truststore.jks -storepass 123456
     kubectl -n kube-system create secret generic cluster-truststore-jks --from-file=cluster.truststore.jks=/tmp/cluster.truststore.jks
-    kubectl annotate secret cluster-truststore-jks replicator.v1.mittwald.de/replicate-to=kafka-main-cluster
+    kubectl -n kube-system annotate secret cluster-truststore-jks replicator.v1.mittwald.de/replicate-to=kafka-main-cluster
     rm /tmp/cluster.truststore.jks
   fi
 }
@@ -113,7 +110,7 @@ jfrog_install()
 
     helm install --namespace jfrog --create-namespace jfrog-artifactory-jcr \
          jfrog/artifactory-jcr --values k8s/cluster2/helm/jfrog/values-artifactory-jcr.yaml \
-         --version 107.77.3
+         --version 107.77.5
   fi
 }
 
@@ -196,8 +193,8 @@ mongodb_install()
   if ! helm status community-operator -n mongodb 2> /dev/null > /dev/null; then
     helm repo add mongodb https://mongodb.github.io/helm-charts
     helm repo update mongodb
-    helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator
-    --create-namespace --namespace mongodb --version 0.9.0
+    helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator \
+                 --create-namespace --namespace mongodb --version 0.9.0
   fi
 }
 
@@ -262,6 +259,7 @@ minio_install()
     kubectl minio init --namespace minio-operator --cluster-domain "$domain"
   fi
 
+  # TODO: https://github.com/owshq-academy/ws-stack-dados-k8s/blob/master/infra/src/app-manifests/deepstorage/minio-tenant.yaml
   if ! kubectl minio tenant info minio-tenant-1 > /dev/null 2> /dev/null; then
     echo "Creating MINIO instance"
 
@@ -485,14 +483,14 @@ kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 # Cluster 2 setup
 labtools-k8s set-context cluster2
 
-minikube_configure
-
 #velero_install
 
 k8s-replicator_install
 
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
+
+minikube_configure
 
 kafka_ui_install cluster2
 bitnami_confluent_registry_install cluster2
