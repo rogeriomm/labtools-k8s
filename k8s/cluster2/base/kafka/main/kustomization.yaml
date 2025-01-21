@@ -13,6 +13,7 @@ resources:
   - user-registry.yaml
   - user-ide.yaml
   - topic-connect.yaml
+  - topic-samples.yaml
   - bridge.yaml
   - connect.yaml
   - source-connector.yaml
