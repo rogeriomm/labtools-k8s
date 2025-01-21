@@ -4,6 +4,7 @@ metadata:
   name: arbitrary
 
 resources:
+  - namespace.yaml
   - spark-setup.yaml
   - zeppelin-auth.yaml
   - persistent-volume-claim.yaml

@@ -3,12 +3,11 @@ kind: Kustomization
 metadata:
   name: arbitrary
 
-namespace: kafka
-
 resources:
-  - kafka-ui-config.yaml
+  - namespace.yaml
   - kafka-ui-ingress.yaml
+  - kafka-ui-config.yaml
 
 patches:
-  - path: kafka-ui-config.yaml
   - path: kafka-ui-ingress.yaml
+  - path: kafka-ui-config.yaml

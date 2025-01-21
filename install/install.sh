@@ -116,15 +116,7 @@ minio_install()
 kafka_install()
 {
   if ! kubectl get ns kafka; then
-    kubectl create namespace kafka;
-
-    kubectl create namespace kafka-main-cluster;
-
-    kubectl create namespace kafka-project-1;
-    kubectl create namespace kafka-project-2;
-    kubectl create namespace kafka-project-3;
-    kubectl create namespace kafka-project-4;
-    kubectl create namespace kafka-project-5;
+    kubectl create ns kafka
 
     # shellcheck disable=SC2086
     helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator \
@@ -173,7 +165,7 @@ minio_copy()
   fi
 }
 
-zeppelin_create_secret()
+zeppelin_install()
 {
   # Copy certificate from namespace "kube-system" to namespace "zeppelin"
   kubectl --namespace kube-system get secrets mkcert -o yaml | \
@@ -186,53 +178,33 @@ set -e
 
 sudo -v
 
+# Cluster 1 setup
 labtools-k8s set-context cluster1
 
+# Install Kafka api-resource on cluster1
 kafka_install cluster1
 
+kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
+
+# Cluster 2 setup
 labtools-k8s set-context cluster2
 
+# Install Kafka api-resource on cluster2
 kafka_install cluster2
 
-labtools-k8s configure-clusters
-
-labtools-k8s set-context cluster2
-
-minio_install
-
-postgres_install
-
+# Install MongoDB api-resource on cluster2
 mongodb_install
-
-trino_install
-
-hive_install
-
-if ! kubectl get namespace aws-glue; then
-  kubectl create ns aws-glue
-fi
-
-if ! kubectl get namespace zeppelin; then
-  kubectl create ns zeppelin
-fi
-
-if ! kubectl get namespace tunnel; then
-  kubectl create ns tunnel
-fi
-
-airflow_install
-
-datahub_install
-
-zeppelin_create_secret
 
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
 
-# FIXME wait mongodb user, Airflow issue
+minio_install
+postgres_install
+trino_install
+hive_install
+airflow_install
+datahub_install
+zeppelin_install
 
-sleep 2
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
 
 minio_copy
-
-#kubectl describe pods -n zeppelin | grep -A20 Events

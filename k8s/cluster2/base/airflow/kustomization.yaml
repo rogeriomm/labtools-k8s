@@ -4,4 +4,5 @@ metadata:
   name: arbitrary
 
 resources:
+  - namespace.yaml
   - airflow.yaml
