@@ -1,3 +1,4 @@
+# https://github.com/strimzi/strimzi-kafka-operator/blob/main/helm-charts/helm3/strimzi-kafka-operator/values.yaml
 replicas: 1
 
 watchNamespaces: [kafka-main-cluster,kafka-project-1,kafka-project-2,kafka-project-3,kafka-project-4,kafka-project-5]
@@ -7,6 +8,16 @@ defaultImageRegistry: quay.io
 defaultImageRepository: strimzi
 defaultImageTag: 0.39.0
 
+#kubernetesServiceDnsDomain: cluster2.xpt
+
 extraEnvs:
   - name: KUBERNETES_SERVICE_DNS_DOMAIN
     value: "cluster2.xpt"
+
+resources:
+  limits:
+    memory: 600Mi
+    cpu: 1000m
+  requests:
+    memory: 384Mi
+    cpu: 200m
