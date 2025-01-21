@@ -323,12 +323,12 @@ serviceMonitor:
   labels: {}
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
   annotations: {}
   # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: open-metadata.local
+    - host: openmetadata.worldl.xpt
       paths:
         - path: /
           pathType: ImplementationSpecific
