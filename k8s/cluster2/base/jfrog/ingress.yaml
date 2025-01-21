@@ -11,10 +11,19 @@ spec:
     - host: lab.jfrog.worldl.xpt
       http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
+          - backend:
               service:
-                name: jfrog-artifactory-jcr-artifactory-nginx
+                name: jfrog-artifactory-jcr
                 port:
-                  number: 80
+                  number: 8082
+            path: /
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: jfrog-artifactory-jcr
+                port:
+                  number: 8081
+            path: /artifactory/
+            pathType: ImplementationSpecific
+
+
