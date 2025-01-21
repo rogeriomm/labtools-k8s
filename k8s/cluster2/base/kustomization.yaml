@@ -4,6 +4,7 @@ metadata:
   name: arbitrary
 
 resources:
+  - postgres
   - jupyter
   - zeppelin
   - airflow
@@ -14,3 +15,4 @@ resources:
   - hive
   - kafka/main
   - kafka
+

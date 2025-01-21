@@ -1,4 +1,6 @@
+# https://artifacthub.io/packages/helm/airflow-helm/airflow/8.4.0
 # https://github.com/airflow-helm/charts/blob/main/charts/airflow/values.yaml
+
 airflow:
   image:
     repository: registry.minikube/airflow-2.7.1-10
@@ -71,7 +73,7 @@ airflow:
       - id: mongodb_db
         type: mongo
         description: "MongoDB"
-        host: example-mongodb-svc.mongodb.svc.cluster2.xpt
+        host: mongodb-1-svc.mongodb.svc.cluster2.xpt
         port: 27017
         schema: my_database
         login: ${MONGODB_USERNAME}
@@ -80,22 +82,22 @@ airflow:
   connectionsTemplates:
     POSTGRES_USERNAME:
       kind: secret
-      name: airflow-postgres-credentials
-      key: username
+      name: user-airflow
+      key: user
 
     POSTGRES_PASSWORD:
       kind: secret
-      name: airflow-postgres-credentials
+      name: user-airflow
       key: password
 
     MONGODB_USERNAME:
       kind: secret
-      name: airflow-mongodb-credentials
-      key: username
+      name: mongodb-airflow-user
+      key: user
 
     MONGODB_PASSWORD:
       kind: secret
-      name: airflow-mongodb-credentials
+      name: mongodb-airflow-user
       key: password
 
 workers:
@@ -152,11 +154,11 @@ externalDatabase:
   database: airflow
 
   ## Kubernetes secret in your airflow namespace
-  userSecret: "airflow-database-credentials"
-  userSecretKey: "username"
+  userSecret: "user-airflow"
+  userSecretKey: "user"
 
   ## Kubernetes secret in your airflow namespace
-  passwordSecret: "airflow-database-credentials"
+  passwordSecret: "user-airflow"
   passwordSecretKey: "password"
 
   ## use this for any extra connection-string settings, e.g. ?sslmode=disable

@@ -190,7 +190,7 @@ spec:
             subPath: labtools-k8s/data/zeppelin/conf
           - name: data-lab-volume
             mountPath: /opt/zeppelin/k8s/interpreter
-            subPath: labtools-k8s/k8s/yaml2/zeppelin/interpreter
+            subPath: labtools-k8s/k8s/cluster2/base/zeppelin/interpreter
           - name: data-lab-volume
             mountPath: /Volumes/data/git
       - name: zeppelin-server-gateway

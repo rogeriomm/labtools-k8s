@@ -5,4 +5,6 @@ metadata:
 
 resources:
   - namespace.yaml
-  - mongodb-instance.yaml
+  - users.yaml
+  - initdb.yaml
+

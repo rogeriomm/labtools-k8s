@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: user-ide
+  labels:
+    strimzi.io/cluster: main
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: group
+          name: my-group
+        operations:
+          - Read
+      - resource:
+          type: topic
+          name: my-topic
+        operations:
+          - Read
+          - Describe
+          - Write
+          - Create

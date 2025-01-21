@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-airflow
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "airflow"
+type: Opaque
+data:
+  user: "YWlyZmxvdw=="
+  password: "YWlyZmxvdw=="
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-metastore-db
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "hive"
+type: Opaque
+data:
+  user: "bWV0YXN0b3JlX2Ri"
+  password: "bWV0YXN0b3JlX2Ri"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-datahub
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "datahub"
+type: Opaque
+data:
+  user: "ZGF0YWh1Yg=="
+  password: "ZGF0YWh1Yg=="

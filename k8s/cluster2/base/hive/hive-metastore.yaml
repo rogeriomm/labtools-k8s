@@ -29,9 +29,9 @@ spec:
             - name: HIVE_SITE_CONF_javax_jdo_option_ConnectionURL
               value: "jdbc:postgresql://postgres-postgresql.postgres.svc.cluster2.xpt:5432/metastore_db"
             - name: HIVE_SITE_CONF_javax_jdo_option_ConnectionUserName
-              value: "postgres"
+              value: "metastore_db"
             - name: HIVE_SITE_CONF_javax_jdo_option_ConnectionPassword
-              value: "WZHN980duu"
+              value: "metastore_db"
             - name: HIVE_SITE_CONF_fs_s3a_access_key
               value: "minio"
             - name: HIVE_SITE_CONF_fs_s3a_secret_key

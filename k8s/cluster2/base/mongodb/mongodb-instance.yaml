@@ -3,7 +3,7 @@ apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
 metadata:
   namespace: mongodb
-  name: example-mongodb
+  name: mongodb-1
 spec:
   members: 1
   type: ReplicaSet
@@ -12,10 +12,10 @@ spec:
     authentication:
       modes: ["SCRAM"]
   users:
-    - name: my-user
+    - name: airflow
       db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: my-user-password
+        name: mongodb-airflow-user
       roles:
         - name: clusterAdmin
           db: admin
@@ -32,7 +32,10 @@ apiVersion: v1
 kind: Secret
 metadata:
   namespace: mongodb
-  name: my-user-password
+  name: mongodb-airflow-user
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "airflow,zeppelin"
 type: Opaque
 stringData:
+  user: "airflow"
   password: "password"
