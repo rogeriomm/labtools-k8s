@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-common
+  namespace: airflow
+spec:
+  storageClassName: nfs-common
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-dags
+  namespace: airflow
+spec:
+  storageClassName: nfs-common
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Mi

@@ -1,3 +1,4 @@
+# https://github.com/airflow-helm/charts/blob/main/charts/airflow/values.yaml
 airflow:
   image:
     repository: registry.minikube/airflow-2.7.1-10
@@ -182,3 +183,19 @@ ingress:
     path: "/flower"
     ## WARNING: requires Kubernetes 1.18 or later, use "kubernetes.io/ingress.class" annotation for older versions
     ingressClassName: "nginx"
+
+dags:
+  ## NOTE: this is the default value
+  path: /opt/airflow/dags
+
+  persistence:
+    enabled: true
+
+    ## NOTE: this is name of your existing volume
+    existingClaim: airflow-dags
+
+    ## sub-path under `dags.persistence.existingClaim` to use
+    subPath: "labtools-k8s/data/airflow/dags"
+
+    ## NOTE: as multiple Pods read the DAGs concurrently this MUST be ReadOnlyMany or ReadWriteMany
+    accessMode: ReadOnlyMany
