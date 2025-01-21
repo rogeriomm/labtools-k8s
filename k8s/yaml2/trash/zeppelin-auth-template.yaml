@@ -1,0 +1,10 @@
+#  cat dot.htpasswd | base64
+# kubectl get secret secret-basic-auth  --output="jsonpath={.data.dot\.htpasswd}" | base64 --decode
+apiVersion: v1
+kind: Secret
+metadata:
+  name: htpasswd
+  namespace: zeppelin
+type: Opaque
+data:
+  dot.htpasswd: xxx-dot-password-base64-xxx

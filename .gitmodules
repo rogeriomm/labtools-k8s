@@ -1,3 +1,42 @@
 [submodule "zeppelin-k8s"]
 	path = zeppelin-k8s
 	url = git@github.com:rogeriomm/zeppelin-k8s.git
+[submodule "modules/kafka-k8s"]
+	path = modules/kafka-k8s
+	url = git@github.com:rogeriomm/kafka-k8s.git
+[submodule "modules/localstack-k8s"]
+	path = modules/localstack-k8s
+	url = git@github.com:rogeriomm/localstack-k8s.git
+[submodule "modules/metabase-k8s"]
+	path = modules/metabase-k8s
+	url = git@github.com:rogeriomm/metabase-k8s.git
+[submodule "modules/lab-zeppelin-notebooks"]
+	path = modules/lab-zeppelin-notebooks
+	url = git@github.com:rogeriomm/lab-zeppelin-notebooks.git
+[submodule "modules/public-server"]
+	path = modules/public-server
+	url = git@github.com:rogeriomm/public-server.git
+[submodule "modules/mongodb-k8s"]
+	path = modules/mongodb-k8s
+	url = git@github.com:rogeriomm/mongodb-k8s.git
+[submodule "modules/hive-metastore-postgres-docker"]
+	path = modules/hive-metastore-postgres-docker
+	url = git@github.com:rogeriomm/hive-metastore-postgres-docker.git
+[submodule "modules/minikube-labtools-k8s"]
+	path = modules/minikube-labtools-k8s
+	url = git@github.com:rogeriomm/minikube-labtools-k8s.git
+[submodule "modules/airflow-k8s"]
+	path = modules/airflow-k8s
+	url = git@github.com:rogeriomm/airflow-k8s.git
+[submodule "modules/zeppelin-k8s"]
+	path = modules/zeppelin-k8s
+	url = git@github.com:rogeriomm/zeppelin-k8s.git
+[submodule "modules/spark-k8s"]
+	path = modules/spark-k8s
+	url = git@github.com:rogeriomm/spark-k8s.git
+[submodule "modules/minio-k8s"]
+	path = modules/minio-k8s
+	url = git@github.com:rogeriomm/minio-k8s.git
+[submodule "modules/superset-k8s"]
+	path = modules/superset-k8s
+	url = git@github.com:rogeriomm/superset-k8s.git
