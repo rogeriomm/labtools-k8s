@@ -274,7 +274,7 @@ kafka_ui_install()
             health:
               ldap:
                 enabled: false
-      " | kubectl apply -f -
+      " | kubectl -n kafka apply -f -
   fi
 }
 
