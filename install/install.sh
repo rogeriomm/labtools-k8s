@@ -33,6 +33,14 @@ velero_install()
     fi
 }
 
+localstack_install() {
+    if ! helm status localstack -n localstack 2> /dev/null > /dev/null; then
+      helm repo add localstack https://localstack.github.io/helm-charts
+      helm repo update localstack
+      helm install --namespace localstack --create-namespace localstack localstack/localstack --values k8s/cluster2/helm/localstack/values.yaml --version 0.6.8
+    fi
+}
+
 minikube_configure()
 {
   # Raise the kindnet daemonset pod memory resource limit
@@ -404,6 +412,8 @@ kubectl annotate secret mkcert replicator.v1.mittwald.de/replicate-to="zeppelin"
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
 
 #kafka_wait_main_cluster
+
+localstack_install
 
 elasticsearch_install
 
