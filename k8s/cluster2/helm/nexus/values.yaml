@@ -115,13 +115,13 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: nginx
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
-  hostUI: iq-server.demo
+  hostUI: nexus.worldl.xpt
   hostUIPath: /
-  hostAdmin: admin.iq-server.demo
+  hostAdmin: admin.nexus.worldl.xpt
   hostAdminPath: /
   # tls:
   #   - secretName: nexus-local-tls
