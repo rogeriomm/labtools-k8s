@@ -11,3 +11,15 @@ Get the application URL by running these commands:
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl port-forward $POD_NAME 8080:8080
 ```
+
+
+# Links
+   * Connectors
+      * https://trino.io/docs/current/connector/kafka.html
+      * https://trino.io/docs/current/connector/delta-lake.html
+      * https://trino.io/docs/current/connector/iceberg.html
+      * https://trino.io/docs/current/connector/elasticsearch.html
+      * https://trino.io/docs/current/connector/postgresql.html
+      * https://trino.io/docs/current/connector/mongodb.html
+      * https://trino.io/docs/current/connector/mysql.html
+      * https://trino.io/docs/current/connector/hive.html
