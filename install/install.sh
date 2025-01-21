@@ -154,7 +154,7 @@ datahub_install()
 
 keycloak_install()
 {
-  if ! helm status keycloack -n keycloack 2> /dev/null > /dev/null; then
+  if ! helm status my-release -n keycloack 2> /dev/null > /dev/null; then
     helm install my-release oci://registry-1.docker.io/bitnamicharts/keycloak --create-namespace --namespace keycloack  \
          --values k8s/cluster2/helm/keycloack/values.yaml
   fi
@@ -273,6 +273,54 @@ minio_show()
     set -x
 }
 
+minio_show_admin()
+{
+    user=$(kubectl -n minio-tenant-1 get secret minio-tenant-1-user-1  -o jsonpath='{.data.CONSOLE_ACCESS_KEY}' | base64 -d)
+    password=$(kubectl -n minio-tenant-1 get secret minio-tenant-1-user-1  -o jsonpath='{.data.CONSOLE_SECRET_KEY}' | base64 -d)
+    echo "Admin: $user/$password"
+}
+
+minio_copy()
+{
+  export https_proxy="http://localhost:8888"
+
+  # Add "minio" user with policie "consoleAdmin"
+  if ! mc admin user info local minio; then
+    user=$(kubectl -n minio-tenant-1 get secret minio-tenant-1-user-1  -o jsonpath='{.data.CONSOLE_ACCESS_KEY}' | base64 -d)
+    password=$(kubectl -n minio-tenant-1 get secret minio-tenant-1-user-1  -o jsonpath='{.data.CONSOLE_SECRET_KEY}' | base64 -d)
+    echo -e "minio\nawesomes3" | mc admin user add local
+    mc admin policy attach local consoleAdmin --user minio
+  fi
+
+  set +xlg
+
+  if ! mc ls local 2> /dev/null > /dev/null ; then
+    echo "Waiting MINIO S3"
+
+    # Show MinIO Root User Credentials
+    kubectl minio tenant info minio-tenant-1
+
+    while ! mc ls local 2> /dev/null > /dev/null ; do
+      echo -n "."
+      sleep 10
+    done
+  fi
+
+  set -x
+
+  # Copy files
+  if ! mc ls local/bronze 2> /dev/null > /dev/null ; then
+    mc mb local/bronze
+
+    mc cp --recursive "$LABTOOLS_K8S/load-data/bronze/" local/bronze/
+
+    mc mb local/silver
+    mc mb local/gold
+
+    mc mb local/spark
+  fi
+}
+
 livy_install()
 {
   echo "Install Livy"
@@ -347,6 +395,8 @@ redpanda_console_install()
     helm repo add redpanda https://charts.redpanda.com
     helm repo update redpanda
 
+    kubectl -n kafka-main-cluster wait kafka/main --for=condition=Ready --timeout=900s
+
     # https://github.com/redpanda-data/console/blob/master/docs/installation.md#configuration
     #   In general we only use flags to specify the path to your config file which contains all the actual configuration.
     #   Because Console requires sensitive information such as credentials, we offer further flags so that you don't
@@ -389,45 +439,6 @@ kafka_wait_main_cluster()
 {
   echo "Waiting Kafka main cluster"
   kubectl -n kafka-main-cluster wait kafka/main --for=condition=Ready --timeout=30m
-}
-
-minio_copy()
-{
-  export https_proxy="http://localhost:8888"
-
-  # Add "minio" user with policie "consoleAdmin"
-  if ! mc admin user info local minio; then
-    echo -e "minio\nawesomes3" | mc admin user add local
-    mc admin policy attach local consoleAdmin --user minio
-  fi
-
-  set +xlg
-
-  if ! mc ls local 2> /dev/null > /dev/null ; then
-    echo "Waiting MINIO S3"
-
-    # Show MinIO Root User Credentials
-    kubectl minio tenant info minio-tenant-1
-
-    while ! mc ls local 2> /dev/null > /dev/null ; do
-      echo -n "."
-      sleep 10
-    done
-  fi
-
-  set -x
-
-  # Copy files
-  if ! mc ls local/bronze 2> /dev/null > /dev/null ; then
-    mc mb local/bronze
-
-    mc cp --recursive "$LABTOOLS_K8S/load-data/bronze/" local/bronze/
-
-    mc mb local/silver
-    mc mb local/gold
-
-    mc mb local/spark
-  fi
 }
 
 #
@@ -474,7 +485,6 @@ k8s-replicator_install
 kafka_install cluster2
 
 kafka_ui_install cluster2
-redpanda_console_install cluster2
 bitnami_confluent_registry_install cluster2
 
 
@@ -514,10 +524,13 @@ openmetadata_install
 
 keycloak_install
 
+redpanda_console_install cluster2
+
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
 
 postgres_show
 mysql_show
 minio_show
 
+minio_show_admin
 minio_copy
