@@ -37,7 +37,9 @@ airflow:
 
   ## extra environment variables for the airflow Pods
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-environment-variables.md
-  extraEnv: []
+  extraEnv:
+    - name: AIRFLOW__CORE__TEST_CONNECTION
+      value: Enabled
 
   ## extra VolumeMounts for the airflow Pods
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-persistent-volumes.md
@@ -64,16 +66,25 @@ airflow:
           claimName: nfs-common
 
   connections:
-      - id: postgres_db
+      - id: postgres_datahub
         type: postgres
-        description: "Postgres"
+        description: "Postgres datahub db"
         host: postgres-postgresql.postgres.svc.cluster2.xpt
         port: 5432
-        schema: my_database
+        schema: datahub
         login: ${POSTGRES_USERNAME}
         password: ${POSTGRES_PASSWORD}
 
-      - id: mongodb_db
+      - id: postgres_hive_metastore
+        type: postgres
+        description: "Postgres Hive metastore db"
+        host: postgres-postgresql.postgres.svc.cluster2.xpt
+        port: 5432
+        schema: metastore_db
+        login: ${POSTGRES_USERNAME}
+        password: ${POSTGRES_PASSWORD}
+
+      - id: mongodb
         type: mongo
         description: "MongoDB"
         host: mongodb-1-svc.mongodb.svc.cluster2.xpt
