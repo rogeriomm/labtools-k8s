@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hive-metastore
-  namespace: hive
   labels:
     app.kubernetes.io/name: hive-metastore
 spec:
@@ -40,17 +39,11 @@ spec:
               value: "https://minio.minio-tenant-1.svc.cluster2.xpt"
             - name: HIVE_SITE_CONF_fs_s3a_path_style_access
               value: "true"
-          volumeMounts:
-            - name: ca-pemstore
-              mountPath: /usr/local/share/ca-certificates/
-              readOnly: true
+            - name: CA_CERTIFICATE_FILE
+              value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           ports:
             - name: metastore
               containerPort: 9083
-      volumes:
-        - name: ca-pemstore
-          configMap:
-            name: ca-pemstore
 ---
 kind: Service
 apiVersion: v1
