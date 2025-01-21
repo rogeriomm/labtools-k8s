@@ -96,9 +96,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/postgresql
-  #tag: 16.1.0-debian-11-r19
+  registry: registry.minikube
+  repository: bitnami-postgresql-decoderbufs
   tag: 15.5.0-debian-11-r18
   digest: ""
   ## Specify a imagePullPolicy
@@ -243,10 +242,7 @@ postgresqlDataDir: /bitnami/postgresql/data
 ## @param postgresqlSharedPreloadLibraries Shared preload libraries (comma-separated list)
 ##
 
-# https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-server-configuration
-# decoderbufs is based on Protobuf and maintained by the Debezium community: https://github.com/debezium/postgres-decoderbufs
-#postgresqlSharedPreloadLibraries: "pgaudit,decoderbufs"
-postgresqlSharedPreloadLibraries: "pgaudit"
+postgresqlSharedPreloadLibraries: "pgaudit,decoderbufs"
 
 ## Start PostgreSQL pod(s) without limitations on shm memory.
 ## By default docker and containerd (and possibly other container runtimes) limit `/dev/shm` to `64M`
@@ -334,14 +330,7 @@ primary:
     ## @param primary.initdb.postgresqlWalDir Specify a custom location for the PostgreSQL transaction log
     ##
     postgresqlWalDir: ""
-    ## @param primary.initdb.scripts Dictionary of initdb scripts
-    ## Specify dictionary of scripts to be run at first boot
-    ## e.g:
-    ## scripts:
-    ##   my_init_script.sh: |
-    ##      #!/bin/sh
-    ##      echo "Do something."
-    ##
+
     scripts:
        init_script.sql: |
           /* Debezium CDC setup */
@@ -363,7 +352,8 @@ primary:
           /* Datahub DB */
           CREATE USER datahub WITH PASSWORD 'datahub';
           ALTER USER datahub WITH SUPERUSER;
-         
+       init_script.sh: |
+         echo "..................."
 
     ## @param primary.initdb.scriptsConfigMap ConfigMap with scripts to be run at first boot
     ## NOTE: This will override `primary.initdb.scripts`
@@ -444,6 +434,7 @@ primary:
   ## @param primary.startupProbe.periodSeconds Period seconds for startupProbe
   ## @param primary.startupProbe.timeoutSeconds Timeout seconds for startupProbe
   ## @param primary.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param primary.startupProbe.successThreshold Success threshold for startupProbe
   ## @param primary.startupProbe.successThreshold Success threshold for startupProbe
   ##
   startupProbe:
@@ -590,12 +581,21 @@ primary:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate: {}
+
   ## @param primary.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the PostgreSQL Primary container(s)
   ##
-  extraVolumeMounts: []
+  extraVolumeMounts: |
+     - name: lab
+       mountPath: /data
+       readOnly: true
+
   ## @param primary.extraVolumes Optionally specify extra list of additional volumes for the PostgreSQL Primary pod(s)
   ##
-  extraVolumes: []
+  extraVolumes: | 
+    - name: lab
+      persistentVolumeClaim:
+         claimName: lab
+
   ## @param primary.sidecars Add additional sidecar containers to the PostgreSQL Primary pod(s)
   ## For example:
   ## sidecars:
