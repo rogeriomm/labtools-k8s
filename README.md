@@ -76,15 +76,19 @@ flowchart TD
 <img src="docs/minio/MinioOperatorWeb.png" alt="drawing" width="1000"/>
 <img src="docs/minio/MinioWeb.png" alt="drawing" width="1000"/>
 
+# Argo CD
+<img src="docs/argocd/ArgoCdWeb.png" alt="drawing" width="1000"/>
+
 # Kubernetes
 <img src="docs/k8s/K8sPodsCluster2.png" alt="drawing" width="1000"/>
 
+   * [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/minikube/minikube.ipynb)
 
 # Web local
 | Local URL                                            | Description                                                                                                                | User    | Password                                                                                                                              |
 |------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|
 | https://dashboard.worldl.xpt/                        | [K8S dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)                             |         |                                                                                                                                       |
-| https://argocd-server.argocd.svc.cluster2.xpt        | [ArgoCD](https://argoproj.github.io/cd/)                                                                                   | admin   | [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/argocd/admin-password.ipynb) |
+| https://argocd.worldl.xpt                            | [ArgoCD](https://argoproj.github.io/cd/)                                                                                   | admin   | [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/argocd/admin-password.ipynb) |
 | https://zeppelin.worldl.xpt                          | [Zeppelin](https://zeppelin.apache.org/)                                                                                   |         |                                                                                                                                       |
 | https://jupyter.worldl.xpt/jupyter                   | [Jupyter](https://jupyter.org/) notebook: Python,Scala, RUST                                                               |         |                                                                                                                                       |
 | https://jupyter-commander.worldl.xpt/jupyter         | [Jupyter](https://jupyter.org/) notebook: Python,Scala, RUST - K8S Admin Service Account                                   |         |                                                                                                                                       |
