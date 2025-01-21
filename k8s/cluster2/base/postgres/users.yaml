@@ -40,5 +40,5 @@ metadata:
     replicator.v1.mittwald.de/replicate-to: "kafka-main-cluster"
 type: Opaque
 data:
-  username: "ZGViZXppdW0K"
-  password: "ZGViZXppdW0K"
+  username: "ZGViZXppdW0="
+  password: "ZGViZXppdW0="
