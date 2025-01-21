@@ -172,6 +172,18 @@ zeppelin_install()
       kubectl apply --namespace zeppelin -f -
 }
 
+#
+# https://cert-manager.io/docs/devops-tips/syncing-secrets-across-namespaces/  <====
+#   https://github.com/mittwald/kubernetes-replicator
+k8s-replicator_install()
+{
+  if ! helm status kubernetes-replicator -n k8s-replicator 2> /dev/null > /dev/null; then
+    helm repo add mittwald https://helm.mittwald.de
+    helm repo update mittwald
+    helm upgrade --install kubernetes-replicator --create-namespace --namespace k8s-replicator mittwald/kubernetes-replicator
+  fi
+}
+
 set -x
 set -e
 
@@ -190,6 +202,8 @@ labtools-k8s set-context cluster2
 
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
+
+k8s-replicator_install
 
 # Install MongoDB api-resource on cluster2
 mongodb_install
