@@ -42,3 +42,14 @@ type: Opaque
 data:
   username: "ZGViZXppdW0="
   password: "ZGViZXppdW0="
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-user-openmetadata-svc
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "openmetadata"
+type: Opaque
+data:
+  username: "b3Blbm1ldGFkYXRh"
+  password: "b3Blbm1ldGFkYXRh"
