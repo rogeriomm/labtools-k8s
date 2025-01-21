@@ -244,11 +244,6 @@ debezium_install()
 
 kafka_ui_install()
 {
-  if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
-    helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
-         --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
-  fi
-
   if kubectl -n kafka-main-cluster get secret kafka-user-ui; then
       sasl_jaas_config=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.sasl\.jaas\.config}' | base64 -d)
 
@@ -275,6 +270,11 @@ kafka_ui_install()
               ldap:
                 enabled: false
       " | kubectl -n kafka apply -f -
+  fi
+
+  if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
+    helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
+         --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
   fi
 }
 
