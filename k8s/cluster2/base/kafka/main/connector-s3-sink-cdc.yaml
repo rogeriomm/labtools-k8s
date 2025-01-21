@@ -15,20 +15,42 @@ spec:
     topic: my-topic
 
     schema.generator.class: "io.confluent.connect.storage.hive.schema.DefaultSchemaGenerator"
+    # io.confluent.connect.storage.partitioner.HourlyPartitioner
+    # io.confluent.connect.storage.partitioner.TimeBasedPartitioner
     partitioner.class: "io.confluent.connect.storage.partitioner.DefaultPartitioner"
+    #partition.duration.ms: 3600000
     schema.compatibility: "NONE"
+
+    # https://forum.confluent.io/t/kafkaconnect-with-amazon-sink-s3-sink-connect-is-not-working/4601/6
+    #aws.secret.access.key: "${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws_access_key_id}"
+    #s3.compression.type: "gzip"
+    #path.format: "YYYY/MM-dd/HH"
+    #timestamp.extractor: Record
 
     # Avro converter configurations
     key.converter: io.confluent.connect.avro.AvroConverter
     key.converter.schema.registry.url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
+    key.converter.schemas.enable: true
+
     value.converter: io.confluent.connect.avro.AvroConverter
     value.converter.schema.registry.url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
+    value.converter.schemas.enable: true
 
     store.url: "https://minio.minio-tenant-1.svc"
     storage.class: "io.confluent.connect.s3.storage.S3Storage"
 
     # Format type in which the data will be stored into MinIO
     format.class: io.confluent.connect.s3.format.avro.AvroFormat
-    flush.size: 3
+    flush.size: 1000
     # Specifies the endpoint from which the connector can pull, validate the schema and deserialize the data from the producer
     schema.registry.url: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
+
+    # https://joelforjava.com/blog/2019/10/27/adding-ssl-encryption-to-kafka-connector.html
+    # https://docs.confluent.io/platform/current/connect/security.html
+    # Authentication settings for Connect consumers used with sink connectors
+    consumer.security.protocol: SSL
+    consumer.ssl.enabled.protocols: TLSv1.2,TLSv1.1
+    consumer.ssl.truststore.type: JKS
+    consumer.ssl.keystore.location: /opt/kafka/external-configuration/self-signed-certificate/cluster.truststore.jks
+    consumer.ssl.keystore.password: 123456
+    consumer.ssl.key.password: 123456
