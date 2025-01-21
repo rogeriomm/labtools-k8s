@@ -96,8 +96,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: registry.minikube
-  repository: bitnami-postgresql-decoderbufs
+  registry: jfrog.worldl.xpt
+  repository: lab/bitnami-postgresql-decoderbufs
   tag: 15.5.0-debian-11-r18
   digest: ""
   ## Specify a imagePullPolicy
