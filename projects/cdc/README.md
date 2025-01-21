@@ -20,3 +20,5 @@ flowchart TD
 
    * [CDC replication on Delta lake](https://github.com/rogeriomm/debezium-cdc-replication-delta)
 
+# Links
+   * https://try.estuary.dev/intro_to_cdc_ondemand/
