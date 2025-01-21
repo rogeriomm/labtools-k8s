@@ -15,12 +15,14 @@ data:
         -R 1080:127.0.0.1:1080 \
         -R 8888:127.0.0.1:8888 \
         -R 2222:127.0.0.1:22 \
+        -R 8080:ingress.worldl.xpt:80 \
+        -R 8443:ingress.worldl.xpt:443 \
         -p 22 \
         -i /tmp/ssh/id_rsa \
         -o "StrictHostKeyChecking=no" \
         mac@macos.worldl.xpt \
     
-       tail -f   "$HOME/autossh.log"
+       tail -f "$HOME/autossh.log"
 ---
 apiVersion: apps/v1
 kind: Deployment
