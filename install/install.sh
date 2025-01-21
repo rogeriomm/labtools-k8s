@@ -28,6 +28,7 @@ certmanager_install()
 {
     if ! helm status cert-manager -n cert-manager 2> /dev/null > /dev/null; then
       kubectl create namespace cert-manager
+      # https://cert-manager.io/docs/installation/helm/#3-install-customresourcedefinitions
       kubectl -n cert-manager apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.crds.yaml
 
       helm repo add jetstack https://charts.jetstack.io --force-update
@@ -74,12 +75,12 @@ argocd_install()
 
   # Login Argo CD
   password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o=jsonpath='{.data.password}' | base64 -d)
-  argocd login argocd.worldl.xpt --grpc-web --username admin --password "$password"
-  argocd repo add  https://github.com/rogeriomm/labtools-k8s --name labtools-k8s
+  #argocd login argocd.worldl.xpt --grpc-web --username admin --password "$password"
+  #argocd repo add  https://github.com/rogeriomm/labtools-k8s --name labtools-k8s
 
-  if ! argocd proj get labtools-k8s > /dev/null ; then
-    argocd proj create labtools-k8s --description "labtools-k8s"
-  fi
+  #if ! argocd proj get labtools-k8s > /dev/null ; then
+  #  argocd proj create labtools-k8s --description "labtools-k8s"
+  #fi
 }
 
 nexus_install()
@@ -114,13 +115,6 @@ elasticsearch_install()
     helm install --namespace elasticsearch --create-namespace elasticsearch \
          oci://registry-1.docker.io/bitnamicharts/elasticsearch --values k8s/cluster2/helm/elasticsearch/values.yaml \
          --version 19.17.2
-  fi
-}
-
-hive_install()
-{
-  if ! kubectl get configmap ca-pemstore -n hive 2> /dev/null > /dev/null; then
-    kubectl -n hive create configmap ca-pemstore --from-file="$MINIKUBE_HOME"/ca.crt
   fi
 }
 
@@ -498,7 +492,6 @@ postgres_install
 mysql_install
 sqlserver_install
 
-hive_install
 airflow_install
 livy_install
 
