@@ -9,6 +9,3 @@ resources:
   - namespace.yaml
   - pvc.yaml
   - users.yaml
-
-patches:
-  - path: users.yaml
