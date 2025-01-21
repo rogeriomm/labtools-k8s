@@ -31,3 +31,14 @@ type: Opaque
 data:
   user: "YWlyZmxvdw=="
   password: "YWlyZmxvdw=="
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-user-debezium
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "kafka-main-cluster"
+type: Opaque
+data:
+  username: "ZGViZXppdW0K"
+  password: "ZGViZXppdW0K"
