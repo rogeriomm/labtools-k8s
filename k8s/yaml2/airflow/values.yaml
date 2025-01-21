@@ -57,6 +57,46 @@ airflow:
         persistentVolumeClaim:
           claimName: nfs-common
 
+  connections:
+      - id: postgres_db
+        type: postgres
+        description: "Postgres"
+        host: postgres-postgresql.postgres.svc.cluster2.xpt
+        port: 5432
+        schema: my_database
+        login: ${POSTGRES_USERNAME}
+        password: ${POSTGRES_PASSWORD}
+
+      - id: mongodb_db
+        type: mongo
+        description: "MongoDB"
+        host: example-mongodb-svc.mongodb.svc.cluster2.xpt
+        port: 27017
+        schema: my_database
+        login: ${MONGODB_USERNAME}
+        password: ${MONGODB_PASSWORD}
+
+  connectionsTemplates:
+    POSTGRES_USERNAME:
+      kind: secret
+      name: airflow-postgres-credentials
+      key: username
+
+    POSTGRES_PASSWORD:
+      kind: secret
+      name: airflow-postgres-credentials
+      key: password
+
+    MONGODB_USERNAME:
+      kind: secret
+      name: airflow-mongodb-credentials
+      key: username
+
+    MONGODB_PASSWORD:
+      kind: secret
+      name: airflow-mongodb-credentials
+      key: password
+
 workers:
   extraVolumeMounts:
     - name: data-lab-volume
@@ -65,7 +105,6 @@ workers:
 
   extraVolumes:
     - name: data-lab-volume
-      mountPath: /nfs
       persistentVolumeClaim:
         claimName: nfs-common
 
@@ -112,11 +151,11 @@ externalDatabase:
   database: airflow
 
   ## Kubernetes secret in your airflow namespace
-  userSecret: "airflow-cluster1-database-credentials"
+  userSecret: "airflow-database-credentials"
   userSecretKey: "username"
 
   ## Kubernetes secret in your airflow namespace
-  passwordSecret: "airflow-cluster1-database-credentials"
+  passwordSecret: "airflow-database-credentials"
   passwordSecretKey: "password"
 
   ## use this for any extra connection-string settings, e.g. ?sslmode=disable
