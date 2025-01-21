@@ -2,7 +2,7 @@
 
 hive_install()
 {
-  if ! configmap ca-pemstore -n hive 2> /dev/null > /dev/null; then
+  if ! kubectl get configmap ca-pemstore -n hive 2> /dev/null > /dev/null; then
     kubectl -n hive create configmap ca-pemstore --from-file="$MINIKUBE_HOME"/ca.crt
   fi
 }
@@ -31,7 +31,7 @@ datahub_install()
 
 airflow_install()
 {
-  if ! kubectl get namespace airflow ; then
+  if ! helm status airflow -n airflow 2> /dev/null > /dev/null; then
     helm repo add airflow-stable https://airflow-helm.github.io/charts
     helm repo update airflow-stable
     # See "Airflow Version Support on https://artifacthub.io/packages/helm/airflow-helm/airflow
