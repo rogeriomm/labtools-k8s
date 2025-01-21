@@ -12,9 +12,9 @@ data:
         -o "ServerAliveInterval 30" \
         -o "ServerAliveCountMax 3" \
         -N \
-        -R 1080:localhost:1080 \
-        -R 8888:localhost:8888 \
-        -R 2222:localhost:22 \
+        -R 1080:127.0.0.1:1080 \
+        -R 8888:127.0.0.1:8888 \
+        -R 2222:127.0.0.1:22 \
         -p 22 \
         -i /tmp/ssh/id_rsa \
         -o "StrictHostKeyChecking=no" \
