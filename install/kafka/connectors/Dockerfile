@@ -122,7 +122,7 @@ COPY ./plugins/ /opt/kafka/plugins/
 
 # https://debezium.io/documentation/reference/stable/configuration/avro.html#deploying-confluent-schema-registry-with-debezium-containers
 #   "Beginning with Debezium 2.0.0, Confluent Schema Registry support is not included in the Debezium containers"
-#COPY --from=builder /workspace/dependencies/target/dependency/*.jar /opt/kafka/libs/
+COPY --from=builder /workspace/dependencies/target/dependency/*.jar /opt/kafka/libs/
 COPY --from=confluent /usr/share/confluent-hub-components /opt/kafka/plugins/
 COPY --from=comunity /usr/share/confluent-hub-components /opt/kafka/plugins/
 
