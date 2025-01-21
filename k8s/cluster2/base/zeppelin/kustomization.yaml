@@ -7,6 +7,6 @@ resources:
   - namespace.yaml
   - spark-setup.yaml
   - zeppelin-auth.yaml
-  - persistent-volume-claim.yaml
+  - pvc.yaml
   - zeppelin-server.yaml
   - zeppelin-ingress.yaml
