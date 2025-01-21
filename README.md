@@ -2,17 +2,22 @@ This is a work in progress
 
    * [Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/)
       * [Quick start](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start) 
+        * [Kafka](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start/kafka) 
    * [Zeppelin notebooks (TODO)](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/zeppelin-notebooks/)
 
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres
+   * [YAML](k8s/cluster2/base/kafka/main)   -  [Notebook](https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/kafka/DebeziumPostgresCdc.ipynb)
+
 <img src="docs/kafka/KafkaUiTopicsCdc.png" alt="drawing" width="1000"/>
 <img src="docs/kafka/KafkaUiSchemaCdc.png" alt="drawing" width="1000"/>
 
-# Zeppelin
+# Zeppelin/Jupyter
+   * [YAML](k8s/cluster2/base/zeppelin)
+
 <img src="docs/zeppelin/ZeppelinWeb.png" alt="drawing" width="1000"/>
 
-# Jupyter
+   * [YAML](k8s/cluster2/base/jupyter)
 <img src="docs/jupyter/JupyterWeb.png" alt="drawing" width="1000"/>
 
 # Spark
