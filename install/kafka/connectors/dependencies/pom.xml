@@ -8,15 +8,25 @@
   <artifactId>my-app</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <properties>
+    <confluent.version>${confluent_version}</confluent.version>
+  </properties>
+
   <dependencies>
 
     <!-- https://mvnrepository.com/artifact/io.confluent/kafka-connect-avro-converter -->
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-connect-avro-converter</artifactId>
-      <version>5.2.1</version>
+      <version>${confluent.version}</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/io.confluent/common-utils -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>common-utils</artifactId>
+      <version>${confluent.version}</version>
+    </dependency>
   </dependencies>
 
   <repositories>
