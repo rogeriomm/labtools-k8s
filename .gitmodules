@@ -16,9 +16,6 @@
 [submodule "modules/public-server"]
 	path = modules/public-server
 	url = git@github.com:rogeriomm/public-server.git
-[submodule "modules/mongodb-k8s"]
-	path = modules/mongodb-k8s
-	url = git@github.com:rogeriomm/mongodb-k8s.git
 [submodule "modules/hive-metastore-postgres-docker"]
 	path = modules/hive-metastore-postgres-docker
 	url = git@github.com:rogeriomm/hive-metastore-postgres-docker.git
