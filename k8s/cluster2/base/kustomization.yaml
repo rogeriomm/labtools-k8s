@@ -12,5 +12,4 @@ resources:
   - admin
   - aws
   - hive
-  - kafka/sample-1
-  - kafka/sample-2
+  - kafka/main
