@@ -2,7 +2,7 @@ apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
   name: star
-  namespace: kafka-project
+  namespace: kafka-project-1
   labels:
     strimzi.io/cluster: lab-cluster
 spec:

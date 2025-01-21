@@ -1,23 +1,5 @@
 #!/usr/bin/env zsh
 
-nfs_fix()
-{
-  set +e &&  pid=$(pgrep -n nfsd) &&  set -e
-  args=""
-
-  if [ "$pid" != "" ] ; then
-    args="$(ps -o args  "$pid" | awk '/nfsd/{print $2}')"
-  fi
-
-  if [[ "$pid" == "" || "$args" != "-N" ]]  ; then
-    if [[ "$pid" == "" ]] ; then
-      sudo kill "$pid"
-    fi
-    sudo nfsd stop 2> /dev/null > /dev/null
-    sudo nfsd -N &
-  fi
-}
-
 hive_install()
 {
   if ! kubectl get namespace hive; then
@@ -42,9 +24,9 @@ datahub_install()
     kubectl create -n datahub secret generic postgresql-secrets --from-literal=postgres-password="$POSTGRES_PASSWORD"
     kubectl create -n datahub secret generic neo4j-secrets --from-literal=neo4j-password=neo4j-secrets
 
-    helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/yaml2/datahub/values-prerequisites.yaml
+    helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml
 
-    helm install --namespace datahub datahub datahub/datahub --values k8s/yaml2/datahub/values.yaml
+    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml
   fi
 }
 
@@ -54,17 +36,17 @@ airflow_install()
     helm repo add airflow-stable https://airflow-helm.github.io/charts
     helm repo update airflow-stable
     # See "Airflow Version Support on https://artifacthub.io/packages/helm/airflow-helm/airflow
-    helm install airflow airflow-stable/airflow --create-namespace --namespace airflow --version "8.8.0" --values k8s/yaml2/airflow/values.yaml
+    helm install airflow airflow-stable/airflow --create-namespace --namespace airflow --version "8.8.0" --values k8s/cluster2/helm/airflow/values.yaml
 
     # MONGODB
-    MONGODB_USER="my-user"
-    MONGODB_PASSWORD=$(kubectl get secret --namespace mongodb my-user-password  -o jsonpath="{.data.password}")
+    #MONGODB_USER="my-user"
+    #MONGODB_PASSWORD=$(kubectl get secret --namespace mongodb my-user-password  -o jsonpath="{.data.password}")
 
-    kubectl -n airflow create secret generic airflow-mongodb-credentials \
-       --from-literal=username="${MONGODB_USER}" \
-       --from-literal=password="${MONGODB_PASSWORD}"
+    #kubectl -n airflow create secret generic airflow-mongodb-credentials \
+    #   --from-literal=username="${MONGODB_USER}" \
+    #   --from-literal=password="${MONGODB_PASSWORD}"
 
-    # POSTGRES - Airflow
+    # POSTGRES
     POSTGRES_USER=postgres
     POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
 
@@ -83,7 +65,7 @@ trino_install()
   if ! kubectl get namespace trino 2> /dev/null ; then
     helm repo add trino https://trinodb.github.io/charts
     helm repo update trino
-    helm install -f k8s/yaml2/trino/values.yaml --create-namespace --namespace trino  trino-cluster trino/trino
+    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino-cluster trino/trino
   fi
 }
 
@@ -92,7 +74,7 @@ mongodb_install()
   if ! kubectl get namespace mongodb 2> /dev/null ; then
     helm repo add mongodb https://mongodb.github.io/helm-charts
     helm repo update mongodb
-    helm install -f k8s/yaml2/mongodb/values.yaml community-operator mongodb/community-operator --create-namespace --namespace mongodb
+    helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator --create-namespace --namespace mongodb
   fi
 }
 
@@ -102,7 +84,7 @@ postgres_install()
     helm repo add bitnami https://charts.bitnami.com/bitnami
     helm repo update bitnami
 
-    helm install -f k8s/yaml2/postgres/values.yaml --create-namespace --namespace postgres postgres bitnami/postgresql
+    helm install -f k8s/cluster2/helm/postgres/values.yaml --create-namespace --namespace postgres postgres bitnami/postgresql
   fi
 }
 
@@ -135,29 +117,15 @@ kafka_install()
 {
   if ! kubectl get ns kafka; then
     kubectl create namespace kafka;
+    kubectl create namespace kafka-project-1;
 
-    pushd
-
-    cd "$LABTOOLS_K8S"/modules/kafka-k8s
-
-    for ns in  kafka-project-1 kafka-project-2 kafka-project-3 kafka-project-4 kafka-project-5
-    do
-      if ! kubectl get ns $ns; then kubectl create namespace $ns; fi
-
-      kubectl create -f k8s/install/cluster-operator/020-RoleBinding-strimzi-cluster-operator.yaml -n $ns
-      kubectl create -f k8s/install/cluster-operator/023-RoleBinding-strimzi-cluster-operator.yaml -n $ns
-      kubectl create -f k8s/install/cluster-operator/031-RoleBinding-strimzi-cluster-operator-entity-operator-delegation.yaml -n $ns
-    done
-
-    # Deploy the Cluster Operator
-    kubectl create -f k8s/install/cluster-operator -n kafka
+    # shellcheck disable=SC2086
+    helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator --values k8s/$1/helm/kafka/values.yaml
 
     kubectl rollout status deployment strimzi-cluster-operator -n kafka --timeout=90s
 
     # Check the status of the deployment
     kubectl get deployments -n kafka
-
-    popd
   fi
 }
 
@@ -204,21 +172,17 @@ set -e
 
 sudo -v
 
-nfs_fix
-
 labtools-k8s set-context cluster1
 
-kafka_install
+kafka_install cluster1
 
 labtools-k8s set-context cluster2
 
-kafka_install
+kafka_install cluster2
 
 labtools-k8s configure-clusters
 
 labtools-k8s set-context cluster2
-
-kafka_install
 
 minio_install
 
@@ -248,7 +212,7 @@ datahub_install
 
 zeppelin_create_secret
 
-kubectl apply -f "$LABTOOLS_K8S/k8s/yaml2/"
+kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
 
 sleep 2
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin

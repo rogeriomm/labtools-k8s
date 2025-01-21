@@ -1,0 +1,12 @@
+replicas: 1
+
+watchNamespaces: [kafka-project-1,kafka-project-2,kafka-project-3,kafka-project-4,kafka-project-5]
+watchAnyNamespace: false
+
+defaultImageRegistry: quay.io
+defaultImageRepository: strimzi
+defaultImageTag: 0.39.0
+
+extraEnvs:
+  - name: KUBERNETES_SERVICE_DNS_DOMAIN
+    value: "cluster2.xpt"

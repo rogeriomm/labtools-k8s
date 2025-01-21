@@ -18,22 +18,9 @@ spec:
         app.kubernetes.io/name: aws-glue
     spec:
       volumes:
-         - name: notebook-volume-2
-           hostPath:
-             path: /Volumes/data/git/labtools-k8s/data/aws-glue-2/notebooks
-             type: Directory
-         - name: notebook-volume-3
-           hostPath:
-             path: /Volumes/data/git/labtools-k8s/data/aws-glue-3/notebooks
-             type: Directory
-         - name: notebook-volume-4
-           hostPath:
-             path: /Volumes/data/git/labtools-k8s/data/aws-glue-4/notebooks
-             type: Directory
-         - name: aws-config
-           hostPath:
-             path: /Volumes/data/git/labtools-k8s/data/aws-glue/.aws
-             type: Directory
+        - name: data-lab-volume
+          persistentVolumeClaim:
+            claimName: nfs-common
       containers:
         - name: aws-glue-2
           image: amazon/aws-glue-libs:glue_libs_2.0.0_image_01
@@ -58,10 +45,12 @@ spec:
             - name: SPARK_MASTER_WEBUI_PORT
               value: "4040"
           volumeMounts:
-            - name: aws-config
+            - name: data-lab-volume
               mountPath: /home/glue_user/.aws
-            - name: notebook-volume-2
+              subPath: labtools-k8s/data/aws-glue/.aws
+            - name: data-lab-volume
               mountPath: /home/glue_user/workspace/jupyter_workspace
+              subPath: labtools-k8s/data/aws-glue-2/notebooks
         - name: aws-glue-3
           image: amazon/aws-glue-libs:glue_libs_3.0.0_image_01
           args:
@@ -85,10 +74,12 @@ spec:
             - name: SPARK_MASTER_WEBUI_PORT
               value: "4041"
           volumeMounts:
-            - name: aws-config
+            - name: data-lab-volume
               mountPath: /home/glue_user/.aws
-            - name: notebook-volume-3
+              subPath: labtools-k8s/data/aws-glue/.aws
+            - name: data-lab-volume
               mountPath: /home/glue_user/workspace/jupyter_workspace
+              subPath: labtools-k8s/data/aws-glue-3/notebooks
         - name: aws-glue-4
           image: amazon/aws-glue-libs:glue_libs_4.0.0_image_01
           args:
@@ -112,10 +103,12 @@ spec:
             - name: SPARK_MASTER_WEBUI_PORT
               value: "4042"
           volumeMounts:
-            - name: aws-config
+            - name: data-lab-volume
               mountPath: /home/glue_user/.aws
-            - name: notebook-volume-4
+              subPath: labtools-k8s/data/aws-glue/.aws
+            - name: data-lab-volume
               mountPath: /home/glue_user/workspace/jupyter_workspace
+              subPath: labtools-k8s/data/aws-glue-4/notebooks
 ---
 kind: Service
 apiVersion: v1
@@ -245,4 +238,16 @@ spec:
                 name: aws-glue-jupyter-service
                 port:
                   number: 18082
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-common
+  namespace: aws-glue
+spec:
+  storageClassName: nfs-common
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Mi

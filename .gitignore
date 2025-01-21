@@ -1,6 +1,7 @@
 cert/
 certs/
 data/
+load-data/
 .idea/
 .tool-versions
 nohup.out

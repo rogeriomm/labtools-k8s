@@ -37,3 +37,6 @@
 [submodule "modules/superset-k8s"]
 	path = modules/superset-k8s
 	url = git@github.com:rogeriomm/superset-k8s.git
+[submodule "modules/ranger"]
+	path = modules/ranger
+	url = git@github.com:rogeriomm/ranger.git

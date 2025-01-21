@@ -1207,7 +1207,7 @@
         },
         "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.path ": {
           "name": "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.path ",
-          "value": "/Volume/data/git",
+          "value": "/Volumes/data/git",
           "type": "textarea"
         },
         "spark.kubernetes.executor.volumes.persistentVolumeClaim.data.mount.subPath": {
