@@ -17,10 +17,11 @@ plug()
   cd ..
 }
 
-plug "postgres"  "2.4.1.Final"
+plug "postgres"  "2.5.0.Final"
 plug "sqlserver" "2.5.0.Final"
-plug "mongodb"   "2.4.1.Final"
-plug "mysql"     "2.4.1.Final"
-plug "oracle"    "2.4.1.Final"
+plug "mongodb"   "2.5.0.Final"
+plug "mysql"     "2.5.0.Final"
+plug "oracle"    "2.5.0.Final"
 
-docker build . -t debezium-connector-postgres:0.39.0-kafka-3.6.1
+docker build . -t debezium-connector-postgres:0.39.0-kafka-3.6.1 --no-cache
+
