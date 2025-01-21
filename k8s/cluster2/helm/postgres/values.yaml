@@ -98,7 +98,8 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: bitnami/postgresql
-  tag: 16.1.0-debian-11-r19
+  #tag: 16.1.0-debian-11-r19
+  tag: 15.5.0-debian-11-r18
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -241,7 +242,12 @@ ldap:
 postgresqlDataDir: /bitnami/postgresql/data
 ## @param postgresqlSharedPreloadLibraries Shared preload libraries (comma-separated list)
 ##
+
+# https://debezium.io/documentation/reference/stable/connectors/postgresql.html#postgresql-server-configuration
+# decoderbufs is based on Protobuf and maintained by the Debezium community: https://github.com/debezium/postgres-decoderbufs
+#postgresqlSharedPreloadLibraries: "pgaudit,decoderbufs"
 postgresqlSharedPreloadLibraries: "pgaudit"
+
 ## Start PostgreSQL pod(s) without limitations on shm memory.
 ## By default docker and containerd (and possibly other container runtimes) limit `/dev/shm` to `64M`
 ## ref: https://github.com/docker-library/postgres/issues/416
