@@ -28,9 +28,12 @@ spec:
   restartPolicy: Never
   terminationGracePeriodSeconds: 30
   volumes:
-  - name: data-lab-volume
+  - name: data-lab-claim
     persistentVolumeClaim:
       claimName: lab-claim
+  - name: data-lab-common
+    persistentVolumeClaim:
+       claimName: nfs-common
   containers:
   - name: {{zeppelin.k8s.interpreter.container.name}}
     image: {{zeppelin.k8s.interpreter.container.image}}
@@ -72,13 +75,15 @@ spec:
   {% else %}
   {% if zeppelin.k8s.interpreter.gpu.type is defined and zeppelin.k8s.interpreter.gpu.nums is defined %}
     resources:
-      limits:  
+      limits:
         {{zeppelin.k8s.interpreter.gpu.type}}: "{{zeppelin.k8s.interpreter.gpu.nums}}"
   {% endif %}
   {% endif %}
     volumeMounts:
-      - name: data-lab-volume
+      - name: data-lab-claim
         mountPath: /lab
+      - name: data-lab-common
+        mountPath: /Volumes/data/git
 ---
 #
 #
