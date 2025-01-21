@@ -10,18 +10,15 @@ spec:
   authorization:
     type: simple
     acls:
-      # Topics and groups used by the HTTP clients through the HTTP Bridge
-      # Change to match the topics used by your HTTP clients
-      - resource:
-          type: group
-          name: my-group
-        operations:
-          - Read
       - resource:
           type: topic
-          name: my-topic
-        operations:
-          - Read
-          - Describe
-          - Write
-          - Create
+          name: '*'
+        operation: All
+      - resource:
+          type: group
+          name: '*'
+        operation: All
+      - resource:
+          type: cluster
+          name: '*'
+        operation: All
