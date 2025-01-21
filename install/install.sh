@@ -157,6 +157,32 @@ kafka_install()
   if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
     helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
          --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
+
+    sasl_jaas_config=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.sasl\.jaas\.config}' | base64 -d)
+
+    echo "
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: kafka-ui-configmap
+      namespace: kafka
+    data:
+      config.yml: |-
+        kafka:
+          clusters:
+            - name: main
+              bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
+              properties:
+                security.protocol: SASL_PLAINTEXT
+                sasl.mechanism: SCRAM-SHA-512
+                sasl.jaas.config: $sasl_jaas_config
+        auth:
+          type: disabled
+        management:
+          health:
+            ldap:
+              enabled: false
+    " | kubectl apply -f -
   fi
 }
 
@@ -224,7 +250,7 @@ kafka_install cluster1
 
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 
-kubectl annotate secret kafka-user-ide  replicator.v1.mittwald.de/replicate-to="kafka" -n kafka-main-cluster
+#kubectl annotate secret kafka-user-ide  replicator.v1.mittwald.de/replicate-to="kafka" -n kafka-main-cluster
 
 # Cluster 2 setup
 labtools-k8s set-context cluster2
