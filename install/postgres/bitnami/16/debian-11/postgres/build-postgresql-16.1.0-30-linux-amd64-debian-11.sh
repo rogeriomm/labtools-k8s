@@ -1,5 +1,5 @@
-Docker image: docker.io/bitnami/debian-base-buildpack:bullseye-r5
-Commands:
+echo Docker image: docker.io/bitnami/debian-base-buildpack:bullseye-r5
+echo Commands: && source patches.sh
 apt-get update -y
 DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends libedit-dev libicu-dev uuid-dev flex libpcre3-dev liblz4-dev bzip2 sqlite3 libsqlite3-dev cmake libyaml-dev libzstd-dev libbz2-dev libz-dev
 export JAVA_HOME=/opt/bitnami/java
@@ -36,93 +36,93 @@ mkdir -p /srp-tools/observer && \
     rm /srp-tools/observer.tar.gz && \
     chmod u+x /srp-tools/observer/bin/observer_agent && \
     /srp-tools/observer/bin/observer_agent --version
-curl https://ftp.postgresql.org/pub/source/v16.1/postgresql-16.1.tar.gz --output /tmp/sources/postgresql/postgresql-16.1.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/postgresql-16.1.0.tmp -xf /tmp/sources/postgresql/postgresql-16.1.tar.gz
-cd /bitnami/blacksmith-sandox/postgresql-16.1.0.tmp
-/bitnami/blacksmith-sandox/postgresql-16.1.0/configure  --prefix=/opt/bitnami/postgresql --with-libedit-preferred --with-openssl --with-libxml --with-libxslt --with-readline --with-icu --with-uuid=e2fs --with-ldap CFLAGS=-O2 CXXFLAGS=-O2 --with-lz4
+wget https://ftp.postgresql.org/pub/source/v16.1/postgresql-16.1.tar.gz -O /tmp/sources/postgresql/postgresql-16.1.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/postgresql/postgresql-16.1.tar.gz
+cd /bitnami/blacksmith-sandox/postgresql-16.1
+./configure  --prefix=/opt/bitnami/postgresql --with-libedit-preferred --with-openssl --with-libxml --with-libxslt --with-readline --with-icu --with-uuid=e2fs --with-ldap CFLAGS=-O2 CXXFLAGS=-O2 --with-lz4
 make  world --jobs=5
 make  install-world --jobs=5
-curl https://github.com/libgeos/geos/archive/3.8.4.tar.gz --output /tmp/sources/geos/geos-3.8.4.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/geos-3.8.4.tmp -xf /tmp/sources/geos/geos-3.8.4.tar.gz
-cd /bitnami/blacksmith-sandox/geos-3.8.4.tmp
+wget https://github.com/libgeos/geos/archive/3.8.4.tar.gz  -O /tmp/sources/geos/geos-3.8.4.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/geos/geos-3.8.4.tar.gz
+cd /bitnami/blacksmith-sandox/geos-3.8.4
 ./autogen.sh 
-/bitnami/blacksmith-sandox/geos-3.8.4/configure  --prefix=/opt/bitnami/postgresql
+./configure  --prefix=/opt/bitnami/postgresql
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/OSGeo/PROJ/archive/6.3.2.tar.gz --output /tmp/sources/proj/PROJ-6.3.2.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/proj-6.3.2.tmp -xf /tmp/sources/proj/PROJ-6.3.2.tar.gz
-cd /bitnami/blacksmith-sandox/proj-6.3.2.tmp
+wget https://github.com/OSGeo/PROJ/archive/6.3.2.tar.gz -O /tmp/sources/proj/PROJ-6.3.2.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/proj/PROJ-6.3.2.tar.gz
+cd /bitnami/blacksmith-sandox/PROJ-6.3.2
 ./autogen.sh 
-/bitnami/blacksmith-sandox/proj-6.3.2/configure  --prefix=/opt/bitnami/postgresql
+./configure  --prefix=/opt/bitnami/postgresql
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/OSGeo/gdal/releases/download/v3.8.3/gdal-3.8.3.tar.gz --output /tmp/sources/gdal/gdal-3.8.3.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/gdal-3.8.3.tmp -xf /tmp/sources/gdal/gdal-3.8.3.tar.gz
-cd /bitnami/blacksmith-sandox/gdal-3.8.3.tmp
-cmake  /bitnami/blacksmith-sandox/gdal-3.8.3 -DCMAKE_INSTALL_PREFIX:PATH=/opt/bitnami/postgresql -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DGDAL_USE_EXTERNAL_LIBS:BOOL=OFF -DGDAL_USE_PROJ=ON -DGDAL_USE_GEOS=ON -B/bitnami/blacksmith-sandox/gdal-3.8.3/out
-make  --jobs=5
+wget https://github.com/OSGeo/gdal/releases/download/v3.8.3/gdal-3.8.3.tar.gz -O /tmp/sources/gdal/gdal-3.8.3.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/gdal/gdal-3.8.3.tar.gz
+cd /bitnami/blacksmith-sandox/gdal-3.8.3
+cmake  . -DCMAKE_INSTALL_PREFIX:PATH=/opt/bitnami/postgresql -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DGDAL_USE_EXTERNAL_LIBS:BOOL=OFF -DGDAL_USE_PROJ=ON -DGDAL_USE_GEOS=ON -B/bitnami/blacksmith-sandox/gdal-3.8.3/out
+cd out && make  --jobs=5
 cmake  --build . --target install
-curl https://github.com/json-c/json-c/archive/refs/tags/json-c-0.16-20220414.tar.gz --output /tmp/sources/json-c/json-c-json-c-0.16-20220414.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/json-c-0.16.20220414.tmp -xf /tmp/sources/json-c/json-c-json-c-0.16-20220414.tar.gz
-cd /bitnami/blacksmith-sandox/json-c-0.16.20220414.tmp
-cmake  /bitnami/blacksmith-sandox/json-c-0.16.20220414 -DCMAKE_INSTALL_PREFIX:PATH=/opt/bitnami/postgresql -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-Wno-error
+wget https://github.com/json-c/json-c/archive/refs/tags/json-c-0.16-20220414.tar.gz -O /tmp/sources/json-c/json-c-json-c-0.16-20220414.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/json-c/json-c-json-c-0.16-20220414.tar.gz
+cd /bitnami/blacksmith-sandox/json-c-json-c-0.16-20220414
+cmake  . -DCMAKE_INSTALL_PREFIX:PATH=/opt/bitnami/postgresql -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-Wno-error
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/orafce/orafce/archive/refs/tags/VERSION_4_9_0.tar.gz --output /tmp/sources/orafce/orafce-VERSION_4_9_0.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/orafce-4.9.0.tmp -xf /tmp/sources/orafce/orafce-VERSION_4_9_0.tar.gz
-cd /bitnami/blacksmith-sandox/orafce-4.9.0.tmp
+wget https://github.com/orafce/orafce/archive/refs/tags/VERSION_4_9_0.tar.gz -O /tmp/sources/orafce/orafce-VERSION_4_9_0.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/orafce/orafce-VERSION_4_9_0.tar.gz
+cd /bitnami/blacksmith-sandox/orafce-VERSION_4_9_0
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/tada/pljava/archive/V1_6_6.tar.gz --output /tmp/sources/pljava/pljava-1_6_6.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/pljava-1.6.6.tmp -xf /tmp/sources/pljava/pljava-1_6_6.tar.gz
-cd /bitnami/blacksmith-sandox/pljava-1.6.6.tmp
+wget https://github.com/tada/pljava/archive/V1_6_6.tar.gz -O /tmp/sources/pljava/pljava-1_6_6.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/pljava/pljava-1_6_6.tar.gz
+cd /bitnami/blacksmith-sandox/pljava-1_6_6
 mvn  clean package
-java  -jar /bitnami/blacksmith-sandox/pljava-1.6.6/pljava-packaging/target/pljava-pg16.jar
-curl http://www.unixodbc.org/unixODBC-2.3.12.tar.gz --output /tmp/sources/unixodbc/unixODBC-2.3.12.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/unixodbc-2.3.12.tmp -xf /tmp/sources/unixodbc/unixODBC-2.3.12.tar.gz
-cd /bitnami/blacksmith-sandox/unixodbc-2.3.12.tmp
-/bitnami/blacksmith-sandox/unixodbc-2.3.12/configure  --prefix=/opt/bitnami/common
+java  -jar ./pljava-packaging/target/pljava-pg16.jar
+wget http://www.unixodbc.org/unixODBC-2.3.12.tar.gz -O /tmp/sources/unixodbc/unixODBC-2.3.12.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/unixodbc/unixODBC-2.3.12.tar.gz
+cd /bitnami/blacksmith-sandox/unixODBC-2.3.12
+./configure  --prefix=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
-curl https://ftp.postgresql.org/pub/odbc/versions/src/psqlodbc-16.00.0000.tar.gz --output /tmp/sources/psqlodbc/psqlodbc-16.00.0000.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/psqlodbc-16.0.0.tmp -xf /tmp/sources/psqlodbc/psqlodbc-16.00.0000.tar.gz
-cd /bitnami/blacksmith-sandox/psqlodbc-16.0.0.tmp
-/bitnami/blacksmith-sandox/psqlodbc-16.0.0/configure  --prefix=/opt/bitnami/postgresql --with-pq=/opt/bitnami/postgresql --with-unixodbc=/opt/bitnami/common
+wget https://ftp.postgresql.org/pub/odbc/versions/src/psqlodbc-16.00.0000.tar.gz -O /tmp/sources/psqlodbc/psqlodbc-16.00.0000.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/psqlodbc/psqlodbc-16.00.0000.tar.gz
+cd /bitnami/blacksmith-sandox/psqlodbc-16.00.0000
+./configure  --prefix=/opt/bitnami/postgresql --with-pq=/opt/bitnami/postgresql --with-unixodbc=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.21.12.tar.gz --output /tmp/sources/protobuf/protobuf-cpp-3.21.12.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/protobuf-3.21.12.tmp -xf /tmp/sources/protobuf/protobuf-cpp-3.21.12.tar.gz
-cd /bitnami/blacksmith-sandox/protobuf-3.21.12.tmp
-/bitnami/blacksmith-sandox/protobuf-3.21.12/configure  --prefix=/opt/bitnami/common
+wget https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.21.12.tar.gz -O /tmp/sources/protobuf/protobuf-cpp-3.21.12.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/protobuf/protobuf-cpp-3.21.12.tar.gz
+cd /bitnami/blacksmith-sandox/protobuf-3.21.12
+./autogen.sh && ./configure  --prefix=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/protobuf-c/protobuf-c/releases/download/v1.5.0/protobuf-c-1.5.0.tar.gz --output /tmp/sources/protobuf-c/protobuf-c-1.5.0.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/protobuf-c-1.5.0.tmp -xf /tmp/sources/protobuf-c/protobuf-c-1.5.0.tar.gz
-cd /bitnami/blacksmith-sandox/protobuf-c-1.5.0.tmp
-/bitnami/blacksmith-sandox/protobuf-c-1.5.0/configure  --prefix=/opt/bitnami/common
+wget https://github.com/protobuf-c/protobuf-c/releases/download/v1.5.0/protobuf-c-1.5.0.tar.gz -O /tmp/sources/protobuf-c/protobuf-c-1.5.0.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/protobuf-c/protobuf-c-1.5.0.tar.gz
+cd /bitnami/blacksmith-sandox/protobuf-c-1.5.0
+./configure  --prefix=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
-curl http://download.osgeo.org/postgis/source/postgis-3.4.1.tar.gz --output /tmp/sources/postgis/postgis-3.4.1.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/postgis-3.4.1.tmp -xf /tmp/sources/postgis/postgis-3.4.1.tar.gz
-cd /bitnami/blacksmith-sandox/postgis-3.4.1.tmp
-/bitnami/blacksmith-sandox/postgis-3.4.1/configure  --prefix=/opt/bitnami/postgresql --with-pgconfig=/opt/bitnami/postgresql/bin/pg_config --with-geosconfig=/opt/bitnami/postgresql/bin/geos-config --with-projdir=/opt/bitnami/postgresql --with-gdalconfig=/opt/bitnami/postgresql/bin/gdal-config --with-jsondir=/opt/bitnami/postgresql --with-protobufdir=/opt/bitnami/common
+wget http://download.osgeo.org/postgis/source/postgis-3.4.1.tar.gz -O /tmp/sources/postgis/postgis-3.4.1.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/postgis/postgis-3.4.1.tar.gz
+cd /bitnami/blacksmith-sandox/postgis-3.4.1
+./configure  --prefix=/opt/bitnami/postgresql --with-pgconfig=/opt/bitnami/postgresql/bin/pg_config --with-geosconfig=/opt/bitnami/postgresql/bin/geos-config --with-projdir=/opt/bitnami/postgresql --with-gdalconfig=/opt/bitnami/postgresql/bin/gdal-config --with-jsondir=/opt/bitnami/postgresql --with-protobufdir=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
-curl https://github.com/pgaudit/pgaudit/archive/16.0.tar.gz --output /tmp/sources/pgaudit/pgaudit-16.0.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/pgaudit-16.0.0.tmp -xf /tmp/sources/pgaudit/pgaudit-16.0.tar.gz
-cd /bitnami/blacksmith-sandox/pgaudit-16.0.0.tmp
+wget  https://github.com/pgaudit/pgaudit/archive/16.0.tar.gz -O /tmp/sources/pgaudit/pgaudit-16.0.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/pgaudit/pgaudit-16.0.tar.gz
+cd /bitnami/blacksmith-sandox/pgaudit-16.0.0
 make  USE_PGXS=1 --jobs=5
 make  USE_PGXS=1 install --jobs=5
-curl https://github.com/pgbackrest/pgbackrest/archive/release/2.49.tar.gz --output /tmp/sources/pgbackrest/pgbackrest-release-2.49.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/pgbackrest-2.49.0.tmp -xf /tmp/sources/pgbackrest/pgbackrest-release-2.49.tar.gz
-cd /bitnami/blacksmith-sandox/pgbackrest-2.49.0.tmp
-/bitnami/blacksmith-sandox/pgbackrest-2.49.0/src/configure  --prefix=/opt/bitnami/postgresql
+wget https://github.com/pgbackrest/pgbackrest/archive/release/2.49.tar.gz -O /tmp/sources/pgbackrest/pgbackrest-release-2.49.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/pgbackrest/pgbackrest-release-2.49.tar.gz
+cd /bitnami/blacksmith-sandox/pgbackrest-2.49.0
+./configure  --prefix=/opt/bitnami/postgresql
 make  --jobs=5
 make  install --jobs=5
-curl https://ftp.samba.org/pub/cwrap/nss_wrapper-1.1.15.tar.gz --output /tmp/sources/nss_wrapper/nss_wrapper-1.1.15.tar.gz
-tar --no-same-owner -C /bitnami/blacksmith-sandox/nss_wrapper-1.1.15.tmp -xf /tmp/sources/nss_wrapper/nss_wrapper-1.1.15.tar.gz
-cd /bitnami/blacksmith-sandox/nss_wrapper-1.1.15.tmp
-cmake  /bitnami/blacksmith-sandox/nss_wrapper-1.1.15 -DCMAKE_INSTALL_PREFIX=/opt/bitnami/common
+wget https://ftp.samba.org/pub/cwrap/nss_wrapper-1.1.15.tar.gz -O /tmp/sources/nss_wrapper/nss_wrapper-1.1.15.tar.gz
+tar --no-same-owner -C /bitnami/blacksmith-sandox/ -xf /tmp/sources/nss_wrapper/nss_wrapper-1.1.15.tar.gz
+cd /bitnami/blacksmith-sandox/nss_wrapper-1.1.15
+cmake  . -DCMAKE_INSTALL_PREFIX=/opt/bitnami/common
 make  --jobs=5
 make  install --jobs=5
 strip  "/opt/bitnami/postgresql/bin/cct"
