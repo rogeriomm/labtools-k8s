@@ -298,6 +298,7 @@ kafka_ui_install()
                   security.protocol: SASL_PLAINTEXT
                   sasl.mechanism: SCRAM-SHA-512
                   sasl.jaas.config: $sasl_jaas_config
+                  schemaRegistry: http://main-registry-schema-registry.kafka-main-cluster.svc:8081
           auth:
             type: disabled
           management:

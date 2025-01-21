@@ -5,5 +5,4 @@ metadata:
 
 resources:
   - namespace.yaml
-  - kafka-ui-config.yaml
   - kafka-ui-ingress.yaml
