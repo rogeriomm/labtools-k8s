@@ -41,5 +41,14 @@ jfrog/xray                      103.88.10       3.88.10         Universal compon
 docker login jfrog.worldl.xpt
 ```
 
+```shell
+docker pull hello-world
+docker image tag hello-world jfrog.worldl.xpt/lab/hello-world
+docker push jfrog.worldl.xpt/lab/hello-world
+```
+
 <img src="JFrogContainerRegistry.png" alt="drawing" width="1000"/>
 <img src="JFrogRepositoryLab.png" alt="drawing" width="1000"/>
+<img src="JfrogSecurityConfiguration.png" alt="drawing" width="1000"/>
+
+   * https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/jfrog/jfrog.ipynb
