@@ -15,4 +15,5 @@ resources:
   - hive
   - kafka/main
   - kafka
+  - metabase
 
