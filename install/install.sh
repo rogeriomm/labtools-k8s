@@ -24,6 +24,12 @@ data:
   echo "${CONFIG_MAP}" | kubectl apply -f -
 }
 
+minikube_configure()
+{
+  # Raise the kindnet daemonset pod memory resource limit
+  kubectl -n kube-system patch daemonset kindnet --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/resources/limits/memory", "value":"100Mi"}]'
+}
+
 argocd_install()
 {
   if ! helm status argocd -n argocd 2> /dev/null > /dev/null; then
@@ -321,6 +327,8 @@ sudo -v
 # Cluster 1 setup
 labtools-k8s set-context cluster1
 
+minikube_configure
+
 k8s-replicator_install
 
 argocd_install
@@ -334,6 +342,8 @@ kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 
 # Cluster 2 setup
 labtools-k8s set-context cluster2
+
+minikube_configure
 
 k8s-replicator_install
 
