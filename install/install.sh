@@ -24,6 +24,16 @@ data:
   echo "${CONFIG_MAP}" | kubectl apply -f -
 }
 
+argocd_install()
+{
+  if ! helm status argocd -n argocd 2> /dev/null > /dev/null; then
+    helm repo add argocd https://argoproj.github.io/argo-helm
+    helm repo update argocd
+    helm install --namespace argocd --create-namespace argocd  argocd/argo-cd --values k8s/cluster2/helm/argocd/values.yaml
+  fi
+
+}
+
 nexus_install()
 {
   echo "Install NEXUS"
@@ -311,10 +321,12 @@ sudo -v
 # Cluster 1 setup
 labtools-k8s set-context cluster1
 
+k8s-replicator_install
+
+argocd_install
+
 # Install Kafka api-resource on cluster1
 kafka_install cluster1
-
-k8s-replicator_install
 
 kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 
@@ -327,6 +339,8 @@ k8s-replicator_install
 
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
+
+argocd_install
 
 configure_metallb_for_minikube
 
