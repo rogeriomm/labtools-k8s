@@ -123,7 +123,7 @@ console:
     kafka:
       brokers:
         - main-kafka-bootstrap.kafka-main-cluster.svc:9092
-      schemaRegistry: # https://docs.redpanda.com/current/manage/schema-reg/schema-reg-ui/#prerequisites
+      schemaRegistry:
         enabled: true
         urls: ["http://main-registry-schema-registry.kafka-main-cluster.svc:8081"]
       protobuf:
@@ -139,6 +139,14 @@ console:
         # password: set via Helm secret / Env variable
       tls:
         enabled: false
+    connect:
+      enabled: true
+      clusters:
+        - name: my-connect
+          url: https://docs.redpanda.com/current/manage/schema-reg/schema-reg-ui/#prerequisites
+          tls:
+            enabled: false  # Trusted certs are still allowed by default
+
   # roles:
   # roleBindings:
 
