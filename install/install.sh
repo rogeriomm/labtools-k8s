@@ -52,9 +52,14 @@ argocd_install()
   if ! helm status argocd -n argocd 2> /dev/null > /dev/null; then
     helm repo add argocd https://argoproj.github.io/argo-helm
     helm repo update argocd
-    helm install --namespace argocd --create-namespace argocd  argocd/argo-cd --values k8s/cluster2/helm/argocd/values.yaml
+    helm install --namespace argocd --create-namespace argocd  \
+        argocd/argo-cd --values k8s/cluster2/helm/argocd/values.yaml \
+        --wait --timeout 600s
   fi
 
+  # Login Argo CD
+  password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o=jsonpath='{.data.password}' | base64 -d)
+  argocd login argocd.worldl.xpt --grpc-web --username admin --password "$password"
 }
 
 nexus_install()
@@ -374,7 +379,7 @@ minio_copy()
     mc admin policy attach local consoleAdmin --user minio
   fi
 
-  set +x
+  set +xlg
 
   if ! mc ls local 2> /dev/null > /dev/null ; then
     echo "Waiting MINIO S3"
@@ -426,8 +431,6 @@ labtools-k8s set-context cluster1
 #minikube_configure
 
 k8s-replicator_install
-
-argocd_install
 
 # Install Kafka api-resource on cluster1
 kafka_install cluster1
