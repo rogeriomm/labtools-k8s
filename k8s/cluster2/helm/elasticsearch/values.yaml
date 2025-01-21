@@ -1,5 +1,4 @@
-# Copyright VMware, Inc.
-# SPDX-License-Identifier: APACHE-2.0
+# https://github.com/bitnami/charts/tree/main/bitnami/elasticsearch
 
 ## @section Global parameters
 ## Global Docker image parameters
@@ -81,7 +80,7 @@ clusterName: elastic
 containerPorts:
   restAPI: 9200
   transport: 9300
-## @param plugins Comma, semi-colon or space separated list of plugins to install at initialization
+## @param plugins Comma, semicolon or space separated list of plugins to install at initialization
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/elasticsearch#environment-variables
 ##
 plugins: ""
@@ -189,7 +188,7 @@ useIstioLabels: true
 image:
   registry: docker.io
   repository: bitnami/elasticsearch
-  tag: 8.11.4-debian-11-r1
+  tag: 8.12.0-debian-11-r4
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -218,7 +217,7 @@ security:
   ## @param security.elasticPassword Password for 'elastic' user
   ## Ref: https://github.com/bitnami/containers/tree/main/bitnami/elasticsearch#security
   ##
-  elasticPassword: ""
+  elasticPassword: "elastic"
   ## @param security.existingSecret Name of the existing secret containing the Elasticsearch password (expected key: `elasticsearch-password`)
   ##
   existingSecret: ""
