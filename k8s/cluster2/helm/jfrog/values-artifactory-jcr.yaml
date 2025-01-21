@@ -39,7 +39,7 @@ artifactory:
   ## Nginx
   ## See full list of supported Nginx options and documentation in artifactory chart: https://github.com/jfrog/charts/tree/master/stable/artifactory
   nginx:
-    enabled: true  # https://github.com/jfrog/charts/tree/master/stable/artifactory-jcr#ingress-and-tls
+    enabled: false  # https://github.com/jfrog/charts/tree/master/stable/artifactory-jcr#ingress-and-tls
     tlsSecretName: ""
     service:
       type: ClusterIP
@@ -49,7 +49,7 @@ artifactory:
     enabled: true
     tls:
     hosts:
-      - jfrog-jcr.worldl.xpt
+      - jfrog.worldl.xpt
   ## PostgreSQL
   ## See list of supported postgresql options and documentation in artifactory chart: https://github.com/jfrog/charts/tree/master/stable/artifactory
   ## Configuration values for the PostgreSQL dependency sub-chart
