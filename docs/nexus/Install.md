@@ -1,0 +1,1 @@
+   * https://github.com/sonatype/helm3-charts
