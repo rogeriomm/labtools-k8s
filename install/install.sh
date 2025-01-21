@@ -2,10 +2,10 @@
 
 harbor_install() {
   if ! helm status harbor -n harbor 2> /dev/null > /dev/null; then
-    helm install --namespace cert-manager --create-namespace harbor \
+    helm install --namespace harbor --create-namespace harbor \
        oci://registry-1.docker.io/bitnamicharts/harbor \
        --values k8s/cluster2/helm/harbor/values.yaml \
-       --version v1.14.2
+       --version 19.9.0
   fi
 }
 
