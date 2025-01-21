@@ -280,8 +280,6 @@ debezium_install()
 kafka_ui_install()
 {
   if kubectl -n kafka-main-cluster get secret kafka-user-ui; then
-      echo "-------------"
-
       sasl_jaas_config=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.sasl\.jaas\.config}' | base64 -d)
 
       echo "
@@ -446,7 +444,7 @@ mongodb_install
 # Replicator
 kubectl annotate secret mkcert replicator.v1.mittwald.de/replicate-to="zeppelin" -n kube-system
 
-kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/base"
+kubectl apply -k "$LABTOOLS_K8S/k8s/cluster2/overlay/dev"
 
 #kafka_wait_main_cluster
 
