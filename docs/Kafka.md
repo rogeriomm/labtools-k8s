@@ -21,3 +21,7 @@ kubectl get kafka lab-cluster -o=jsonpath='{.status.listeners[?(@.type=="externa
 
    * Jetbrains Big Data Tools configuration
       * https://www.jetbrains.com/help/idea/big-data-tools-kafka.html
+
+# Links
+   * https://github.com/provectus/kafka-ui
+   * https://cert-manager.io/docs/devops-tips/syncing-secrets-across-namespaces/
