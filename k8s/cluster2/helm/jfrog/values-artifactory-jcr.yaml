@@ -39,7 +39,7 @@ artifactory:
   ## Nginx
   ## See full list of supported Nginx options and documentation in artifactory chart: https://github.com/jfrog/charts/tree/master/stable/artifactory
   nginx:
-    enabled: true
+    enabled: true  # https://github.com/jfrog/charts/tree/master/stable/artifactory-jcr#ingress-and-tls
     tlsSecretName: ""
     service:
       type: ClusterIP

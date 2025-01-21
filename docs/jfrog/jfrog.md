@@ -33,6 +33,7 @@ jfrog/vault                     0.25.0          1.14.0          Official HashiCo
 jfrog/xray                      103.88.10       3.88.10         Universal component scan for security and licen...
 ```
 
-   * https://artifacthub.io/packages/helm/jfrog/artifactory-oss
-     * https://github.com/jfrog/charts/tree/master/stable/artifactory
    * https://artifacthub.io/packages/helm/jfrog/artifactory-jcr
+      * https://github.com/jfrog/charts/tree/master/stable/artifactory-jcr#chart-details
+         *  "Optionally expose Artifactory with Ingress Ingress documentation"
+
