@@ -37,6 +37,8 @@ Qix9BAu3sVYifqASpt97gTxwlrspoNe0
 
 ```shell
  kubectl -n kafka-main-cluster get service main-kafka-bootstrap
+```
+
 ```text
 NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
 main-kafka-bootstrap   ClusterIP   10.107.19.180   <none>        9091/TCP,9092/TCP,9093/TCP   30h
