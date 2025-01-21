@@ -1,0 +1,33 @@
+global:
+  datahub:
+    version: v0.10.4
+    systemUpdate:
+      ## The following options control settings for datahub-upgrade job which will
+      ## managed ES indices and other update related work
+      enabled: true
+
+  sql:
+    datasource:
+      host: "postgres-postgresql.postgres.svc.cluster2.xpt:5432"
+      hostForpostgresqlClient: "postgres-postgresql.postgres.svc.cluster2.xpt"
+      port: "5432"
+      url: "jdbc:postgresql://postgres-postgresql.postgres.svc.cluster2.xpt:5432/datahub"
+      driver: "org.postgresql.Driver"
+      username: "postgres"
+      # kubectl get secret --namespace postgres postgres-postgresql -o yaml
+      password:
+        secretRef: postgresql-secrets
+        secretKey: postgres-password
+
+
+datahub-ingestion-cron:
+  enabled: false
+
+elasticsearchSetupJob:
+  enabled: true
+
+mysqlSetupJob:
+  enabled: false
+
+postgresqlSetupJob:
+  enabled: true
