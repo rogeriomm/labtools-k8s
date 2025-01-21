@@ -1,0 +1,1 @@
+docker build . -f ./Dockerfile -t registry.minikube/bitnami-postgresql-decoderbufs:15.5.0-debian-11-r18 "$1"
