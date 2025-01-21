@@ -43,10 +43,10 @@ openmetadata:
       dbScheme: mysql
       databaseName: openmetadata_db
       auth:
-        username: openmetadata_user
+        username: openmetadata
         password:
-          secretRef: mysql-secrets
-          secretKey: openmetadata-mysql-password
+          secretRef: mysql-user-openmetadata
+          secretKey: password
       dbParams: "allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
     pipelineServiceClientConfig:
       enabled: true
