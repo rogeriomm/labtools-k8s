@@ -148,7 +148,15 @@ datahub_install()
     helm install --namespace datahub datahub datahub/datahub \
        --values k8s/cluster2/helm/datahub/values.yaml \
        --version 0.3.28 \
-       --wait --timeout 600s
+       --wait --timeout 1000s
+  fi
+}
+
+keycloak_install()
+{
+  if ! helm status keycloack -n keycloack 2> /dev/null > /dev/null; then
+    helm install my-release oci://registry-1.docker.io/bitnamicharts/keycloak --create-namespace --namespace keycloack  \
+         --values k8s/cluster2/helm/keycloack/values.yaml
   fi
 }
 
@@ -503,6 +511,8 @@ livy_install
 trino_install
 datahub_install
 openmetadata_install
+
+keycloak_install
 
 labtools-k8s set-ingress zeppelin zeppelin-server zeppelin
 

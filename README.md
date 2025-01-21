@@ -114,6 +114,7 @@ flowchart TD
 | https://jfrog.worldl.xpt                             | [Jfrog](https://jfrog.com/artifactory/)                                                                                    | admin   | password                                                                                                                              |
 | https://nexus.worldl.xpt/                            | [Nexus](https://www.sonatype.com/products/sonatype-nexus-repository)     Free trial                                        | admin   | admin123                                                                                                                              |
 | https://nexus.admin.worldl.xpt/                      | [Nexus](https://www.sonatype.com/products/sonatype-nexus-repository)     Free trial                                        |         |                                                                                                                                       |
+| https://keycloack.worldl.xpt                         | [Keycloak](https://www.keycloak.org)                                                                                       | admin   | password                                                                                                                              |
 
 # Internet Web ([Protected by Firewall](https://github.com/rogeriomm/public-server))
 | Public URL                                 | Description                                                   |                   |   |   |
