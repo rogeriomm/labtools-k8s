@@ -6,7 +6,7 @@ data:
   config.yml: |-
     kafka:
       clusters:
-        - name: yaml
+        - name: main
           bootstrapServers: kafka-cluster-broker-endpoints:9092
     auth:
       type: disabled
