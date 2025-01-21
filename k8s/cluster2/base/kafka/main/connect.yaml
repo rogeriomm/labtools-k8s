@@ -34,3 +34,11 @@ spec:
     config.storage.replication.factor: -1
     offset.storage.replication.factor: -1
     status.storage.replication.factor: -1
+  # https://github.com/minio/blog-assets/blob/main/kafka/kafka-schema-registry-minio.md?ref=blog.min.io#deploy-kafka-connect
+  template:
+    connectContainer:
+      env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "minio"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "awesomes3"

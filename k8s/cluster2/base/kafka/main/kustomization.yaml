@@ -19,3 +19,5 @@ resources:
   - connect.yaml
   - connector-debezium-postgres.yaml
   - connector-debezium-sqlserver.yaml
+  - connector-s3-sink-cdc.yaml
+  - connector-s3-source.yaml
