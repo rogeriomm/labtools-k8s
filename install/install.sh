@@ -46,7 +46,12 @@ hive_install()
 # https://github.com/open-metadata/openmetadata-helm-charts
 openmetadata_install()
 {
-  echo "Install OpenMetadata"
+  if ! helm status openmetadata -n openmetadata 2> /dev/null > /dev/null; then
+    helm repo add open-metadata https://helm.open-metadata.org/
+    helm repo update open-metadata
+
+    helm install openmetadata --namespace openmetadata --create-namespace open-metadata/openmetadata --values k8s/cluster2/helm/openmetadata/values.yaml
+  fi
 }
 
 #
@@ -169,14 +174,7 @@ confluent_install_operator()
 
 debezium_install()
 {
-  if ! docker image inspect debezium-connector-postgres:0.39.0-kafka-3.6.1 > /dev/null 2> /dev/null; then
-
-    debezium_version="1.0.0"
-
-https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.4.0.Final/
-
-    echo "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${debezium_version}/debezium-connector-postgres-${debezium_version}-plugin.tar.gz"
-  fi
+  echo "Debezium install"
 }
 
 kafka_ui_install()
@@ -313,10 +311,10 @@ kubectl apply -k "$LABTOOLS_K8S/k8s/cluster1/base"
 # Cluster 2 setup
 labtools-k8s set-context cluster2
 
+k8s-replicator_install
+
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
-
-k8s-replicator_install
 
 configure_metallb_for_minikube
 
