@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sqlserver-user-debezium
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "kafka-main-cluster"
+type: Opaque
+data:
+  username: "ZGViZXppdW0K"
+  password: "ZGViZXppdW0K"
