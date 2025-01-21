@@ -14,7 +14,7 @@ openmetadata:
       adminPort: 8586
     elasticsearch:
       enabled: true
-      host: opensearch
+      host: elasticsearch.elasticsearch.svc
       searchType: opensearch
       port: 9200
       scheme: http
@@ -67,8 +67,10 @@ openmetadata:
         enabled: true
         username: admin
         password:
-          secretRef: airflow-secrets
-          secretKey: openmetadata-airflow-password
+          #secretRef: airflow-secrets
+          #secretKey: openmetadata-airflow-password
+          secretRef: airflow-user-openmetadata
+          secretKey: password
         trustStorePath: ""
         trustStorePassword:
           secretRef: ""
