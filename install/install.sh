@@ -322,7 +322,7 @@ redpanda_console_install()
     sasl_password=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.password}' | base64 -d)
 
     helm upgrade --install redpandas-console --namespace kafka redpanda/console \
-       --values "$LABTOOLS_K8S/k8s/$1/helm/redpandas/values-console.yaml" \
+       --values "$LABTOOLS_K8S/k8s/$1/helm/redpanda/values-console.yaml" \
        --set console.config.kafka.sasl.password="$sasl_password" \
        --version 0.7.20
   fi
