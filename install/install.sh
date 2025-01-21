@@ -115,7 +115,7 @@ trino_install()
   if ! helm status trino -n trino 2> /dev/null > /dev/null;  then
     helm repo add trino https://trinodb.github.io/charts
     helm repo update trino
-    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino trino/trino
+    helm install -f k8s/cluster2/helm/trino/values.yaml --create-namespace --namespace trino  trino trino/trino --version 0.17.0
   fi
 }
 
