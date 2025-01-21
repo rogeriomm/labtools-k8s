@@ -9,7 +9,7 @@ metadata:
     strimzi.io/use-connector-resources: "true"
 spec:
   version: 3.6.1
-  image: debezium-connector-postgres:0.39.0-kafka-3.6.1
+  image: registry.minikube/kafka-connector-plugins:0.39.0-kafka-3.6.1
   replicas: 1
   bootstrapServers: main-kafka-bootstrap:9093
   tls:
