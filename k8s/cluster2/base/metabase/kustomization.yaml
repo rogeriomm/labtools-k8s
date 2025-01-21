@@ -5,4 +5,5 @@ metadata:
 
 resources:
   - namespace.yaml
+  - volume.yaml
   - metabase.yaml
