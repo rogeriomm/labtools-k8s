@@ -1,3 +1,5 @@
+   * https://trino.io/docs/current/installation/kubernetes.html
+
 ```text
 NAME: trino-cluster
 LAST DEPLOYED: Fri Apr 21 12:25:24 2023
@@ -14,6 +16,11 @@ Get the application URL by running these commands:
 
 ```shell
 nc -v  trino.trino.svc 8080
+```
+
+   * https://trino.io/docs/current/client/cli.html
+```shell
+trino http://trino.trino.svc:8080/tpch/tiny
 ```
 
    * http://trino.trino.svc:8080
