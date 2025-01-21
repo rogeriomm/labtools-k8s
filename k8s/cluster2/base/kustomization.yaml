@@ -4,6 +4,7 @@ metadata:
   name: arbitrary
 
 resources:
+  - velero
   - postgres
   - jupyter
   - zeppelin
