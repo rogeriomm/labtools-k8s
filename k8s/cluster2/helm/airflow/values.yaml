@@ -103,12 +103,197 @@ airflow:
       name: mongodb-user-airflow
       key: password
 
+###################################
+## COMPONENT | Airflow Workers
+###################################
 workers:
+  ## if the airflow workers StatefulSet should be deployed
+  ##
+  enabled: true
+
+  ## the number of worker Pods to run
+  ## - if you set this >1 we recommend defining a `workers.podDisruptionBudget`
+  ## - this is the minimum when `workers.autoscaling.enabled` is true
+  ##
+  replicas: 1
+
+  ## resource requests/limits for the worker Pod
+  ## - spec for ResourceRequirements:
+  ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#resourcerequirements-v1-core
+  ##
+  resources: {}
+
+  ## the nodeSelector configs for the worker Pods
+  ## - docs for nodeSelector:
+  ##   https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
+  ##
+  nodeSelector: {}
+
+  ## the affinity configs for the worker Pods
+  ## - spec for Affinity:
+  ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#affinity-v1-core
+  ##
+  affinity: {}
+
+  ## the toleration configs for the worker Pods
+  ## - spec for Toleration:
+  ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#toleration-v1-core
+  ##
+  tolerations: []
+
+  ## the security context for the worker Pods
+  ## - spec for PodSecurityContext:
+  ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#podsecuritycontext-v1-core
+  ##
+  securityContext: {}
+
+  ## labels for the worker StatefulSet
+  ##
+  labels: {}
+
+  ## Pod labels for the worker StatefulSet
+  ##
+  podLabels: {}
+
+  ## annotations for the worker StatefulSet
+  ##
+  annotations: {}
+
+  ## Pod annotations for the worker StatefulSet
+  ##
+  podAnnotations: {}
+
+  ## if we add the annotation: "cluster-autoscaler.kubernetes.io/safe-to-evict" = "true"
+  ##
+  safeToEvict: true
+
+  ## configs for the PodDisruptionBudget of the worker StatefulSet
+  ##
+  podDisruptionBudget:
+    ## if a PodDisruptionBudget resource is created for the worker StatefulSet
+    ##
+    enabled: false
+
+    ## the `apiVersion` to use for PodDisruptionBudget resources
+    ## - for Kubernetes 1.21 and later: "policy/v1"
+    ## - for Kubernetes 1.20 and before: "policy/v1beta1"
+    ##
+    apiVersion: policy/v1
+
+    ## the maximum unavailable pods/percentage for the worker StatefulSet
+    ##
+    maxUnavailable: ""
+
+    ## the minimum available pods/percentage for the worker StatefulSet
+    ##
+    minAvailable: ""
+
+  ## configs for the HorizontalPodAutoscaler of the worker Pods
+  ## - [WARNING] if using git-sync, ensure `dags.gitSync.resources` is set
+  ## - [WARNING] if using worker log-cleanup, ensure `workers.logCleanup.resources` is set
+  ##
+  ## ____ EXAMPLE _______________
+  ##   autoscaling:
+  ##     enabled: true
+  ##     maxReplicas: 16
+  ##     metrics:
+  ##     - type: Resource
+  ##       resource:
+  ##         name: memory
+  ##         target:
+  ##           type: Utilization
+  ##           averageUtilization: 80
+  ##
+  autoscaling:
+    enabled: false
+    maxReplicas: 2
+    metrics: []
+
+    ## the `apiVersion` to use for HorizontalPodAutoscaler resources
+    ## - for Kubernetes 1.23 and later: "autoscaling/v2"
+    ## - for Kubernetes 1.22 and before: "autoscaling/v2beta2"
+    ##
+    apiVersion: autoscaling/v2
+
+  ## configs for the celery worker Pods
+  ##
+  celery:
+    ## if celery worker Pods are gracefully terminated
+    ## - consider defining a `workers.podDisruptionBudget` to prevent there not being
+    ##   enough available workers during graceful termination waiting periods
+    ##
+    ## graceful termination process:
+    ##  1. prevent worker accepting new tasks
+    ##  2. wait AT MOST `workers.celery.gracefullTerminationPeriod` for tasks to finish
+    ##  3. send SIGTERM to worker
+    ##  4. wait AT MOST `workers.terminationPeriod` for kill to finish
+    ##  5. send SIGKILL to worker
+    ##
+    gracefullTermination: false
+
+    ## how many seconds to wait for tasks to finish before SIGTERM of the celery worker
+    ##
+    gracefullTerminationPeriod: 600
+
+  ## how many seconds to wait after SIGTERM before SIGKILL of the celery worker
+  ## - [WARNING] tasks that are still running during SIGKILL will be orphaned, this is important
+  ##   to understand with KubernetesPodOperator(), as Pods may continue running
+  ##
+  terminationPeriod: 60
+
+  ## configs for the log-cleanup sidecar of the worker Pods
+  ## - helps prevent excessive log buildup by regularly deleting old files
+  ##
+  logCleanup:
+    ## if the log-cleanup sidecar is enabled
+    ## - [WARNING] must be disabled if `logs.persistence.enabled` is `true`
+    ##
+    enabled: false
+
+    ## resource requests/limits for the log-cleanup container
+    ## - spec of ResourceRequirements:
+    ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#resourcerequirements-v1-core
+    ##
+    resources: {}
+
+    ## the number of minutes to retain log files (by last-modified time)
+    ##
+    retentionMinutes: 21600
+
+    ## the number of seconds between each check for files to delete
+    ##
+    intervalSeconds: 900
+
+  ## configs for the worker Pods' liveness probe
+  ##
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    timeoutSeconds: 60
+    failureThreshold: 5
+
+  ## extra pip packages to install in the worker Pod
+  ##
+  ## ____ EXAMPLE _______________
+  ##   extraPipPackages:
+  ##     - "SomeProject==1.0.0"
+  ##
+  extraPipPackages: []
+
+  ## extra VolumeMounts for the worker Pods
+  ## - spec for VolumeMount:
+  ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#volumemount-v1-core
+  ##
   extraVolumeMounts:
     - name: data-lab-volume
       mountPath: /Volumes/data/git
       readOnly: false
 
+  ## extra Volumes for the worker Pods
+  ## - spec for Volume:
+  ##   https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#volume-v1-core
+  ##
   extraVolumes:
     - name: data-lab-volume
       persistentVolumeClaim:
@@ -128,7 +313,7 @@ scheduler:
   ## configs for the log-cleanup sidecar of the scheduler
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/monitoring/log-cleanup.md
   logCleanup:
-    enabled: true
+    enabled: false
     retentionMinutes: 21600
 
   ## configs for the scheduler Pods' liveness probe
@@ -189,6 +374,47 @@ ingress:
     ## WARNING: requires Kubernetes 1.18 or later, use "kubernetes.io/ingress.class" annotation for older versions
     ingressClassName: "nginx"
 
+###################################
+## CONFIG | Airflow Logs
+###################################
+logs:
+  ## the airflow logs folder
+  ##
+  path: /opt/airflow/logs
+
+  ## configs for the logs PVC
+  ##
+  persistence:
+    ## if a persistent volume is mounted at `logs.path`
+    ##
+    enabled: true
+
+    ## the name of an existing PVC to use
+    ##
+    existingClaim: "worker-tmp"
+
+    ## sub-path under `logs.persistence.existingClaim` to use
+    ##
+    subPath: ""
+
+    ## the name of the StorageClass used by the PVC
+    ## - if set to "", then `PersistentVolumeClaim/spec.storageClassName` is omitted
+    ## - if set to "-", then `PersistentVolumeClaim/spec.storageClassName` is set to ""
+    ##
+    storageClass: ""
+
+    ## the access mode of the PVC
+    ## - [WARNING] must be "ReadWriteMany" or airflow pods will fail to start
+    ##
+    accessMode: ReadWriteMany
+
+    ## the size of PVC to request
+    ##
+    size: 1Gi
+
+###################################
+## CONFIG | Airflow DAGs
+###################################
 dags:
   ## NOTE: this is the default value
   path: /opt/airflow/dags
