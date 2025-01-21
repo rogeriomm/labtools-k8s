@@ -35,10 +35,13 @@ spec:
     topic.prefix: sqlserver.testDB
 
     # Debezium Avro serialization configurations
-
     transforms: "unwrap"
     transforms.unwrap.type: "io.debezium.transforms.ExtractNewRecordState"
     transforms.unwrap.add.headers: "db"
     transforms.unwrap.add.fields: "op,table,source.ts_ms"
     transforms.unwrap.drop.tombstones: "false"
     transforms.unwrap.delete.handling.mode: "rewrite"
+
+    # https://debezium.io/documentation/reference/stable/development/engine.html#_in_the_code
+    schema.history.internal: "io.debezium.storage.file.history.FileSchemaHistory"
+    schema.history.internal.file.filename: "/tmp/schema_history.dat"
