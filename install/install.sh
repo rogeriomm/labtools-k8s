@@ -54,12 +54,18 @@ argocd_install()
     helm repo update argocd
     helm install --namespace argocd --create-namespace argocd  \
         argocd/argo-cd --values k8s/cluster2/helm/argocd/values.yaml \
+        --version 5.55.0 \
         --wait --timeout 600s
   fi
 
   # Login Argo CD
   password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o=jsonpath='{.data.password}' | base64 -d)
   argocd login argocd.worldl.xpt --grpc-web --username admin --password "$password"
+  argocd repo add  https://github.com/rogeriomm/labtools-k8s --name labtools-k8s
+
+  if ! argocd proj get labtools-k8s > /dev/null ; then
+    argocd proj create labtools-k8s --description "labtools-k8s"
+  fi
 }
 
 nexus_install()
