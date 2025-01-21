@@ -21,6 +21,8 @@ spec:
         port: 9094
         type: nodeport
         tls: false
+    authorization:
+      type: simple
     storage:
       type: jbod
       volumes:
