@@ -703,5 +703,4 @@ externalKafka:
   ##
   sasl:
     user: "kafka-user-registry"
-    password: "aGkWHQY1MBenm1K0GyIOI9jIe6GGR1f2"
-    existingSecret: ""
+    existingSecret: "kafka-user-registry-copy"
