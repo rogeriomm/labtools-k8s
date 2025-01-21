@@ -7,6 +7,7 @@ USE testDB;
 EXEC sys.sp_cdc_enable_db;
 
 CREATE USER debezium FOR LOGIN debezium;
+GRANT SELECT ON DATABASE::testDB TO debezium;
 
 -- Create and populate our products using a single insert with many rows
 CREATE TABLE products (
