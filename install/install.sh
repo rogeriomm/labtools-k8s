@@ -99,7 +99,7 @@ minio_install()
     kubectl minio init --namespace minio-operator --cluster-domain "$domain"
   fi
 
-  if ! kubectl get namespace minio-tenant-1; then
+  if ! kubectl minio tenant minio-tenant-1; then
     echo "Creating MINIO instance"
 
     kubectl create ns minio-tenant-1
