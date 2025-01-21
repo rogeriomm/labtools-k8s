@@ -74,7 +74,7 @@ argocd_install()
   fi
 
   # Login Argo CD
-  password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o=jsonpath='{.data.password}' | base64 -d)
+  #password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o=jsonpath='{.data.password}' | base64 -d)
   #argocd login argocd.worldl.xpt --grpc-web --username admin --password "$password"
   #argocd repo add  https://github.com/rogeriomm/labtools-k8s --name labtools-k8s
 
@@ -141,9 +141,14 @@ datahub_install()
 
     kubectl create namespace datahub
 
-    helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml --version 0.1.6
+    helm install --namespace datahub prerequisites datahub/datahub-prerequisites \
+      --values k8s/cluster2/helm/datahub/values-prerequisites.yaml \
+      --version 0.1.7
 
-    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --version 0.3.28
+    helm install --namespace datahub datahub datahub/datahub \
+       --values k8s/cluster2/helm/datahub/values.yaml \
+       --version 0.3.28 \
+       --wait --timeout 600s
   fi
 }
 
