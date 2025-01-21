@@ -24,6 +24,20 @@ data:
   echo "${CONFIG_MAP}" | kubectl apply -f -
 }
 
+certmanager_install()
+{
+    if ! helm status cert-manager -n cert-manager 2> /dev/null > /dev/null; then
+      kubectl create namespace cert-manager
+      kubectl -n cert-manager apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.crds.yaml
+
+      helm repo add jetstack https://charts.jetstack.io --force-update
+      helm repo update jetstack
+      helm install --namespace cert-manager --create-namespace cert-manager jetstack/cert-manager \
+          --values k8s/cluster2/helm/cert-manager/values.yaml \
+          --version v1.14.2
+    fi
+}
+
 velero_install()
 {
     if ! helm status velero -n velero 2> /dev/null > /dev/null; then
@@ -456,6 +470,8 @@ k8s-replicator_install
 
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
+
+certmanager_install
 
 argocd_install
 
