@@ -272,11 +272,6 @@ confluent_install_operator()
     fi
 }
 
-debezium_install()
-{
-  echo "Debezium install"
-}
-
 kafka_ui_install()
 {
   if kubectl -n kafka-main-cluster get secret kafka-user-ui; then
@@ -293,7 +288,7 @@ kafka_ui_install()
           kafka:
             clusters:
               - name: main
-                bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
+                bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc:9092
                 properties:
                   security.protocol: SASL_PLAINTEXT
                   sasl.mechanism: SCRAM-SHA-512
@@ -311,6 +306,25 @@ kafka_ui_install()
   if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
     helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
          --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
+  fi
+}
+
+redpanda_console_install()
+{
+  if ! helm status redpandas-console -n kafka 2> /dev/null > /dev/null; then
+    helm repo add redpanda https://charts.redpanda.com
+    helm repo update redpanda
+
+    # https://github.com/redpanda-data/console/blob/master/docs/installation.md#configuration
+    #   In general we only use flags to specify the path to your config file which contains all the actual configuration.
+    #   Because Console requires sensitive information such as credentials, we offer further flags so that you don't
+    #   need to put them into your YAML configuration.
+    sasl_password=$(kubectl -n kafka-main-cluster get secret kafka-user-ui -o=jsonpath='{.data.password}' | base64 -d)
+
+    helm upgrade --install redpandas-console --namespace kafka redpanda/console \
+       --values "$LABTOOLS_K8S/k8s/$1/helm/redpandas/values-console.yaml" \
+       --set console.config.kafka.sasl.password="$sasl_password" \
+       --version 0.7.20
   fi
 }
 
@@ -339,10 +353,9 @@ kafka_install()
   fi
 
   kafka_ui_install "$1"
+  redpanda_console_install "$1"
 
   bitnami_confluent_registry_install "$1"
-
-  debezium_install
 }
 
 kafka_wait_main_cluster()
