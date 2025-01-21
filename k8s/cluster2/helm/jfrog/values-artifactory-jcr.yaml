@@ -46,7 +46,7 @@ artifactory:
   ## Ingress
   ## See full list of supported Ingress options and documentation in artifactory chart: https://github.com/jfrog/charts/tree/master/stable/artifactory
   ingress:
-    enabled: true
+    enabled: false
     tls:
     hosts:
       - jfrog.worldl.xpt

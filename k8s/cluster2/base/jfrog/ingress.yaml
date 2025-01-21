@@ -5,9 +5,33 @@ metadata:
   namespace: jfrog
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    # https://stackoverflow.com/questions/49918313/413-error-with-kubernetes-and-nginx-ingress-controller
+    nginx.ingress.kubernetes.io/proxy-body-size: "1000m"
 spec:
+  defaultBackend:
+    service:
+      name: jfrog-artifactory-jcr
+      port:
+        number: 8082
   ingressClassName: nginx
   rules:
+    - host: jfrog.worldl.xpt
+      http:
+        paths:
+          - backend:
+              service:
+                name: jfrog-artifactory-jcr
+                port:
+                  number: 8082
+            path: /
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: jfrog-artifactory-jcr
+                port:
+                  number: 8081
+            path: /artifactory/
+            pathType: ImplementationSpecific
     - host: lab.jfrog.worldl.xpt
       http:
         paths:
@@ -25,5 +49,3 @@ spec:
                   number: 8081
             path: /artifactory/
             pathType: ImplementationSpecific
-
-

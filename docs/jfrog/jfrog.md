@@ -52,3 +52,20 @@ docker push jfrog.worldl.xpt/lab/hello-world
 <img src="JfrogSecurityConfiguration.png" alt="drawing" width="1000"/>
 
    * https://github.com/rogeriomm/labtools-k8s-notebooks/blob/master/jupyter-notebooks/quick-start/jfrog/jfrog.ipynb
+
+# Troubleshooting
+
+```html
+<head><title>413 Request Entity Too Large</title></head>
+<body>
+<center><h1>413 Request Entity Too Large</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+```
+ See K8S NGINX ingress configuration
+ 
+```shell
+kubectl get pods -n ingress-nginx
+```
+   * https://stackoverflow.com/questions/49918313/413-error-with-kubernetes-and-nginx-ingress-controller: 413 error with Kubernetes and Nginx ingress controller
