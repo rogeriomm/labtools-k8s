@@ -31,3 +31,19 @@ mysqlSetupJob:
 
 postgresqlSetupJob:
   enabled: true
+
+datahub-frontend:
+  enabled: true
+  resources:
+    limits:
+      memory: 1400Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  # Set up ingress to expose react front-end
+  ingress:
+    enabled: true
+  defaultUserCredentials:
+    manualValues: |
+       datahub:manualPassword
+       initialViewer:manualPassword
