@@ -163,3 +163,23 @@ kubectl run postgres-postgresql-client --rm --tty -i --restart='Never' --namespa
 
 
    * https://stackoverflow.com/questions/55499984/postgresql-in-helm-initdbscripts-parameter
+
+
+# Troubleshooting
+## Max connections
+   * https://stackoverflow.com/questions/2757549/org-postgresql-util-psqlexception-fatal-sorry-too-many-clients-already
+```sql
+show max_connections;
+
+SELECT * FROM pg_stat_activity;
+SELECT COUNT(*) from pg_stat_activity;
+
+```
+
+```sql
+SHOW config_file;
+```
+
+/opt/bitnami/postgresql/conf/postgresql.conf
+
+  * https://stackoverflow.com/questions/73218618/bitnami-postgresql-change-max-connections

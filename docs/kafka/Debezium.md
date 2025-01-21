@@ -129,6 +129,10 @@ kubectl get -n kafka-main-cluster kafkaconnectors debezium-connector-postgres
 ```
 
 ```shell
+kubectl get -n kafka-main-cluster kafkaconnectors debezium-connector-postgres -o jsonpath='{.status.connectorStatus.tasks[0].trace}'
+```
+
+```shell
 kubectl get -n kafka-main-cluster kafkaconnectors debezium-connector-postgres -o yaml | yq
 ```
    * Success output
@@ -375,8 +379,7 @@ cat /opt/bitnami/postgresql/share/extension/decoderbufs.control
  minikube ssh -- "cd /Volumes/data/git/labtools-k8s/install/postgres/bitnami/15/debian-11/decoderbufs && ./build-postgres-decoderbufs.sh"
 ```
 
-
-# Curl
+# Creating connector using CURL
    * config.json file
 ```yaml
 {
@@ -406,89 +409,6 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 ]
 ```
 
-```shell
-curl -H "Accept:application/json" http://my-connect-connect-api.kafka-main-cluster.svc:8083/connector-plugins/ | jq
-```
-```json
-[
-  {
-    "class": "io.debezium.connector.mongodb.MongoDbConnector",
-    "type": "source",
-    "version": "2.4.1.Final"
-  },
-  {
-    "class": "io.debezium.connector.mysql.MySqlConnector",
-    "type": "source",
-    "version": "2.4.1.Final"
-  },
-  {
-    "class": "io.debezium.connector.oracle.OracleConnector",
-    "type": "source",
-    "version": "2.4.1.Final"
-  },
-  {
-    "class": "io.debezium.connector.postgresql.PostgresConnector",
-    "type": "source",
-    "version": "2.4.1.Final"
-  },
-  {
-    "class": "io.debezium.connector.sqlserver.SqlServerConnector",
-    "type": "source",
-    "version": "2.5.0.Final"
-  },
-  {
-    "class": "org.apache.kafka.connect.mirror.MirrorCheckpointConnector",
-    "type": "source",
-    "version": "3.6.1"
-  },
-  {
-    "class": "org.apache.kafka.connect.mirror.MirrorHeartbeatConnector",
-    "type": "source",
-    "version": "3.6.1"
-  },
-  {
-    "class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
-    "type": "source",
-    "version": "3.6.1"
-  }
-]
-```
-
-   * https://github.com/rogeriomm/labtools-k8s/blob/master/k8s/cluster2/base/kafka/main/connector-debezium.yaml
-```shell
-curl -H "Accept:application/json" http://my-connect-connect-api.kafka-main-cluster.svc:8083/connectors?expand=info | jq
-```
-```json
-{
-  "debezium-connector-postgres": {
-    "info": {
-      "name": "debezium-connector-postgres",
-      "config": {
-        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-        "database.dbname": "airflow",
-        "database.user": "debezium",
-        "topic.prefix": "postgres",
-        "schema.history.internal.kafka.topic": "schema-changes.inventory",
-        "database.hostname": "postgres-postgresql.postgres.svc.cluster2.xpt",
-        "tasks.max": "1",
-        "database.password": "debezium",
-        "name": "debezium-connector-postgres",
-        "schema.history.internal.kafka.bootstrap.servers": "main-kafka-bootstrap:9092",
-        "database.include.list": "inventory",
-        "database.port": "5432"
-      },
-      "tasks": [
-        {
-          "connector": "debezium-connector-postgres",
-          "task": 0
-        }
-      ],
-      "type": "source"
-    }
-  }
-}
-```
-
 # AVRO configuration
    * https://debezium.io/documentation/reference/stable/configuration/avro.html
      * " Beginning with Debezium 2.0.0, Confluent Schema Registry support is not included in the Debezium containers. To enable the Confluent Schema Registry for a Debezium container,... "
@@ -496,7 +416,6 @@ curl -H "Accept:application/json" http://my-connect-connect-api.kafka-main-clust
 
 # Tested Versions
    * https://debezium.io/releases/
-
 
 # Links
    * https://debezium.io/documentation/reference/stable/operations/kubernetes.html
