@@ -126,4 +126,15 @@ COPY ./plugins/ /opt/kafka/plugins/
 COPY --from=confluent /usr/share/confluent-hub-components /opt/kafka/plugins/
 COPY --from=comunity /usr/share/confluent-hub-components /opt/kafka/plugins/
 
-USER 1001
+COPY update-ca-trust.sh /opt/kafka/bin
+
+# https://www.redhat.com/sysadmin/configure-ca-trust-list
+# https://www.redhat.com/sysadmin/ca-certificates-cli
+# head -n 20 /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt
+RUN  microdnf install sudo less vim && \
+     echo "kafka ALL=(ALL) NOPASSWD: /usr/bin/update-ca-trust, /bin/rm /etc/sudoers" >> /etc/sudoers && \
+     chown kafka /etc/pki/ca-trust/source/anchors && \
+     chmod +x /opt/kafka/bin/update-ca-trust.sh && \
+     sed -i '2i/opt/kafka/bin/update-ca-trust.sh' /opt/kafka/kafka_connect_run.sh
+
+USER kafka
