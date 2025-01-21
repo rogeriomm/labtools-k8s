@@ -1,6 +1,6 @@
 replicas: 1
 
-watchNamespaces: [kafka-project-1,kafka-project-2,kafka-project-3,kafka-project-4,kafka-project-5]
+watchNamespaces: [kafka-main-cluster,kafka-project-1,kafka-project-2,kafka-project-3,kafka-project-4,kafka-project-5]
 watchAnyNamespace: false
 
 defaultImageRegistry: quay.io
