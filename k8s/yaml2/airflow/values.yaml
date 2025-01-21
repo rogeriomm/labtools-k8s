@@ -1,4 +1,8 @@
 airflow:
+  image:
+    repository: registry.minikube/airflow-2.7.1-10
+    tag: master
+
   clusterDomain: cluster2.xpt
 
   config:
@@ -41,6 +45,29 @@ airflow:
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-persistent-volumes.md
   ## [FAQ] https://github.com/airflow-helm/charts/blob/main/charts/airflow/docs/faq/kubernetes/mount-files.md
   extraVolumes: []
+
+  kubernetesPodTemplate:
+    extraVolumeMounts:
+      - name: data-lab-volume
+        mountPath: /Volumes/data/git
+        readOnly: false
+
+    extraVolumes:
+      - name: data-lab-volume
+        persistentVolumeClaim:
+          claimName: nfs-common
+
+workers:
+  extraVolumeMounts:
+    - name: data-lab-volume
+      mountPath: /Volumes/data/git
+      readOnly: false
+
+  extraVolumes:
+    - name: data-lab-volume
+      mountPath: /nfs
+      persistentVolumeClaim:
+        claimName: nfs-common
 
 ###################################
 ## COMPONENT | Airflow Scheduler
