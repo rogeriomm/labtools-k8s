@@ -41,8 +41,19 @@ datahub-frontend:
       cpu: 100m
       memory: 512Mi
   # Set up ingress to expose react front-end
+
   ingress:
     enabled: true
+    # https://datahubproject.io/docs/deploy/aws/ search ingress
+    hosts:
+      - host: datahub.worldl.xpt
+        redirectPaths:
+          - path: /*
+            name: ssl-redirect
+            port: "9002"
+        paths:
+          - /*
+
   defaultUserCredentials:
     manualValues: |
        datahub:manualPassword
