@@ -1,5 +1,14 @@
 #!/usr/bin/env zsh
 
+harbor_install() {
+  if ! helm status harbor -n harbor 2> /dev/null > /dev/null; then
+    helm install --namespace cert-manager --create-namespace harbor \
+       oci://registry-1.docker.io/bitnamicharts/harbor \
+       --values k8s/cluster2/helm/harbor/values.yaml \
+       --version v1.14.2
+  fi
+}
+
 configure_metallb_for_minikube() {
   # determine load balancer ingress range
   CIDR_BASE_ADDR="$(minikube ip)"
@@ -486,6 +495,8 @@ labtools-k8s set-context cluster2
 #velero_install
 
 k8s-replicator_install
+
+harbor_install
 
 # Install Kafka api-resource on cluster2
 kafka_install cluster2
