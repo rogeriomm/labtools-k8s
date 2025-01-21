@@ -35,8 +35,6 @@ existingSecret: ""
 envs:
   secret: {}
   config: {}
-#  config:
-#    KAFKA_CLUSTERS_0_SCHEMAREGISTRY: "http://main-registry-schema-registry.kafka-main-cluster.svc:8081"
 
 networkPolicy:
   enabled: false
