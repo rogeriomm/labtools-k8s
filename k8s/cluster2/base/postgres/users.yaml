@@ -2,18 +2,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: user-airflow
-  annotations:
-    replicator.v1.mittwald.de/replicate-to: "airflow"
-type: Opaque
-data:
-  user: "YWlyZmxvdw=="
-  password: "YWlyZmxvdw=="
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: user-metastore-db
+  name: postgres-user-metastore-db
   annotations:
     replicator.v1.mittwald.de/replicate-to: "hive"
 type: Opaque
@@ -24,10 +13,21 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: user-datahub
+  name: postgres-user-datahub
   annotations:
     replicator.v1.mittwald.de/replicate-to: "datahub"
 type: Opaque
 data:
   user: "ZGF0YWh1Yg=="
   password: "ZGF0YWh1Yg=="
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-user-airflow
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "airflow"
+type: Opaque
+data:
+  user: "YWlyZmxvdw=="
+  password: "YWlyZmxvdw=="

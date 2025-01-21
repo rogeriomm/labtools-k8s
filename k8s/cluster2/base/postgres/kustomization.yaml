@@ -3,8 +3,9 @@ kind: Kustomization
 metadata:
   name: arbitrary
 
+namespace: postgres
+
 resources:
   - namespace.yaml
   - users.yaml
   - initdb.yaml
-

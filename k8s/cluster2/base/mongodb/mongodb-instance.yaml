@@ -32,7 +32,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   namespace: mongodb
-  name: mongodb-airflow-user
+  name: mongodb-user-airflow
   annotations:
     replicator.v1.mittwald.de/replicate-to: "airflow,zeppelin"
 type: Opaque

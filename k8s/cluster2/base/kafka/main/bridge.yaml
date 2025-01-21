@@ -12,7 +12,7 @@ spec:
   authentication:
     type: tls
     certificateAndKey:
-      secretName: my-bridge
+      secretName: kafka-user-bridge
       certificate: user.crt
       key: user.key
   http:

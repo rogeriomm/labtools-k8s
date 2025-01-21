@@ -5,4 +5,7 @@ metadata:
 
 resources:
   - namespace.yaml
-  - airflow.yaml
+  - pvc.yaml
+
+patches:
+  - path: namespace.yaml

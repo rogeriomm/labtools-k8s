@@ -104,6 +104,29 @@ livy_install()
   echo "Install Livy"
 }
 
+
+bitnami_confluent_registry_install()
+{
+    if ! helm status main-registry -n kafka-main-cluster 2> /dev/null > /dev/null; then
+      # Bitnami package for Confluent Schema Registry
+      #helm upgrade main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/cluster1/helm/registry-confluent/values.yaml"
+      #helm upgrade main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/cluster2/helm/registry-confluent/values.yaml"
+      #kubectl delete pvc data-main-registry-kafka-controller-0
+      helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka-main-cluster --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml" --version 14.0.1
+    fi
+}
+
+confluent_install_operator()
+{
+    if ! helm status confluent-operator -n kafka 2> /dev/null > /dev/null; then
+      helm repo add confluentinc https://packages.confluent.io/helm
+      helm repo update
+      helm upgrade --install confluent-operator \
+        confluentinc/confluent-for-kubernetes \
+        --namespace kafka
+    fi
+}
+
 kafka_install()
 {
   if ! kubectl get ns kafka; then
@@ -129,10 +152,8 @@ kafka_install()
 
   fi
 
-  if ! helm status main-registry -n kafka 2> /dev/null > /dev/null; then
-    # Bitnami package for Confluent Schema Registry
-    helm install main-registry oci://registry-1.docker.io/bitnamicharts/schema-registry --namespace kafka --values "$LABTOOLS_K8S/k8s/$1/helm/registry-confluent/values.yaml"
-  fi
+
+  bitnami_confluent_registry_install "$1"
 
   if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
     # helm uninstall --namespace kafka kafka-ui

@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
-  name: my-connect
+  name: kafka-user-connect
   labels:
     strimzi.io/cluster: main
 spec:
