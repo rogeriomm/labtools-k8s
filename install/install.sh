@@ -1,5 +1,41 @@
 #!/usr/bin/env zsh
 
+configure_metallb_for_minikube() {
+  # determine load balancer ingress range
+  CIDR_BASE_ADDR="$(minikube ip)"
+  INGRESS_FIRST_ADDR="$(echo "${CIDR_BASE_ADDR}" | awk -F'.' '{print $1,$2,$3,2}' OFS='.')"
+  INGRESS_LAST_ADDR="$(echo "${CIDR_BASE_ADDR}" | awk -F'.' '{print $1,$2,$3,255}' OFS='.')"
+  INGRESS_RANGE="${INGRESS_FIRST_ADDR}-${INGRESS_LAST_ADDR}"
+
+  CONFIG_MAP="apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - $INGRESS_RANGE"
+
+  # configure metallb ingress address range
+  echo "${CONFIG_MAP}" | kubectl apply -f -
+}
+
+nexus_install()
+{
+  echo "Install NEXUS"
+}
+
+elasticsearch_install()
+{
+  if ! helm status elasticsearch -n elasticsearch 2> /dev/null > /dev/null; then
+    helm install --namespace elasticsearch --create-namespace elasticsearch oci://registry-1.docker.io/bitnamicharts/elasticsearch --values k8s/cluster2/helm/elasticsearch/values.yaml
+  fi
+}
+
 hive_install()
 {
   if ! kubectl get configmap ca-pemstore -n hive 2> /dev/null > /dev/null; then
@@ -24,12 +60,15 @@ datahub_install()
 
     kubectl create namespace datahub
 
-    helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml
+    helm install --namespace datahub prerequisites datahub/datahub-prerequisites --values k8s/cluster2/helm/datahub/values-prerequisites.yaml --version 0.1.6
 
-    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --wait --timeout 900s
+    helm install --namespace datahub datahub datahub/datahub --values k8s/cluster2/helm/datahub/values.yaml --wait --timeout 900s --version 0.3.27
   fi
 }
 
+#
+# helm search repo airflow-stable
+#
 airflow_install()
 {
   if ! helm status airflow -n airflow 2> /dev/null > /dev/null; then
@@ -63,7 +102,7 @@ postgres_install()
 {
   if ! helm status postgres -n postgres 2> /dev/null > /dev/null; then
     helm install postgres oci://registry-1.docker.io/bitnamicharts/postgresql -f k8s/cluster2/helm/postgres/values.yaml \
-         --create-namespace --namespace postgres --wait --timeout 600s --version 13.2.9
+         --create-namespace --namespace postgres --wait --timeout 600s --version 13.2.30
   fi
 }
 
@@ -140,33 +179,8 @@ https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/2.4.0.Fin
   fi
 }
 
-kafka_install()
+kafka_ui_install()
 {
-  if ! kubectl get ns kafka; then
-    kubectl create ns kafka
-    kubectl create ns kafka-main-cluster
-    kubectl create ns kafka-project-1
-    kubectl create ns kafka-project-2
-    kubectl create ns kafka-project-3
-    kubectl create ns kafka-project-4
-    kubectl create ns kafka-project-5
-
-    # https://quay.io/repository/strimzi/operator
-    helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator \
-                 --values "k8s/$1/helm/kafka/values.yaml" --version 0.39.0
-
-    kubectl rollout status deployment strimzi-cluster-operator -n kafka --timeout=90s
-
-    # Check the status of the deployment
-    kubectl get deployments -n kafka
-
-    helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
-    helm repo update kafka-ui
-
-  fi
-
-  bitnami_confluent_registry_install "$1"
-
   if ! helm status kafka-ui -n kafka 2> /dev/null > /dev/null; then
     helm install kafka-ui kafka-ui/kafka-ui --version 0.7.5 --namespace kafka \
          --values "$LABTOOLS_K8S/k8s/$1/helm/kafka-ui/values.yaml"
@@ -197,6 +211,35 @@ kafka_install()
               enabled: false
     " | kubectl apply -f -
   fi
+}
+
+kafka_install()
+{
+  if ! kubectl get ns kafka; then
+    kubectl create ns kafka
+    kubectl create ns kafka-main-cluster
+    kubectl create ns kafka-project-1
+    kubectl create ns kafka-project-2
+    kubectl create ns kafka-project-3
+    kubectl create ns kafka-project-4
+    kubectl create ns kafka-project-5
+
+    # https://quay.io/repository/strimzi/operator
+    helm install --namespace kafka strimzi-cluster-operator  oci://quay.io/strimzi-helm/strimzi-kafka-operator \
+                 --values "k8s/$1/helm/kafka/values.yaml" --version 0.39.0
+
+    kubectl rollout status deployment strimzi-cluster-operator -n kafka --timeout=90s
+
+    # Check the status of the deployment
+    kubectl get deployments -n kafka
+
+    helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
+    helm repo update kafka-ui
+  fi
+
+  bitnami_confluent_registry_install "$1"
+
+  kafka_ui_install "$1"
 
   debezium_install
 }
@@ -275,6 +318,8 @@ kafka_install cluster2
 
 k8s-replicator_install
 
+configure_metallb_for_minikube
+
 # Install MongoDB api-resource on cluster2
 mongodb_install
 
@@ -290,6 +335,7 @@ postgres_install
 trino_install
 hive_install
 airflow_install
+elasticsearch_install
 datahub_install
 openmetadata_install
 livy_install
