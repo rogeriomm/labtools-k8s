@@ -28,7 +28,7 @@ elasticsearch:
       memory: "768M"
     limits:
       cpu: "1000m"
-      memory: "768M"
+      memory: "1200M"
 
 # Deploys neo4j community version. Only supports single node
 neo4j-community:
