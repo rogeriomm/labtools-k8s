@@ -10,6 +10,7 @@ spec:
   config:
     retention.ms: 7200000
     segment.bytes: 1073741824
+    cleanup.policy: compact
 ---
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
@@ -23,6 +24,7 @@ spec:
   config:
     retention.ms: 7200000
     segment.bytes: 1073741824
+    cleanup.policy: compact
 ---
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
@@ -36,3 +38,4 @@ spec:
   config:
     retention.ms: 7200000
     segment.bytes: 1073741824
+    cleanup.policy: compact
