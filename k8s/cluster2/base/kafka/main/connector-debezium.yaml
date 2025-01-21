@@ -1,20 +1,22 @@
-# https://debezium.io/documentation/reference/stable/connectors/postgresql.html
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
   name: debezium-connector-postgres
   labels:
-    strimzi.io/cluster: main
+    strimzi.io/cluster: my-connect
 spec:
   class: io.debezium.connector.postgresql.PostgresConnector
   tasksMax: 1
   config:
+    # https://debezium.io/documentation/reference/stable/connectors/postgresql.html
     tasks.max: 1
     database.hostname: postgres-postgresql.postgres.svc.cluster2.xpt
     database.port: 5432
-    database.user: ${secrets:debezium-example/debezium-secret:username}
-    database.password: ${secrets:debezium-example/debezium-secret:password}
-    database.server.id: 184054
+    #database.user: ${secrets:kafka-main-cluster/postgres-user-debezium:username}
+    #database.password: ${secrets:kafka-main-cluster/postgres-user-debezium:password}
+    database.user: debezium
+    database.password: debezium
+    database.dbname: airflow
     topic.prefix: postgres
     database.include.list: inventory
     schema.history.internal.kafka.bootstrap.servers: main-kafka-bootstrap:9092

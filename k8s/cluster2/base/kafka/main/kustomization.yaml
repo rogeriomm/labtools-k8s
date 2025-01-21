@@ -16,17 +16,5 @@ resources:
   - topic-samples.yaml
   - bridge.yaml
   - connect.yaml
-  - source-connector.yaml
-  - debezium-connector.yaml
-
-patches:
-  - path: kafka.yaml
-  - path: user-connect.yaml
-  - path: user-bridge.yaml
-  - path: user-kafka-ui.yaml
-  - path: user-ide.yaml
-  - path: user-registry.yaml
-  - path: bridge.yaml
-  - path: connect.yaml
-  - path: source-connector.yaml
-  - path: debezium-connector.yaml
+  - connector-source.yaml
+  - connector-debezium.yaml
