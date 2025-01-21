@@ -143,7 +143,7 @@ console:
       enabled: true
       clusters:
         - name: my-connect
-          url: https://docs.redpanda.com/current/manage/schema-reg/schema-reg-ui/#prerequisites
+          url: http://my-connect-connect-api.kafka-main-cluster.svc:8083
           tls:
             enabled: false  # Trusted certs are still allowed by default
 
