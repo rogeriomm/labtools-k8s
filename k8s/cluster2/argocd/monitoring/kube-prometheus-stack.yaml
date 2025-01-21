@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  namespace: cicd
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: monitoring
+  project: default
+  source:
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    targetRevision: 45.7.1
+    helm:
+      skipCrds: true
+      values: |-
+        grafana:
+          adminPassword: password
+    chart: kube-prometheus-stack
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
