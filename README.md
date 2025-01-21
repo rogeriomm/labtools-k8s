@@ -1,4 +1,4 @@
-This is a work in progress
+**This is a work in progress...**
 
    * [Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/)
       * [Quick start](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start) 
@@ -9,6 +9,32 @@ This is a work in progress
    * TODO
       * [AWS EKS](https://aws.amazon.com/eks/) + Terraform 
         * Staging environment with production-like characteristics
+
+# Pipeline architecture
+```mermaid
+flowchart TD
+    Postgres(Postgres Database) -->|CDC| Kafka(Kafka Strimzi)
+    SQLServer(SQL Server Database) -->|CDC| Kafka
+    Kafka -->|AVRO Data Stream| ConsumerMinio(Minio S3)
+    ConsumerMinio -->|AVRO Data Stream| ConsumerSpark(Apache Spark)
+    ConsumerSpark --> |CDC Replication using Scala Engine - TODO| ConsumerDelta(Delta Lake)
+    ConsumerSpark --> |Data catalog, lineage| ConsumerDatahub(Datahub)
+    ConsumerSpark --> HiveMetastore(Hive metastore)
+    Kafka -->|Schema Management| SchemaRegistry(Confluent Schema Registry)
+    SchemaRegistry -->|Schema Use - API| ConsumerSpark
+    ConsumerDelta -->|Data Query| Trino(Trino)
+    click ConsumerDelta href "https://github.com/rogeriomm/debezium-cdc-replication-delta" "Visit GitHub repository"
+    Airflow(Apache Airflow) -->|Orchestrate| ConsumerSpark
+    Trino --> Zeppelin(Zeppelin)
+    Trino --> Jupyter(Jupyter)
+    Trino --> Metabase(Metabase)
+    
+    class Postgres,SQLServer database;
+    class Kafka,SchemaRegistry kafka;
+    class ConsumerMinio,ConsumerSpark,ConsumerDelta,Trino,Airflow consumers;
+    class Datahub datahub;
+```
+   * [CDC replication on Delta lake(TODO)](https://github.com/rogeriomm/debezium-cdc-replication-delta)
 
 # Kafka Strimzi, Debezium CDC AVRO, Confluent Schema Registry, Postgres/SQL Server
 ## Postgres
@@ -77,6 +103,7 @@ This is a work in progress
 | http://datahub.worldl.xpt/                           | [Datahub](https://datahubproject.io)                                                                                       | datahub | manualPassword                                                                                                                        |
 | https://openmetadata.worldl.xpt/                     | [OpenMetadata](https://open-metadata.org/)                                                                                 | admin   | admin                                                                                                                                 |
 | https://kafkaui.worldl.xpt/                          | [Kafka UI](https://github.com/provectus/kafka-ui)                                                                          |         |                                                                                                                                       |
+| https://redpanda-console.worldl.xpt/                 | [Redpanda Console](https://redpanda.com/redpanda-console-kafka-ui)                                                         |         |                                                                                                                                       |
 | https://metabase.worldl.xpt/                         | [Metabase](https://www.metabase.com)                                                                                       |         |                                                                                                                                       |
 | http://trino.trino.svc:8080                          | [Trino](https://trino.io)                                                                                                  |         |                                                                                                                                       |
 | https://jfrog.worldl.xpt                             | [Jfrog](https://jfrog.com/artifactory/)                                                                                    | admin   | password                                                                                                                              |
@@ -88,3 +115,4 @@ This is a work in progress
 |--------------------------------------------|---------------------------------------------------------------|-------------------|---|---|
 | https://world-zeppelin.duckdns.org         | [Zeppelin](https://zeppelin.apache.org/)                      |                   |   |   |
 | https://world-jupyter.duckdns.org/jupyter  | [Jupyter](https://jupyter.org/) notebook: Python, Scala, RUST |                   |   |   |
+
