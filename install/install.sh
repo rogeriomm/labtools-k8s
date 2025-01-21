@@ -125,6 +125,9 @@ mongodb_install()
     helm repo update mongodb
     helm install -f k8s/cluster2/helm/mongodb/values.yaml community-operator mongodb/community-operator --create-namespace --namespace mongodb
   fi
+
+  echo MySQL root password
+  kubectl -n mysql get secret my-release-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode
 }
 
 mysql_install()

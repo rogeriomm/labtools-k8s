@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "openmetadata"
+type: Opaque
+data:
+  user: "bWV0YXN0b3JlX2Ri"
+  password: "bWV0YXN0b3JlX2Ri"
+  openmetadata-mysql-password: "bWV0YXN0b3JlX2Ri"
