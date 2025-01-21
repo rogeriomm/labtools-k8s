@@ -10,9 +10,6 @@
 [submodule "modules/metabase-k8s"]
 	path = modules/metabase-k8s
 	url = git@github.com:rogeriomm/metabase-k8s.git
-[submodule "modules/lab-zeppelin-notebooks"]
-	path = modules/lab-zeppelin-notebooks
-	url = git@github.com:rogeriomm/lab-zeppelin-notebooks.git
 [submodule "modules/public-server"]
 	path = modules/public-server
 	url = git@github.com:rogeriomm/public-server.git
