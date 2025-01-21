@@ -11,7 +11,7 @@ data:
       kafka:
         clusters:
           - name: main
-            bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9092
+            bootstrapServers: main-kafka-bootstrap.kafka-main-cluster.svc:9092
             properties:
               security.protocol: SASL_PLAINTEXT
               sasl.mechanism: SCRAM-SHA-512
