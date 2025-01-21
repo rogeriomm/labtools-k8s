@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: hive-metastore
-          image: registry.minikube/hive-metastore-base-3.2:master
+          image: jfrog.worldl.xpt/lab/hive-metastore-base-3.2:master
           #imagePullPolicy: Always
           env:
             - name: HIVE_SITE_CONF_metastore_warehouse_dir

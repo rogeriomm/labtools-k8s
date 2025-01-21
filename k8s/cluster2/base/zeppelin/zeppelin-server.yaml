@@ -13,8 +13,8 @@ data:
   # Default value is 'local.zeppelin-project.org' while it points 127.0.0.1 and `kubectl port-forward zeppelin-server` will give localhost to connects.
   # If you have your ingress controller configured to connect to `zeppelin-server` service and have a domain name for it (with wildcard subdomain point the same address), you can replace serviceDomain field with your own domain.
   SERVICE_DOMAIN: "zeppelin.worldl.xpt"
-  ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: "registry.minikube/spark-base-python-3.2:master"
-  ZEPPELIN_K8S_CONTAINER_IMAGE: "registry.minikube/zeppelin-custom-0.10.1-3.2:master"
+  ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE: "jfrog.worldl.xpt/lab/spark-base-python-3.2:master"
+  ZEPPELIN_K8S_CONTAINER_IMAGE: "jfrog.worldl.xpt/lab/zeppelin-custom-0.10.1-3.2:master"
   ZEPPELIN_HOME: "/opt/zeppelin"
   ZEPPELIN_SERVER_RPC_PORTRANGE: "12320:12320"
   # default value of 'master' property for spark interpreter.
@@ -152,7 +152,7 @@ spec:
           claimName: nfs-common
       containers:
       - name: zeppelin-server
-        image: registry.minikube/zeppelin-custom-0.10.1-3.2:master
+        image: jfrog.worldl.xpt/lab/zeppelin-custom-0.10.1-3.2:master
         #imagePullPolicy: Always
         command: ["sh", "-c", "$(ZEPPELIN_HOME)/bin/zeppelin.sh"]
         lifecycle:

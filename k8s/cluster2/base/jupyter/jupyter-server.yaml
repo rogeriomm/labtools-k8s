@@ -24,7 +24,7 @@ spec:
             claimName: nfs-common
       containers:
         - name: jupyter-server
-          image: registry.minikube/spark-jupyter-3.4:master
+          image: jfrog.worldl.xpt/lab/spark-jupyter-3.4:master
           ports:
             - name: http
               containerPort: 8888
