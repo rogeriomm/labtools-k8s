@@ -197,7 +197,11 @@ avroCompatibilityLevel: backward
 ##   - name: FOO
 ##     value: BAR
 ##
-extraEnvVars: []
+extraEnvVars:
+  - name: SCHEMA_REGISTRY_KAFKA_SASL_USERS
+    value: "todo"
+  - name: SCHEMA_REGISTRY_KAFKA_SASL_PASSWORDS
+    value: "todo"
 ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
 ##
 extraEnvVarsCM: ""
@@ -691,7 +695,7 @@ externalKafka:
   ## @param externalKafka.brokers Array of Kafka brokers to connect to. Format: protocol://broker_hostname:port
   ##
   brokers:
-    - SSL://main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9093
+    - SASL_PLAINTEXT://main-kafka-bootstrap.kafka-main-cluster.svc.cluster2.xpt:9093
   ## @param externalKafka.listener.protocol Kafka listener protocol. Allowed protocols: PLAINTEXT, SASL_PLAINTEXT, SASL_SSL and SSL
   ##
   listener:
@@ -703,5 +707,5 @@ externalKafka:
   ##
   sasl:
     user: user
-    password: ""
+    password: "123"
     existingSecret: ""
