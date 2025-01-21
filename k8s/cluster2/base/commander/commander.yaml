@@ -56,8 +56,8 @@ spec:
             defaultMode: 0700
       containers:
         - name: tunnel-server-gateway
-          image: jfrog.worldl.xpt/lab/command:master
-          imagePullPolicy: Never
+          image: harbor.worldl.xpt/library/command:master
+          imagePullPolicy: Always
           volumeMounts:
             - name: tunnel-conf
               readOnly: true

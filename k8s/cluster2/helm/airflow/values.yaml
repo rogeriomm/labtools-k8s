@@ -3,7 +3,7 @@
 
 airflow:
   image:
-    repository: jfrog.worldl.xpt/lab/airflow-2.7.3-10
+    repository: harbor.worldl.xpt/library/airflow-2.7.3-10
     tag: master
 
   clusterDomain: cluster2.xpt

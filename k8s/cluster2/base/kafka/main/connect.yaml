@@ -9,7 +9,7 @@ metadata:
     strimzi.io/use-connector-resources: "true"
 spec:
   version: 3.6.1
-  image: jfrog.worldl.xpt/lab/kafka-connector-plugins:0.39.0-kafka-3.6.1
+  image: harbor.worldl.xpt/library/kafka-connector-plugins:0.39.0-kafka-3.6.1
   replicas: 1
   # https://github.com/strimzi/strimzi-kafka-operator/blob/main/documentation/modules/appendix_crds.adoc#externalconfiguration-schema-properties
   externalConfiguration:

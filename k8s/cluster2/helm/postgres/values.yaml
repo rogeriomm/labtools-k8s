@@ -96,8 +96,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: jfrog.worldl.xpt
-  repository: lab/bitnami-postgresql-decoderbufs
+  registry: harbor.worldl.xpt
+  repository: library/bitnami-postgresql-decoderbufs
   tag: 15.5.0-debian-11-r18
   digest: ""
   ## Specify a imagePullPolicy
@@ -338,29 +338,50 @@ primary:
           /* Debezium CDC setup */
           ALTER SYSTEM SET wal_level = logical;
           CREATE USER debezium WITH REPLICATION PASSWORD 'debezium';
-          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
+
           /* Metastore DB */
           CREATE DATABASE metastore_db;
+          \c metastore_db
           CREATE USER metastore_db WITH PASSWORD 'metastore_db';
           GRANT ALL PRIVILEGES ON DATABASE metastore_db TO metastore_db;
           GRANT CREATE ON SCHEMA public TO metastore_db;
           ALTER USER metastore_db WITH SUPERUSER;
+          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO debezium;         
+         
           /* Airflow DB */
           CREATE DATABASE airflow;
+          \c airflow
           CREATE USER airflow WITH PASSWORD 'airflow';
           GRANT ALL PRIVILEGES ON DATABASE airflow TO airflow;
           GRANT CREATE ON SCHEMA public TO airflow;
           ALTER USER airflow WITH SUPERUSER;
+          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO debezium;          
+         
           /* Datahub DB */
+          CREATE DATABASE datahub;
+          \c datahub
           CREATE USER datahub WITH PASSWORD 'datahub';
           ALTER USER datahub WITH SUPERUSER;
+          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO debezium;
+
           /* OpenMetadata user */
+          CREATE DATABASE openmetadata;
+          \c openmetadata
           CREATE USER openmetadata WITH PASSWORD 'openmetadata';
           ALTER USER openmetadata WITH SUPERUSER;
+          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO debezium;         
+         
           /* Keycloak user */
           CREATE DATABASE keycloak;
+          \c keycloak
           CREATE USER keycloak WITH PASSWORD 'keycloak';
           ALTER USER keycloak WITH SUPERUSER;
+          GRANT SELECT ON ALL TABLES IN SCHEMA public TO debezium;
+          ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO debezium;
        init_script.sh: |
          echo "..................."
 
