@@ -1,4 +1,7 @@
-**This is a work in progress...**
+> ⚠️ **This repository is deprecated**  
+> This project is no longer maintained.  
+> The more modern and scalable solution available at [https://github.com/rogeriomm/monorepo-datahub-ops](https://github.com/rogeriomm/monorepo-datahub-ops).
+
 
    * [Jupyter notebooks](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/)
       * [Quick start](https://github.com/rogeriomm/lab-k8s-notebooks/tree/master/jupyter-notebooks/quick-start) 
